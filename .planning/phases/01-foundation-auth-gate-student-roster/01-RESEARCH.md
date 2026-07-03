@@ -644,7 +644,7 @@ CONTEXT.md.*
 | A3 | 5 attempts / 15-minute cooldown are reasonable default thresholds | Code Examples | Low — explicitly marked Claude's Discretion in CONTEXT.md; easy to tune later, no correctness risk. |
 | A4 | `getIronSession(cookies(), sessionOptions)` (using `next/headers`) works unmodified inside `middleware.ts` on Next.js 16.2.x App Router | Pattern 1, Pitfall 2 | Medium — confirmed by iron-session's own official example repo, but not independently tested against Next.js 16.2.x specifically in this research session (repo example may target an earlier Next version). If it fails during implementation, the `unsealData`/`sealData` direct-cookie fallback path in iron-session's single entry point is the documented escape hatch. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Exact IP-extraction behavior of `ipAddress()` when the app is accessed from the
    owner's own home network vs. a potential attacker**
@@ -653,10 +653,11 @@ CONTEXT.md.*
    - What's unclear: Behavior in edge cases (shared NAT, mobile carrier IP rotation) that
      could affect a single legitimate user more than a would-be attacker, given this is a
      one-person app accessed from a phone/laptop that may rotate IPs.
-   - Recommendation: Implement as designed; if the tutor reports being locked out from her
-     own device, loosen the threshold or key the limiter differently (e.g., a short-lived
-     signed cookie flag combined with the IP check) — low-stakes to adjust post-launch
-     given D-05's explicit framing that "the lockout mainly deters bots."
+   - RESOLVED: Implement as designed (accepted risk — overlaps Assumptions Log A2). If the
+     tutor reports being locked out from her own device, loosen the threshold or key the
+     limiter differently (e.g., a short-lived signed cookie flag combined with the IP check)
+     — low-stakes to adjust post-launch given D-05's explicit framing that "the lockout
+     mainly deters bots."
 
 ## Environment Availability
 
