@@ -1,7 +1,8 @@
 ---
 phase: 1
 slug: foundation-auth-gate-student-roster
-status: draft
+status: approved
+reviewed_at: 2026-07-03
 shadcn_initialized: false
 preset: "style: new-york, base color: neutral, css variables: yes (to be run via `npx shadcn@latest init` during Phase 1 scaffolding — no package.json/Next.js project exists yet in this greenfield repo, so the CLI has not been run)"
 created: 2026-07-03
