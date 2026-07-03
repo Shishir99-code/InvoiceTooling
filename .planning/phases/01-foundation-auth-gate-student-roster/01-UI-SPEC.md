@@ -80,10 +80,10 @@ Exactly 2 weights declared (400, 600) and 4 sizes, per contract limits.
 |------|-------|-------|
 | Dominant (60%) | `#FFFFFF` (white) | Page background, modal/dialog background, card/table surface background. |
 | Secondary (30%) | `#F4F4F5` (zinc-100) | Table header row background, alternating/hover table row background, login screen card background (distinguishing it from the page canvas behind it), disabled input background. |
-| Accent (10%) | `#2563EB` (blue-600) | Reserved **exclusively** for: the "Add Student" primary CTA button, the login screen's "Unlock" button, the modal's "Save" button, focus rings on inputs, the active/selected state of the Students↔Archived tab link, and hyperlink-style text (none planned this phase, reserved for future use). |
+| Accent (10%) | `#2563EB` (blue-600) | Reserved **exclusively** for: the "Add Student" primary CTA button, the login screen's "Unlock" button, the modal's primary Add Student / Save Changes button, focus rings on inputs, the active/selected state of the Students↔Archived tab link, and hyperlink-style text (none planned this phase, reserved for future use). |
 | Destructive | `#DC2626` (red-600) | Reserved **exclusively** for: the Archive-confirm dialog's "Archive" button, inline field-validation error text (D-16: "Enter a name", "Rate must be a positive number", "Enter a valid email"), and the login screen's "Incorrect password." message. |
 
-**Accent reserved for:** Add Student button · Unlock button · modal Save button · input focus rings · active tab indicator (Students/Archived). Nothing else may use the accent blue this phase — table rows, icons, and body text stay neutral.
+**Accent reserved for:** Add Student button · Unlock button · modal primary button · input focus rings · active tab indicator (Students/Archived). Nothing else may use the accent blue this phase — table rows, icons, and body text stay neutral.
 
 **Explicit exception — rate-limit lockout message (D-05):** The "Too many attempts — try again in a few minutes." message must **not** use the destructive red. D-05 explicitly calls for a friendly, non-scary tone. Render it in a muted neutral tone — `#71717A` (zinc-500) body text, no red, no warning icon — to visually distinguish "you're just waiting" from "you did something wrong" (which the plain "Incorrect password." destructive-red message communicates instead).
 
@@ -104,11 +104,11 @@ Exactly 2 weights declared (400, 600) and 4 sizes, per contract limits.
 | Inline field error — name | **"Enter a name."** (D-16 locked wording) |
 | Inline field error — rate | **"Rate must be a positive number."** (D-16 locked wording) |
 | Inline field error — email | **"Enter a valid email."** (D-16 locked wording) |
-| Destructive confirmation — archive | Dialog title: **"Archive [Name]?"** (D-12 locked wording, `[Name]` interpolated). Body: **"[Name] will be removed from your active roster. You can restore them anytime from Archived Students."** `[DEFAULT]` — reassures her the action is reversible, consistent with D-10/D-11's data-safety intent. Confirm button: **"Archive"** (destructive red). Cancel button: **"Cancel"** (neutral). |
+| Destructive confirmation — archive | Dialog title: **"Archive [Name]?"** (D-12 locked wording, `[Name]` interpolated). Body: **"[Name] will be removed from your active roster. You can restore them anytime from Archived Students."** `[DEFAULT]` — reassures her the action is reversible, consistent with D-10/D-11's data-safety intent. Confirm button: **"Archive Student"** (destructive red). Dismiss button: **"Keep on Roster"** (neutral) — mirrors D-12's reversible framing, avoids a bare "Cancel". |
 | Restore action | Button label: **"Restore"** on each archived row. No confirmation dialog — restoring is non-destructive, so it should be a single click (unlike Archive). `[DEFAULT — Claude's Discretion per CONTEXT.md]` |
 | Modal titles | **"Add Student"** / **"Edit Student"** — Heading weight, dialog top. |
-| Modal Save button | **"Save"** (accent blue) while idle; **"Saving…"** with the button disabled while `isPending` (React 19 `useActionState`, per RESEARCH.md Pattern 3). |
-| Modal Cancel button | **"Cancel"** (neutral, closes dialog without saving). |
+| Modal primary button | Mode-specific label (accent blue): **"Add Student"** when adding, **"Save Changes"** when editing (never a bare "Save"). While the action is in flight (`isPending`), the button is disabled and reads **"Adding…"** / **"Saving…"** respectively (React 19 `useActionState`, per RESEARCH.md Pattern 3). |
+| Modal dismiss button | **"Discard"** (neutral, closes the dialog without saving; not a bare "Cancel"). |
 | Form field labels | **"Name"**, **"Hourly Rate"**, **"Parent Email"** — Label weight, 14px/600. |
 | Form field helper (rate input) | Placeholder/prefix: input shows a `$` prefix glyph and placeholder `0.00`; user types plain dollars (e.g. `50`), display formats to `$50.00` on blur/save per D-07. `[DEFAULT — implementation detail, not a locked copy string]` |
 | Navigation — roster ↔ archived | Two tab-style links in the page header: **"Students"** (default/active) and **"Archived"**. `[DEFAULT — Claude's Discretion per CONTEXT.md D-11 "precise archived-view affordance"]` |
@@ -138,7 +138,7 @@ These are implementation-guiding notes beyond the reusable design tokens above, 
 
 4. **Add/Edit modal dialog** — shadcn `Dialog`, stacked single-column fields (Name → Hourly Rate → Parent Email), each with a Label above and inline destructive-red error text below when invalid (D-16, blocks Save). Footer: Cancel (neutral) + Save (accent) buttons, right-aligned on desktop, full-width stacked on mobile (D-14 mobile-friendly).
 
-5. **Archive flow** — Each roster row/card has an "Archive" text/icon action (neutral, not destructive-colored at rest — only the confirm dialog's action button is destructive-red, keeping the roster itself visually calm). Clicking opens the archive-confirm `Dialog` (D-12) described in the Copywriting Contract above.
+5. **Archive flow** — Each roster row/card has an **"Archive"** action that ALWAYS renders a visible text label reading "Archive" — on BOTH the desktop table row and the mobile stacked-card layout, never icon-only (an accompanying icon is optional, but the text label is mandatory for accessibility). The action is neutral, not destructive-colored at rest — only the confirm dialog's action button is destructive-red, keeping the roster itself visually calm. Clicking opens the archive-confirm `Dialog` (D-12) described in the Copywriting Contract above.
 
 6. **Archived view + restore** — `[DEFAULT — Claude's Discretion per CONTEXT.md]` A "Students" / "Archived" tab-link pair in the page header (accent-blue active-state underline/text) toggles between the two lists, matching RESEARCH.md's `/archived` route structure. The archived list reuses the same table/card layout and typography tokens, with a single-click "Restore" action per row (no confirm dialog — see Copywriting Contract) and its own empty state ("No archived students").
 
