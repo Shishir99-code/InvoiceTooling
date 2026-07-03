@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 UI-SPEC approved
-last_updated: "2026-07-03T19:15:40.892Z"
-last_activity: 2026-07-03 — ROADMAP.md and STATE.md created; requirements coverage validated 27/27
+stopped_at: Phase 01 Plan 01 - Task 2 complete, awaiting human-action checkpoint (Neon DB + .env.local secrets)
+last_updated: "2026-07-03T19:19:38.935Z"
+last_activity: 2026-07-03 -- Phase 01 Plan 01 Tasks 1-2 complete, checkpoint pending
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
+  total_plans: 5
   completed_plans: 0
   percent: 0
 ---
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-03)
 
 **Core value:** Go from "I tutored these sessions" to "an invoice is in the parent's inbox asking them to Zelle me" in a couple of clicks — without touching a spreadsheet.
-**Current focus:** Phase 1 — Foundation: Auth Gate & Student Roster
+**Current focus:** Phase 01 — foundation-auth-gate-student-roster
 
 ## Current Position
 
-Phase: 1 of 3 (Foundation — Auth Gate & Student Roster)
-Plan: TBD (not yet planned)
-Status: Ready to execute
-Last activity: 2026-07-03 — ROADMAP.md and STATE.md created; requirements coverage validated 27/27
+Phase: 01 (foundation-auth-gate-student-roster) — EXECUTING
+Plan: 1 of 5
+Status: Executing Phase 01 Plan 01 — Tasks 1-2 done (commits 0c44444, 9befead), stopped at checkpoint:human-action (Task 3 needs Neon DB + .env.local secrets)
+Last activity: 2026-07-03 -- Phase 01 Plan 01 Tasks 1-2 complete, checkpoint pending
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -71,6 +71,7 @@ None yet.
 ### Blockers/Concerns
 
 - REQUIREMENTS.md's original Traceability section stated "26 total" v1 requirements, but the actual v1 list (AUTH×4, STUD×4, SESS×5, DASH×2, INV×4, MAIL×4, SET×2, HIST×2) totals 27. Corrected during roadmap creation — see updated Coverage counts in REQUIREMENTS.md.
+- Plan 01-01 paused at checkpoint:human-action (Task 3). Needs a live Neon Postgres database and `.env.local` with DATABASE_URL, APP_PASSWORD, SESSION_SECRET before `drizzle-kit push` can run. See 01-01-PLAN.md checkpoint task for exact steps.
 
 ## Deferred Items
 
