@@ -26,9 +26,15 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Success Criteria** (what must be TRUE):
   1. User can unlock the app by entering the single shared password and stays logged in across page refreshes via a secure (HttpOnly/Secure) session cookie.
   2. Every page except the login screen is inaccessible without a valid session; repeated wrong-password attempts are rate-limited to deter brute force.
-  3. User can add a student (name, hourly rate, optional parent/guardian email), view the full student list, and edit any student's name, rate, or parent email.
+  3. User can add a student (name, hourly rate, required parent/guardian email — required per CONTEXT D-13), view the full student list, and edit any student's name, rate, or parent email.
   4. User can remove a student — students with existing session or invoice history are archived rather than deleted, so history is preserved.
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 01-01-PLAN.md — Scaffold Next.js + Drizzle/Neon + schema (students, login_attempts) + schema push
+- [ ] 01-02-PLAN.md — Auth gate slice: login Server Action + rate limiter + middleware + protected roster read
+- [ ] 01-03-PLAN.md — Student roster CRUD: add/edit/view via zod-validated Server Actions + shadcn modal
+- [ ] 01-04-PLAN.md — Archive & restore: soft-delete flow + confirm dialog + archived view/tabs
+- [ ] 01-05-PLAN.md — Deploy to Vercel + end-to-end production verification
 **UI hint**: yes
 
 ### Phase 2: Session Logging & Unbilled Dashboard
@@ -65,6 +71,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation — Auth Gate & Student Roster | 0/TBD | Not started | - |
+| 1. Foundation — Auth Gate & Student Roster | 0/5 | Planned | - |
 | 2. Session Logging & Unbilled Dashboard | 0/TBD | Not started | - |
 | 3. Invoicing, Email & History | 0/TBD | Not started | - |
