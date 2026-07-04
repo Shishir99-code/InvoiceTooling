@@ -16,10 +16,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Students
 
-- [ ] **STUD-01**: User can add a student with a name and hourly rate, and an optional parent/guardian email
-- [ ] **STUD-02**: User can edit a student's name, hourly rate, and parent email
+- [x] **STUD-01**: User can add a student with a name and hourly rate, and an optional parent/guardian email
+- [x] **STUD-02**: User can edit a student's name, hourly rate, and parent email
 - [ ] **STUD-03**: User can remove a student (archived if they have session/invoice history so history is preserved)
-- [ ] **STUD-04**: User can view a list of all students
+- [x] **STUD-04**: User can view a list of all students
 
 ### Sessions
 
@@ -94,10 +94,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-02 | Phase 1 | Complete |
 | AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Complete |
-| STUD-01 | Phase 1 | Pending |
-| STUD-02 | Phase 1 | Pending |
+| STUD-01 | Phase 1 | Complete |
+| STUD-02 | Phase 1 | Complete |
 | STUD-03 | Phase 1 | Pending |
-| STUD-04 | Phase 1 | Pending |
+| STUD-04 | Phase 1 | Complete |
 | SESS-01 | Phase 2 | Pending |
 | SESS-02 | Phase 2 | Pending |
 | SESS-03 | Phase 2 | Pending |

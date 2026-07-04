@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed Phase 01 Plan 02 (auth gate — login, rate limiter, middleware, protected roster)
-last_updated: "2026-07-04T00:24:00.601Z"
-last_activity: 2026-07-04 -- Phase 01 Plan 02 complete (auth gate slice: login/rate-limit/middleware/protected roster)
+stopped_at: Completed Phase 01 Plan 03 (student roster CRUD — add/edit via zod-validated Server Actions)
+last_updated: "2026-07-04T00:37:38.906Z"
+last_activity: "2026-07-04 -- Phase 01 Plan 03 complete (student roster CRUD — add/edit via zod-validated Server Actions)"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 5
-  completed_plans: 2
-  percent: 40
+  completed_plans: 3
+  percent: 60
 ---
 
 # Project State
@@ -26,19 +26,19 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 ## Current Position
 
 Phase: 01 (foundation-auth-gate-student-roster) — EXECUTING
-Plan: 3 of 5
-Status: Ready to execute — Plans 01-01 and 01-02 complete, Plan 01-03 (student CRUD) not yet started
-Last activity: 2026-07-04 -- Phase 01 Plan 02 complete (auth gate slice: login/rate-limit/middleware/protected roster)
+Plan: 4 of 5
+Status: Ready to execute — Plans 01-01, 01-02, and 01-03 complete (student roster CRUD add/edit shipped); Plan 01-04 not yet started
+Last activity: 2026-07-04 -- Phase 01 Plan 03 complete (student roster CRUD — add/edit via zod-validated Server Actions)
 
-Progress: [████░░░░░░] 40%
+Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 2
+- Total plans completed: 3
 - Average duration: ~15 min
-- Total execution time: ~0.5 hours
+- Total execution time: ~46 min
 
 **By Phase:**
 
@@ -54,6 +54,7 @@ Progress: [████░░░░░░] 40%
 *Updated after each plan completion*
 | Phase 01 P01 | 6min | 3 tasks | 31 files |
 | Phase 01 P02 | ~25min | 2 tasks | 4 files |
+| Phase 01 P03 | 15min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,8 @@ Recent decisions affecting current work:
 - [Phase 01]: STUD-01..04/AUTH-04 not marked complete in REQUIREMENTS.md despite 01-01 frontmatter listing them — Only DB schema exists in 01-01; functional login/CRUD UI is delivered in 01-02/01-03/01-04 — marking complete now would be a false positive
 - [Phase 01]: drizzle.config.ts explicitly loads .env.local instead of relying on dotenv/config default — dotenv/config only auto-reads a literal .env file; Next.js convention uses .env.local, which was never being injected, breaking drizzle-kit push
 - [Phase 01, Plan 02]: @vercel/functions' ipAddress() must be called as ipAddress({ headers: hdrs }), not ipAddress(hdrs), when hdrs comes from next/headers' headers() on Next.js 16.2.10 — the HeadersAdapter Proxy's `has` trap answers true for "headers" in hdrs, routing ipAddress() into the wrong branch (reads undefined instead of calling .get()). Found via live end-to-end testing, not code review.
+- [Phase 01]: [Phase 01, Plan 03]: Added noValidate to the add/edit student form — Native type="email" HTML5 constraint validation was silently blocking submission of malformed emails before the server-side zod D-16 validation could run; server-side zod is now the sole validation gate (found via live Playwright testing).
+- [Phase 01]: [Phase 01, Plan 03]: Replaced setState-in-useEffect with React's 'adjust state during render' pattern — Satisfies the project's react-hooks/set-state-in-effect ESLint rule when closing the Dialog after a successful add/edit submit.
 
 ### Pending Todos
 
@@ -89,6 +92,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-04T00:24:00.601Z
-Stopped at: Completed Phase 01 Plan 02 (auth gate — login, rate limiter, middleware, protected roster)
+Last session: 2026-07-04T00:37:38.903Z
+Stopped at: Completed Phase 01 Plan 03 (student roster CRUD — add/edit via zod-validated Server Actions)
 Resume file: None
