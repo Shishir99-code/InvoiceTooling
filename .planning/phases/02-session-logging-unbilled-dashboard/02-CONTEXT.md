@@ -93,6 +93,17 @@ frozen-snapshot behavior of editing a billed session is a Phase 3 concern.
 - **D-13:** **Dashboard excludes billed sessions from totals** (DASH-02) — the
   amount-owed and hours figures reflect unbilled sessions only.
 
+### Money Snapshot
+- **D-14:** **Session dollar amount is frozen at log/edit time**, not live-derived.
+  The `sessions` table stores an `amountCents` integer column, written when the
+  session is logged and rewritten whenever it is edited (recomputed from the
+  student's rate *at that moment* via `hours × students.rateCents`). Later changes
+  to a student's `rateCents` do NOT retroactively alter already-logged unbilled
+  sessions. This mirrors Phase 3's frozen-invoice philosophy and keeps billing
+  history accurate. The dashboard sums the stored `amountCents` of unbilled
+  sessions (DASH-01/02), not a live-derived figure. (Resolves 02-RESEARCH.md Open
+  Question 1.)
+
 ### Claude's Discretion
 - Exact minutes granularity in the length dropdown (15-min steps suggested).
 - Money formatting reuse — the existing `formatRate` (`$X.XX`) pattern in
