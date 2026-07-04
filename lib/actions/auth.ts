@@ -26,8 +26,14 @@ export async function loginAction(
   // ipAddress() (not NextRequest.ip, which is removed/unreliable) with a non-null
   // fallback so a lookup failure can't collapse every request onto a shared bucket
   // in a way that silently bypasses the limiter (RESEARCH Assumption A2).
+  // Wrapped as `{ headers: hdrs }` (not passed bare) — Next.js 16's `next/headers`
+  // `headers()` return value is a HeadersAdapter Proxy whose `has` trap answers
+  // `true` for `"headers" in hdrs`, which makes @vercel/functions' `ipAddress()`
+  // read `input.headers` (undefined) instead of calling `.get()` directly when
+  // given the bare adapter. Wrapping in a plain Request-shaped object routes
+  // ipAddress() down its `input.headers` branch with a real Headers-like value.
   const hdrs = await headers();
-  const ip = ipAddress(hdrs) ?? "unknown";
+  const ip = ipAddress({ headers: hdrs }) ?? "unknown";
 
   const [existing] = await db
     .select()
