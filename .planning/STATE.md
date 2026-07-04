@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed Phase 01 Plan 01 (foundation scaffold + live Neon schema push)
-last_updated: "2026-07-04T00:11:41.956Z"
-last_activity: 2026-07-04 -- Phase 01 Plan 01 complete (scaffold + live Neon schema push); checkpoint resolved
+stopped_at: Completed Phase 01 Plan 02 (auth gate — login, rate limiter, middleware, protected roster)
+last_updated: "2026-07-04T00:24:00.601Z"
+last_activity: 2026-07-04 -- Phase 01 Plan 02 complete (auth gate slice: login/rate-limit/middleware/protected roster)
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
-  percent: 20
+  completed_plans: 2
+  percent: 40
 ---
 
 # Project State
@@ -26,19 +26,19 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 ## Current Position
 
 Phase: 01 (foundation-auth-gate-student-roster) — EXECUTING
-Plan: 2 of 5
-Status: Ready to execute — Plan 01-01 complete, Plan 01-02 (auth gate slice) not yet started
-Last activity: 2026-07-04 -- Phase 01 Plan 01 complete (scaffold + live Neon schema push); checkpoint resolved
+Plan: 3 of 5
+Status: Ready to execute — Plans 01-01 and 01-02 complete, Plan 01-03 (student CRUD) not yet started
+Last activity: 2026-07-04 -- Phase 01 Plan 02 complete (auth gate slice: login/rate-limit/middleware/protected roster)
 
-Progress: [██░░░░░░░░] 20%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 1
-- Average duration: 6 min
-- Total execution time: 0.1 hours
+- Total plans completed: 2
+- Average duration: ~15 min
+- Total execution time: ~0.5 hours
 
 **By Phase:**
 
@@ -48,11 +48,12 @@ Progress: [██░░░░░░░░] 20%
 
 **Recent Trend:**
 
-- Last 5 plans: none yet
+- Last 5 plans: 6min, ~25min
 - Trend: -
 
 *Updated after each plan completion*
 | Phase 01 P01 | 6min | 3 tasks | 31 files |
+| Phase 01 P02 | ~25min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,7 @@ Recent decisions affecting current work:
 - [Phase 01]: shadcn 'new-york' style replaced by preset 'nova' (Lucide/Geist, neutral) — shadcn CLI moved from named styles to a preset system; nova satisfies the substantive UI-SPEC requirement
 - [Phase 01]: STUD-01..04/AUTH-04 not marked complete in REQUIREMENTS.md despite 01-01 frontmatter listing them — Only DB schema exists in 01-01; functional login/CRUD UI is delivered in 01-02/01-03/01-04 — marking complete now would be a false positive
 - [Phase 01]: drizzle.config.ts explicitly loads .env.local instead of relying on dotenv/config default — dotenv/config only auto-reads a literal .env file; Next.js convention uses .env.local, which was never being injected, breaking drizzle-kit push
+- [Phase 01, Plan 02]: @vercel/functions' ipAddress() must be called as ipAddress({ headers: hdrs }), not ipAddress(hdrs), when hdrs comes from next/headers' headers() on Next.js 16.2.10 — the HeadersAdapter Proxy's `has` trap answers true for "headers" in hdrs, routing ipAddress() into the wrong branch (reads undefined instead of calling .get()). Found via live end-to-end testing, not code review.
 
 ### Pending Todos
 
@@ -87,6 +89,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-04T00:11:28.912Z
-Stopped at: Completed Phase 01 Plan 01 (foundation scaffold + live Neon schema push)
+Last session: 2026-07-04T00:24:00.601Z
+Stopped at: Completed Phase 01 Plan 02 (auth gate — login, rate limiter, middleware, protected roster)
 Resume file: None

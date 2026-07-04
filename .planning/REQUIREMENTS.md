@@ -9,10 +9,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Access
 
-- [ ] **AUTH-01**: User can unlock the app by entering a single shared password
-- [ ] **AUTH-02**: User stays logged in across page refreshes via a secure session cookie
-- [ ] **AUTH-03**: Every page except the login screen is inaccessible without a valid session
-- [ ] **AUTH-04**: Repeated wrong password attempts are rate-limited to deter brute force
+- [x] **AUTH-01**: User can unlock the app by entering a single shared password
+- [x] **AUTH-02**: User stays logged in across page refreshes via a secure session cookie
+- [x] **AUTH-03**: Every page except the login screen is inaccessible without a valid session
+- [x] **AUTH-04**: Repeated wrong password attempts are rate-limited to deter brute force
 
 ### Students
 
@@ -90,10 +90,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
+| AUTH-04 | Phase 1 | Complete |
 | STUD-01 | Phase 1 | Pending |
 | STUD-02 | Phase 1 | Pending |
 | STUD-03 | Phase 1 | Pending |
@@ -119,6 +119,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HIST-02 | Phase 3 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 27 total (corrected — previous count of 26 was a tally error; the full enumerated list above is 27 IDs across AUTH×4, STUD×4, SESS×5, DASH×2, INV×4, MAIL×4, SET×2, HIST×2)
 - Mapped to phases: 27/27 ✓
 - Unmapped: 0 ✓
