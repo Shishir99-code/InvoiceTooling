@@ -13,7 +13,7 @@ TutorInvoice ships as three usable, end-to-end vertical slices rather than horiz
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation — Auth Gate & Student Roster** - Tutor logs into a deployed, password-gated app and manages her student roster
+- [x] **Phase 1: Foundation — Auth Gate & Student Roster** - Tutor logs into a deployed, password-gated app and manages her student roster (completed 2026-07-04)
 - [ ] **Phase 2: Session Logging & Unbilled Dashboard** - Tutor logs sessions against students and sees who owes what at a glance
 - [ ] **Phase 3: Invoicing, Email & History** - Tutor turns unbilled sessions into an emailed invoice and can review past invoices
 
@@ -51,7 +51,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
-- [ ] 01-05-PLAN.md — Deploy to Vercel + end-to-end production verification
+- [x] 01-05-PLAN.md — Deploy to Vercel + end-to-end production verification
 
 **UI hint**: yes
 
@@ -95,6 +95,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation — Auth Gate & Student Roster | 4/5 | In Progress|  |
+| 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete   | 2026-07-04 |
 | 2. Session Logging & Unbilled Dashboard | 0/TBD | Not started | - |
 | 3. Invoicing, Email & History | 0/TBD | Not started | - |

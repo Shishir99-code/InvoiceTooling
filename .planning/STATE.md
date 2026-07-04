@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed Phase 01 Plan 04 (archive/restore soft-delete slice — confirm dialog + archived view + restore)
-last_updated: "2026-07-04T00:47:04Z"
-last_activity: "2026-07-04 -- Phase 01 Plan 04 complete (archive/restore soft-delete slice — confirm dialog + archived view + restore)"
+status: planning
+stopped_at: Completed Phase 01 Plan 05 (Vercel deploy + production verification -- Phase 1 complete)
+last_updated: "2026-07-04T01:17:34.094Z"
+last_activity: 2026-07-04 -- Phase 01 Plan 05 complete (Vercel deploy + production verification; Phase 1 done)
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 5
-  completed_plans: 4
-  percent: 80
+  completed_plans: 5
+  percent: 33
 ---
 
 # Project State
@@ -25,20 +25,20 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 
 ## Current Position
 
-Phase: 01 (foundation-auth-gate-student-roster) — EXECUTING
-Plan: 5 of 5
-Status: Ready to execute — Plans 01-01 through 01-04 complete (student roster CRUD + archive/restore shipped); Plan 01-05 (deploy to Vercel) not yet started
-Last activity: 2026-07-04 -- Phase 01 Plan 04 complete (archive/restore soft-delete slice — confirm dialog + archived view + restore)
+Phase: 01 (foundation-auth-gate-student-roster) — COMPLETE
+Plan: 5 of 5 (all plans complete)
+Status: Phase 1 complete — deployed to live Vercel production URL (https://invoice-tooling-lovat.vercel.app), all 8 Phase 1 requirements (AUTH-01..04, STUD-01..04) verified end-to-end in production. Ready to plan Phase 2.
+Last activity: 2026-07-04 -- Phase 01 Plan 05 complete (Vercel deploy + production verification; Phase 1 done)
 
-Progress: [████████░░] 80%
+Progress: [███░░░░░░░] 33% (1 of 3 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 4
-- Average duration: ~13 min
-- Total execution time: ~54 min
+- Total plans completed: 5
+- Average duration: ~14 min
+- Total execution time: ~74 min
 
 **By Phase:**
 
@@ -48,14 +48,15 @@ Progress: [████████░░] 80%
 
 **Recent Trend:**
 
-- Last 5 plans: 6min, ~25min, 15min, ~8min
-- Trend: stabilizing downward as CRUD/UI patterns get reused
+- Last 5 plans: 6min, ~25min, 15min, ~8min, ~20min
+- Trend: stabilizing; Plan 05's ~20min was mostly waiting on external Vercel deploy/verification, not code work
 
 *Updated after each plan completion*
 | Phase 01 P01 | 6min | 3 tasks | 31 files |
 | Phase 01 P02 | ~25min | 2 tasks | 4 files |
 | Phase 01 P03 | 15min | 2 tasks | 5 files |
 | Phase 01 P04 | ~8min | 2 tasks | 5 files |
+| Phase 01 P05 | ~20min | 1 tasks | 0 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - [Phase 01, Plan 04]: StudentTable generalized to a `renderActions`/`emptyState` prop API instead of a hardcoded active/archived variant switch — keeps the shared table/card component agnostic of which Server Actions or dialogs each page wires in, while both the active roster (Edit+Archive) and the archived view (Restore) reuse identical layout/typography.
 - [Phase 01, Plan 04]: Restore implemented as a zero-JS `<form action={restoreStudentAction.bind(null, id)}>` (arg-bound Server Action, no client component) — restoring is single-click/non-destructive per D-11 with no pending-state UX requirement.
 - [Phase 01, Plan 04]: Students/Archived tab pair inlined directly in each page rather than extracted into a shared component — the plan explicitly allowed either approach; inlining keeps each page's active-tab styling unambiguous for a two-link nav.
+- [Phase 01, Plan 05]: Vercel env vars (DATABASE_URL, APP_PASSWORD, SESSION_SECRET) scoped to both Production and Preview to avoid preview-deploy build failures in future phases
+- [Phase 01, Plan 05]: lib/db/index.ts calls neon(process.env.DATABASE_URL!) at module import time -- first Vercel build failed until DATABASE_URL was set in Vercel env; candidate future hardening is lazy-init the Neon client (not implemented, out of scope for 01-05)
 
 ### Pending Todos
 
@@ -96,6 +99,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-04T00:47:04Z
-Stopped at: Completed Phase 01 Plan 04 (archive/restore soft-delete slice — confirm dialog + archived view + restore)
+Last session: 2026-07-04T01:17:34.090Z
+Stopped at: Completed Phase 01 Plan 05 (Vercel deploy + production verification -- Phase 1 complete)
 Resume file: None
