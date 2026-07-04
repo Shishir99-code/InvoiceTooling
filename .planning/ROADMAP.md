@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 5 plansPlans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Scaffold Next.js + Drizzle/Neon + schema (students, login_attempts) + schema push
+- [x] 01-01-PLAN.md — Scaffold Next.js + Drizzle/Neon + schema (students, login_attempts) + schema push
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -95,6 +95,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation — Auth Gate & Student Roster | 0/5 | Planned | - |
+| 1. Foundation — Auth Gate & Student Roster | 1/5 | In Progress|  |
 | 2. Session Logging & Unbilled Dashboard | 0/TBD | Not started | - |
 | 3. Invoicing, Email & History | 0/TBD | Not started | - |
