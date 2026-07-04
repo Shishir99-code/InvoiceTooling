@@ -47,7 +47,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 01-04-PLAN.md — Archive & restore: soft-delete flow + confirm dialog + archived view/tabs
+- [x] 01-04-PLAN.md — Archive & restore: soft-delete flow + confirm dialog + archived view/tabs
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
@@ -95,6 +95,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation — Auth Gate & Student Roster | 3/5 | In Progress|  |
+| 1. Foundation — Auth Gate & Student Roster | 4/5 | In Progress|  |
 | 2. Session Logging & Unbilled Dashboard | 0/TBD | Not started | - |
 | 3. Invoicing, Email & History | 0/TBD | Not started | - |
