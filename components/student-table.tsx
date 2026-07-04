@@ -1,4 +1,5 @@
-import { StudentFormDialog } from "@/components/student-form-dialog";
+import type { ReactNode } from "react";
+
 import {
   Table,
   TableBody,
@@ -11,27 +12,41 @@ import type { students } from "@/lib/db/schema";
 
 type Student = typeof students.$inferSelect;
 
+interface StudentTableProps {
+  students: Student[];
+  /** Empty-state copy — differs between the active roster (D-15) and the
+   * archived view (its own "No archived students" state). */
+  emptyState: {
+    heading: string;
+    body: string;
+    action?: ReactNode;
+  };
+  /** Per-row action controls — Edit + Archive on the active roster, a
+   * single-click Restore on the archived view. Keeps this component
+   * agnostic of which view is rendering it while sharing the same
+   * typography/spacing tokens across both. */
+  renderActions: (student: Student) => ReactNode;
+}
+
 function formatRate(rateCents: number) {
   return `$${(rateCents / 100).toFixed(2)}`;
 }
 
 // Server Component: renders the roster rows/cards passed in from the page,
-// or the D-15 empty state when there are none yet.
-export function StudentTable({ students }: { students: Student[] }) {
+// or the caller-supplied empty state when there are none yet.
+export function StudentTable({
+  students,
+  emptyState,
+  renderActions,
+}: StudentTableProps) {
   if (students.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 py-16 text-center">
         <h2 className="text-xl leading-tight font-semibold text-zinc-900">
-          No students yet
+          {emptyState.heading}
         </h2>
-        <p className="text-base text-zinc-600">
-          Add your first student to get started.
-        </p>
-        <StudentFormDialog
-          mode="add"
-          triggerLabel="Add Student"
-          triggerClassName="mt-4 bg-blue-600 text-white hover:bg-blue-700"
-        />
+        <p className="text-base text-zinc-600">{emptyState.body}</p>
+        {emptyState.action}
       </div>
     );
   }
@@ -58,13 +73,9 @@ export function StudentTable({ students }: { students: Student[] }) {
                 <TableCell>{formatRate(student.rateCents)}</TableCell>
                 <TableCell>{student.parentEmail}</TableCell>
                 <TableCell className="text-right">
-                  <StudentFormDialog
-                    mode="edit"
-                    student={student}
-                    triggerLabel="Edit"
-                    triggerVariant="outline"
-                    triggerSize="sm"
-                  />
+                  <div className="flex justify-end gap-2">
+                    {renderActions(student)}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -84,13 +95,7 @@ export function StudentTable({ students }: { students: Student[] }) {
               <span className="text-base font-medium text-zinc-900">
                 {student.name}
               </span>
-              <StudentFormDialog
-                mode="edit"
-                student={student}
-                triggerLabel="Edit"
-                triggerVariant="outline"
-                triggerSize="sm"
-              />
+              <div className="flex gap-2">{renderActions(student)}</div>
             </div>
             <span className="text-base text-zinc-600">
               {formatRate(student.rateCents)}/hr

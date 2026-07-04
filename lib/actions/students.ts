@@ -83,3 +83,37 @@ export async function editStudentAction(
   revalidatePath("/");
   return initialStudentActionState;
 }
+
+// D-10: removal always soft-archives — the row is preserved for history.
+// Anti-Pattern: this file must never issue a hard DELETE on the students
+// table; archiving is exclusively an UPDATE that flips the archived flag.
+export async function archiveStudentAction(id: number): Promise<void> {
+  const studentId = Number(id);
+  if (!Number.isInteger(studentId) || studentId <= 0) {
+    throw new Error("Invalid student id.");
+  }
+
+  await db
+    .update(students)
+    .set({ archived: true })
+    .where(eq(students.id, studentId));
+
+  revalidatePath("/");
+  revalidatePath("/archived");
+}
+
+// D-11: restore returns a student to the active roster.
+export async function restoreStudentAction(id: number): Promise<void> {
+  const studentId = Number(id);
+  if (!Number.isInteger(studentId) || studentId <= 0) {
+    throw new Error("Invalid student id.");
+  }
+
+  await db
+    .update(students)
+    .set({ archived: false })
+    .where(eq(students.id, studentId));
+
+  revalidatePath("/");
+  revalidatePath("/archived");
+}
