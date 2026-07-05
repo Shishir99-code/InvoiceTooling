@@ -113,5 +113,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
-| 2. Session Logging & Unbilled Dashboard | 4/4 | Complete   | 2026-07-05 |
+| 2. Session Logging & Unbilled Dashboard | 4/4 | Complete    | 2026-07-05 |
 | 3. Invoicing, Email & History | 0/TBD | Not started | - |
