@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { students } from "@/lib/db/schema";
+import { formatCents } from "@/lib/format";
 
 type Student = typeof students.$inferSelect;
 
@@ -26,10 +27,6 @@ interface StudentTableProps {
    * agnostic of which view is rendering it while sharing the same
    * typography/spacing tokens across both. */
   renderActions: (student: Student) => ReactNode;
-}
-
-function formatRate(rateCents: number) {
-  return `$${(rateCents / 100).toFixed(2)}`;
 }
 
 // Server Component: renders the roster rows/cards passed in from the page,
@@ -70,7 +67,7 @@ export function StudentTable({
                 <TableCell className="font-medium text-zinc-900">
                   {student.name}
                 </TableCell>
-                <TableCell>{formatRate(student.rateCents)}</TableCell>
+                <TableCell>{formatCents(student.rateCents)}</TableCell>
                 <TableCell>{student.parentEmail}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
@@ -98,7 +95,7 @@ export function StudentTable({
               <div className="flex gap-2">{renderActions(student)}</div>
             </div>
             <span className="text-base text-zinc-600">
-              {formatRate(student.rateCents)}/hr
+              {formatCents(student.rateCents)}/hr
             </span>
             <span className="text-base text-zinc-600">
               {student.parentEmail}
