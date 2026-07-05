@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: "02-04 Task 1 complete (fix committed 6004050); paused at Task 2 checkpoint:human-verify awaiting live browser confirmation"
-last_updated: "2026-07-05T20:08:06.031Z"
-last_activity: 2026-07-05 -- Phase 02 execution started
+status: verifying
+stopped_at: Phase 02 complete (02-04 CR-01 gap closure human-verified and merged); Phase 3 (Invoicing, Email & History) ready to plan
+last_updated: "2026-07-05T20:45:11.687Z"
+last_activity: 2026-07-05 -- 02-04 complete (CR-01 closed, human-verified); Phase 02 complete
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 9
-  completed_plans: 8
-  percent: 33
+  completed_plans: 9
+  percent: 67
 ---
 
 # Project State
@@ -21,24 +21,24 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-03)
 
 **Core value:** Go from "I tutored these sessions" to "an invoice is in the parent's inbox asking them to Zelle me" in a couple of clicks — without touching a spreadsheet.
-**Current focus:** Phase 02 — session-logging-unbilled-dashboard
+**Current focus:** Phase 03 — invoicing-email-history (not yet planned)
 
 ## Current Position
 
-Phase: 02 (session-logging-unbilled-dashboard) — EXECUTING GAP CLOSURE
-Plan: 02-04 (gap closure, CR-01) — Task 1 of 2 complete, paused at Task 2 checkpoint:human-verify
-Status: Awaiting human browser verification of back-to-back Log/Edit Session auto-close
-Last activity: 2026-07-05 -- 02-04 Task 1 committed (6004050); paused at checkpoint
+Phase: 02 (session-logging-unbilled-dashboard) — COMPLETE (4/4 plans, including gap closure 02-04)
+Plan: 02-04 (gap closure, CR-01) — both tasks complete; Task 2 checkpoint:human-verify approved
+Status: Phase 02 fully complete; Phase 3 (Invoicing, Email & History) ready to plan
+Last activity: 2026-07-05 -- 02-04 complete (CR-01 closed, human-verified)
 
-Progress: [███░░░░░░░] 33% (1 of 3 phases complete)
+Progress: [██████░░░░] 67% (2 of 3 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 10
-- Average duration: ~14 min
-- Total execution time: ~74 min
+- Total plans completed: 11
+- Average duration: ~15 min
+- Total execution time: ~109 min
 
 **By Phase:**
 
@@ -60,6 +60,7 @@ Progress: [███░░░░░░░] 33% (1 of 3 phases complete)
 | Phase 02 P01 | 10min | 3 tasks | 17 files |
 | Phase 02 P02 | ~20min | 3 tasks | 8 files |
 | Phase 02 P03 | ~15min | 2 tasks | 2 files |
+| Phase 02 P04 | 35min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,7 @@ Recent decisions affecting current work:
 - [Phase 02]: [Phase 02, Plan 03]: Unbilled dashboard uses LEFT JOIN + GROUP BY + aggregate FILTER (WHERE billed=false), not INNER JOIN / WHERE billed — so $0 and billed-only students still appear at $0 (D-12) while billed sessions are excluded from the sums (DASH-02, Pitfall 4)
 - [Phase 02]: [Phase 02, Plan 03]: Reusing the same Drizzle sql aggregate expression in both select and orderBy compiles cleanly on drizzle-orm 0.45.2 — the RESEARCH.md version-nuance flag required no workaround
 - [Phase 02]: [Phase 02, Plan 03]: Dashboard expanded rows expose Edit only (no Delete) — the single destructive entry point stays on the Sessions page (D-11 / UI-SPEC Surface 4)
+- [Phase 02]: 02-04: dropped export of initialSessionActionState from sessions.ts (use-server file) after runtime crash discovered during checkpoint verification — A "use server" file may only export async functions; the unused plain-object export crashed /sessions at module evaluation, which npm run build did not catch
 
 ### Pending Todos
 
@@ -101,7 +103,6 @@ None yet.
 
 - REQUIREMENTS.md's original Traceability section stated "26 total" v1 requirements, but the actual v1 list (AUTH×4, STUD×4, SESS×5, DASH×2, INV×4, MAIL×4, SET×2, HIST×2) totals 27. Corrected during roadmap creation — see updated Coverage counts in REQUIREMENTS.md.
 - ~~Plan 01-01 paused at checkpoint:human-action (Task 3)~~ RESOLVED 2026-07-04 — Neon DB provisioned and `.env.local` populated; `drizzle-kit push` succeeded, tables live.
-- 02-04 (gap closure, CR-01 fix) paused at Task 2 checkpoint:human-verify — awaiting live browser confirmation that back-to-back Log Session / Edit Session saves auto-close the dialog. Task 1 (code fix) committed at 6004050.
 
 ## Deferred Items
 
@@ -113,6 +114,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-05T20:08:01.396Z
-Stopped at: 02-04 Task 1 complete (fix committed 6004050); paused at Task 2 checkpoint:human-verify awaiting live browser confirmation
-Resume file: .planning/phases/02-session-logging-unbilled-dashboard/02-04-PLAN.md
+Last session: 2026-07-05T20:45:11.683Z
+Stopped at: Phase 02 complete (02-04 CR-01 gap closure human-verified and merged); Phase 3 (Invoicing, Email & History) ready to plan
+Resume file: None
