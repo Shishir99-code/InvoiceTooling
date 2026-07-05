@@ -80,7 +80,7 @@ export async function addSessionAction(
 
   revalidatePath("/sessions");
   revalidatePath("/dashboard");
-  return initialSessionActionState;
+  return { fieldErrors: null };
 }
 
 export async function editSessionAction(
@@ -121,7 +121,7 @@ export async function editSessionAction(
 
   revalidatePath("/sessions");
   revalidatePath("/dashboard");
-  return initialSessionActionState;
+  return { fieldErrors: null };
 }
 
 // D-10: sessions are hard-deleted (unlike students, which only ever

@@ -58,7 +58,7 @@ export async function addStudentAction(
   });
 
   revalidatePath("/");
-  return initialStudentActionState;
+  return { fieldErrors: null };
 }
 
 export async function editStudentAction(
@@ -81,7 +81,7 @@ export async function editStudentAction(
     .where(eq(students.id, parsed.data.id));
 
   revalidatePath("/");
-  return initialStudentActionState;
+  return { fieldErrors: null };
 }
 
 // D-10: removal always soft-archives — the row is preserved for history.
