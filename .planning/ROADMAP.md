@@ -76,7 +76,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 02-02-PLAN.md — Session logging & management: zod validation + add/edit/delete Server Actions (server-side money integrity) + Log Session modal (combobox/date/hours-minutes/notes) + grouped-by-student Sessions page (SESS-01..05)
+- [x] 02-02-PLAN.md — Session logging & management: zod validation + add/edit/delete Server Actions (server-side money integrity) + Log Session modal (combobox/date/hours-minutes/notes) + grouped-by-student Sessions page (SESS-01..05)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -109,5 +109,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
-| 2. Session Logging & Unbilled Dashboard | 1/3 | In Progress|  |
+| 2. Session Logging & Unbilled Dashboard | 2/3 | In Progress|  |
 | 3. Invoicing, Email & History | 0/TBD | Not started | - |

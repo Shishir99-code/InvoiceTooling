@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-07-05T15:16:48.995Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-07-05T15:49:24.460Z"
 last_activity: 2026-07-05 -- Phase 02 execution started
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
   percent: 33
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 ## Current Position
 
 Phase: 02 (session-logging-unbilled-dashboard) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-07-05 -- Phase 02 execution started
 
@@ -58,6 +58,7 @@ Progress: [███░░░░░░░] 33% (1 of 3 phases complete)
 | Phase 01 P04 | ~8min | 2 tasks | 5 files |
 | Phase 01 P05 | ~20min | 1 tasks | 0 files |
 | Phase 02 P01 | 10min | 3 tasks | 17 files |
+| Phase 02 P02 | ~20min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,9 @@ Recent decisions affecting current work:
 - [Phase 02]: sessions.studentId FK uses onDelete: restrict, never cascade — Preserves archived-student session history; an accidental hard delete errors loudly instead of silently wiping sessions
 - [Phase 02]: TopNav treats both / and /archived as the Students tab's active state — Archived stays a nested sub-tab under Students (D-02), not a 4th top-level nav item, so the two nav layers never disagree
 - [Phase 02]: SESS-01/SESS-05 not marked complete in REQUIREMENTS.md despite 02-01 frontmatter listing them — Only schema/format-helper groundwork ships in 02-01; the actual session-logging form and write-time amountCents computation land in 02-02 -- marking complete now would be a false positive (mirrors Phase 01 precedent)
+- [Phase 02]: [Phase 02, Plan 02]: StudentCombobox requires itemToStringLabel in addition to itemToStringValue — Base UI Combobox resolves the displayed input label via itemToStringLabel separately from itemToStringValue; omitting it showed a serialized/garbled value instead of Name-parent email after selection (found via live SSR verification).
+- [Phase 02]: [Phase 02, Plan 02]: amountCents is always computed server-side from a fresh students.rateCents re-fetch on both add and edit — Client-submitted rate/amount is never trusted or read from FormData (T-02-01 mitigation); mirrors Phase 1's money-integrity precedent.
+- [Phase 02]: [Phase 02, Plan 02]: deleteSessionAction is a guarded hard DELETE (D-10), not a soft archive like students — Individual session rows are low-stakes and don't need a recoverable archive view; id must be a positive integer or the action throws before any DB write.
 
 ### Pending Todos
 
@@ -104,6 +108,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-05T15:15:57.182Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-07-05T15:49:24.455Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None

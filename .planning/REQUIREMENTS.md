@@ -23,11 +23,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Sessions
 
-- [ ] **SESS-01**: User can log a session by selecting a student via name autocomplete, plus date and hours
-- [ ] **SESS-02**: User can add optional notes to a session
-- [ ] **SESS-03**: User can edit any session's student, date, hours, and notes at any time (including already-billed sessions)
-- [ ] **SESS-04**: User can delete a session
-- [ ] **SESS-05**: Session amounts are computed from hours × the student's hourly rate (money stored as integer cents)
+- [x] **SESS-01**: User can log a session by selecting a student via name autocomplete, plus date and hours
+- [x] **SESS-02**: User can add optional notes to a session
+- [x] **SESS-03**: User can edit any session's student, date, hours, and notes at any time (including already-billed sessions)
+- [x] **SESS-04**: User can delete a session
+- [x] **SESS-05**: Session amounts are computed from hours × the student's hourly rate (money stored as integer cents)
 
 ### Dashboard
 
@@ -98,11 +98,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | STUD-02 | Phase 1 | Complete |
 | STUD-03 | Phase 1 | Complete |
 | STUD-04 | Phase 1 | Complete |
-| SESS-01 | Phase 2 | Pending |
-| SESS-02 | Phase 2 | Pending |
-| SESS-03 | Phase 2 | Pending |
-| SESS-04 | Phase 2 | Pending |
-| SESS-05 | Phase 2 | Pending |
+| SESS-01 | Phase 2 | Complete |
+| SESS-02 | Phase 2 | Complete |
+| SESS-03 | Phase 2 | Complete |
+| SESS-04 | Phase 2 | Complete |
+| SESS-05 | Phase 2 | Complete |
 | DASH-01 | Phase 2 | Pending |
 | DASH-02 | Phase 2 | Pending |
 | SET-01 | Phase 3 | Pending |
