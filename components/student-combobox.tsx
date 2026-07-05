@@ -35,6 +35,7 @@ export function StudentCombobox({
   return (
     <Combobox
       items={students}
+      itemToStringLabel={(s) => `${s.name} — ${s.parentEmail}`}
       itemToStringValue={(s) => `${s.name} — ${s.parentEmail}`}
       value={value}
       onValueChange={onValueChange}
