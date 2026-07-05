@@ -12,13 +12,6 @@ export interface SessionActionState {
   fieldErrors: Record<string, string[]> | null;
 }
 
-// Not exported: a "use server" file may only export async functions, so this
-// stays module-local. Consumers define their own initial state literal (see
-// components/session-form-dialog.tsx), mirroring lib/actions/students.ts.
-const initialSessionActionState: SessionActionState = {
-  fieldErrors: null,
-};
-
 // editSessionAction needs the row id in addition to the shared form fields —
 // extended locally here rather than exported from lib/validation/session.ts,
 // which stays scoped to the add/edit form fields only.

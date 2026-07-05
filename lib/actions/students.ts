@@ -12,8 +12,6 @@ export interface StudentActionState {
   fieldErrors: Record<string, string[]> | null;
 }
 
-const initialStudentActionState: StudentActionState = { fieldErrors: null };
-
 // editStudentAction needs the row id in addition to the shared form fields —
 // extended locally here rather than exported from lib/validation/student.ts,
 // which stays scoped to the add/edit form fields only.
