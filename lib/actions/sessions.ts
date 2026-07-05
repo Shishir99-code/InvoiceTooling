@@ -12,7 +12,10 @@ export interface SessionActionState {
   fieldErrors: Record<string, string[]> | null;
 }
 
-export const initialSessionActionState: SessionActionState = {
+// Not exported: a "use server" file may only export async functions, so this
+// stays module-local. Consumers define their own initial state literal (see
+// components/session-form-dialog.tsx), mirroring lib/actions/students.ts.
+const initialSessionActionState: SessionActionState = {
   fieldErrors: null,
 };
 
