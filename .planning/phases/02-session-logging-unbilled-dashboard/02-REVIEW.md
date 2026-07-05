@@ -1,225 +1,125 @@
 ---
 phase: 02-session-logging-unbilled-dashboard
-reviewed: 2026-07-05T00:00:00Z
+reviewed: 2026-07-05T20:50:01Z
 depth: standard
-files_reviewed: 21
+files_reviewed: 2
 files_reviewed_list:
-  - app/(app)/archived/page.tsx
-  - app/(app)/dashboard/page.tsx
-  - app/(app)/layout.tsx
-  - app/(app)/page.tsx
-  - app/(app)/sessions/page.tsx
-  - components/dashboard-table.tsx
-  - components/date-picker-field.tsx
-  - components/session-delete-confirm-dialog.tsx
-  - components/session-form-dialog.tsx
-  - components/session-table.tsx
-  - components/student-combobox.tsx
-  - components/student-table.tsx
-  - components/top-nav.tsx
-  - components/ui/calendar.tsx
-  - components/ui/combobox.tsx
-  - components/ui/popover.tsx
-  - components/ui/select.tsx
   - lib/actions/sessions.ts
-  - lib/db/schema.ts
-  - lib/format.ts
-  - lib/validation/session.ts
+  - lib/actions/students.ts
 findings:
-  critical: 1
-  warning: 5
-  info: 3
-  total: 9
+  critical: 0
+  warning: 3
+  info: 1
+  total: 4
 status: issues_found
 ---
 
-# Phase 2: Code Review Report
+# Phase 02: Code Review Report (re-review of CR-01 fix)
 
-**Reviewed:** 2026-07-05
+**Reviewed:** 2026-07-05T20:50:01Z
 **Depth:** standard
-**Files Reviewed:** 21
+**Files Reviewed:** 2
 **Status:** issues_found
 
 ## Summary
 
-Reviewed the session-logging feature: the Server Actions (`lib/actions/sessions.ts`),
-Zod validation (`lib/validation/session.ts`), the schema (`lib/db/schema.ts`), the
-sessions/dashboard/archived pages, and the supporting client components plus copied
-shadcn/Base-UI primitives.
+Re-review of the two Server Action files changed by gap-closure plan 02-04 (CR-01):
+`lib/actions/sessions.ts` and `lib/actions/students.ts`.
 
-The SQL is correctly parameterized (no injection surface), the amount snapshot is
-computed server-side with `Math.round` (no float drift), and the dashboard aggregate
-correctly uses a LEFT JOIN + `FILTER (WHERE billed = false)` so $0 students still show.
+**CR-01 is resolved.** Both `addSessionAction`/`editSessionAction` (and the student
+equivalents) now return a fresh `{ fieldErrors: null }` object literal on every success
+instead of a shared module-level constant. This is the correct pattern for `useActionState`,
+which detects state transitions by referential inequality — a fresh object guarantees the
+consuming dialog's "close on success" reference check fires on the 2nd+ consecutive save.
+Dropping `export` from the `initialSessionActionState` binding is also required, since a
+`"use server"` module may only export async functions.
 
-However there is **one core-workflow-breaking defect**: the "close the dialog on
-success" logic uses reference-equality against a shared module-level constant, so the
-Add-Session dialog stops auto-closing after the first successful add. Since the app's
-whole reason for existing is logging *several* sessions in a row, this hits on every
-2nd+ save. Additional warnings cover the frozen-snapshot recompute-on-edit behavior,
-missing defense-in-depth auth on the Server Actions, and unbounded server-side
-duration input.
+However, the fix left the now-orphaned constants in place. In both files the de-exported
+constant is **dead code** — never referenced internally and never exported — producing a
+`@typescript-eslint/no-unused-vars` warning (the rule is set to `'warn'` in the project's
+`next/typescript` config; confirmed in `eslint-config-next/dist/typescript.js`). Separately,
+both edit actions silently report success against a non-existent row id. No security
+vulnerabilities, no data-loss risks, and no BLOCKER-severity issues were found.
 
-## Critical Issues
-
-### CR-01: Add/Edit dialog stops closing after the first successful submit
-
-**File:** `lib/actions/sessions.ts:83`, `lib/actions/sessions.ts:124`, `components/session-form-dialog.tsx:93-99`
-
-**Issue:** On success both `addSessionAction` and `editSessionAction` return the
-**same module-level object** `initialSessionActionState` (defined once at line 15).
-The dialog decides whether to close by comparing references:
-
-```ts
-const [prevState, setPrevState] = useState(state);
-if (state !== prevState) {
-  setPrevState(state);
-  if (state.fieldErrors === null) setOpen(false);
-}
-```
-
-Trace for repeated adds (the `SessionFormDialog` in the page header stays mounted
-across opens, so `prevState` persists):
-
-1. First success: action returns `initialSessionActionState` (ref A); `prevState`
-   is the component's own `initialState` literal (ref B, line 41). `A !== B` → true →
-   dialog closes. Works.
-2. Second success: action returns `initialSessionActionState` again — **the exact
-   same ref A**. Now `prevState === A`, so `A !== A` → false → `setOpen(false)`
-   never runs. **The dialog stays open even though the session was saved.**
-
-The tutor's primary flow is logging multiple sessions consecutively, so this
-misfires on essentially every session after the first. The same defect applies to
-editing the same session twice in one sitting.
-
-**Fix:** Return a fresh object on each success so the reference always changes,
-instead of the shared constant:
-
-```ts
-// addSessionAction and editSessionAction — success paths
-return { fieldErrors: null };
-```
-
-(Alternatively, drive the close off an explicit success token/counter rather than
-reference identity. Note: `lib/actions/students.ts` returns the shared
-`initialStudentActionState` the same way — the student dialogs have the identical
-latent bug and should be fixed together.)
+## Narrative Findings (AI reviewer)
 
 ## Warnings
 
-### WR-01: Server Actions have no auth re-check (defense-in-depth gap)
+### WR-01: Dead, unused constant `initialSessionActionState` left behind by the CR-01 fix
 
-**File:** `lib/actions/sessions.ts:45`, `:86`, `:129`
+**File:** `lib/actions/sessions.ts:18-20`
+**Issue:** After the `export` keyword was removed, `initialSessionActionState` is no longer
+referenced anywhere — not internally, not by consumers.
+`components/session-form-dialog.tsx:41` defines its own
+`const initialState: SessionActionState = { fieldErrors: null }`. The constant is now pure
+dead code. Under the project's ESLint config (`next/typescript` sets
+`@typescript-eslint/no-unused-vars: 'warn'`) this emits a lint warning on every `next lint` /
+CI run. It does not fail the build (tsconfig has no `noUnusedLocals`), but it is unnecessary
+surface area whose explanatory comment now documents a binding that has no reason to exist.
+**Fix:** Delete the binding; fold the rationale into the interface comment instead:
+```ts
+export interface SessionActionState {
+  fieldErrors: Record<string, string[]> | null;
+}
+// No shared initial-state constant is exported: a "use server" module may only
+// export async functions. Consumers define their own literal — see
+// components/session-form-dialog.tsx (mirrors lib/actions/students.ts).
+```
 
-**Issue:** `addSessionAction`, `editSessionAction`, and `deleteSessionAction` perform
-DB writes with no session/authorization check of their own — they rely entirely on
-`middleware.ts` gating the route. Server Actions are independently-invocable POST
-endpoints. CLAUDE.md itself flags middleware-auth-bypass history (CVE-2025-29927) and
-warns that Server Actions "are callable like normal functions but are a network
-boundary." A single middleware misconfiguration or matcher regression would expose
-unauthenticated writes/deletes with no second line of defense.
+### WR-02: Dead, unused constant `initialStudentActionState`
 
-**Fix:** Add a cheap session assertion at the top of each action (read the
-`iron-session` cookie via `cookies()` and throw/redirect if not authenticated), e.g.
-a shared `await requireAuth()` guard called first in every action.
+**File:** `lib/actions/students.ts:15`
+**Issue:** Identical defect to WR-01. `initialStudentActionState` is declared but never used
+or exported; `components/student-form-dialog.tsx:27` supplies its own `initialState` literal.
+Emits an `@typescript-eslint/no-unused-vars` warning. Since the sessions.ts comment points to
+this file as the pattern it mirrors, both should be cleaned up together for consistency.
+**Fix:** Delete line 15 (`const initialStudentActionState: StudentActionState = { fieldErrors: null };`).
 
-### WR-02: Editing recomputes the "frozen" amount at the current rate
+### WR-03: Edit actions report success for a non-existent row id (silent no-op)
 
-**File:** `lib/actions/sessions.ts:105-107`
+**File:** `lib/actions/sessions.ts:114-127`, `lib/actions/students.ts:74-84`
+**Issue:** Both `editSessionAction` and `editStudentAction` run
+`db.update(...).set(...).where(eq(<table>.id, parsed.data.id))` and then unconditionally
+return `{ fieldErrors: null }` without checking the affected-row count. If the submitted `id`
+passes Zod validation (positive integer) but matches no row — e.g. a stale form for a
+since-deleted session, or a crafted request against this network boundary — the UPDATE
+affects zero rows and the caller is told the edit succeeded (dialog closes, `revalidatePath`
+runs). `editSessionAction` even validates the foreign `studentId` (lines 99-106) but never
+verifies the session it is editing exists. Low-probability in normal single-user flow, but a
+correctness gap for a directly-invocable Server Action.
+**Fix:** Inspect the affected rows via Drizzle `.returning()` and surface a field error when
+nothing matched:
+```ts
+const updated = await db
+  .update(sessions)
+  .set({ /* ... */ })
+  .where(eq(sessions.id, parsed.data.id))
+  .returning({ id: sessions.id });
 
-**Issue:** `schema.ts:19` documents `amountCents` as a "frozen snapshot, computed
-server-side once at write time" (D-14). But `editSessionAction` re-fetches the
-student's **current** `rateCents` and recomputes `amountCents` on every edit — even
-edits that only touch `notes` or `date`. If the student's rate changed after the
-session was logged, correcting a typo in the notes silently repriced a historical
-session at the new rate, contradicting the frozen-snapshot contract and potentially
-changing what a parent is billed.
-
-**Fix:** Decide the intended semantics explicitly. If the snapshot must stay frozen,
-only recompute when `durationMinutes` actually changes, or persist the per-session
-rate and recompute from that stored rate rather than the live `students.rateCents`.
-
-### WR-03: Server accepts arbitrary duration; no upper bound or increment check
-
-**File:** `lib/validation/session.ts:19-21`
-
-**Issue:** `durationMinutes` is validated only as a positive integer. The UI constrains
-it to 0–8 hours in 15-minute increments (`session-form-dialog.tsx:45-46`), but the
-Server Action is a network boundary and a crafted POST can submit any positive
-integer (e.g. 999999), producing an absurd `amountCents`. The validator is the sole
-server-side guard and does not enforce the domain constraints the UI implies.
-
-**Fix:** Bound and constrain in the Zod schema, e.g.
-`.max(600)` (10h ceiling) and `.refine((m) => m % 15 === 0, "Use 15-minute increments.")`,
-so the server enforces the same rules the UI shows.
-
-### WR-04: Add-mode form retains stale values after a successful submit
-
-**File:** `components/session-form-dialog.tsx:82-89`
-
-**Issue:** After a successful add the dialog closes but the component stays mounted, so
-`date`, `hours`, `minutes`, and `selectedStudent` keep their previous values (and any
-prior `state.fieldErrors` remain rendered on reopen). The next Add opens pre-filled
-with the last session's student and, more importantly, the **previously chosen date
-rather than today** — easy to silently log a session against the wrong date. The
-`initialDate = new Date()` default only applies at first mount.
-
-**Fix:** Reset the local field state after a successful submit (in the same
-success branch that calls `setOpen(false)`), or key/remount the form on close so add
-mode re-initializes to today with no student selected.
-
-### WR-05: Edit/delete silently succeed against a non-existent id
-
-**File:** `lib/actions/sessions.ts:111-120`, `:135`
-
-**Issue:** `editSessionAction`'s `UPDATE ... WHERE id = ?` and `deleteSessionAction`'s
-`DELETE ... WHERE id = ?` affect 0 rows when the id does not exist, but the actions
-report success (dialog closes, `revalidatePath` runs) with no signal that nothing
-changed. Combined with `session-delete-confirm-dialog.tsx:55`'s optimistic
-`onSubmit={() => setOpen(false)}`, a failed/no-op delete looks identical to a real one.
-
-**Fix:** Check the affected-row count (Drizzle `.returning()` / result rowCount) and
-surface an error state when zero rows matched, rather than assuming success.
+if (updated.length === 0) {
+  return { fieldErrors: { id: ["Session no longer exists."] } };
+}
+```
+Apply the equivalent guard in `editStudentAction`.
 
 ## Info
 
-### IN-01: Dead defensive fallbacks for student join
+### IN-01: No error handling around database writes; non-finite rate not rejected
 
-**File:** `app/(app)/sessions/page.tsx:47-48`
-
-**Issue:** `row.studentName ?? "Unknown student"` and `row.studentArchived ?? false`
-guard against a missing joined student, but `sessions.studentId` is a NOT-NULL FK with
-`onDelete: "restrict"` and students are only ever soft-archived (`schema.ts:14-16`),
-so the joined student is guaranteed present. The fallbacks are unreachable.
-
-**Fix:** Harmless, but consider dropping the fallbacks (or switch to an inner join) to
-avoid implying a nullable relationship that cannot occur.
-
-### IN-02: Dashboard over-fetches unbilled sessions
-
-**File:** `app/(app)/dashboard/page.tsx:41`
-
-**Issue:** `unbilledSessionRows` selects every unbilled session across all students,
-including archived students, then groups by studentId. Only active students appear in
-`dashboardRows`, so archived students' rows are grouped into `sessionsByStudentId` and
-never rendered. Not a correctness bug (out-of-scope performance-wise), just wasted work
-and a slightly confusing data shape.
-
-**Fix:** Optionally constrain the row query to active students (join/filter on
-`students.archived = false`) to match the roster query.
-
-### IN-03: `as number` assertions bypass Select typing
-
-**File:** `components/session-form-dialog.tsx:164`, `:181`
-
-**Issue:** `onValueChange={(value) => setHours(value as number)}` (and the minutes
-equivalent) cast the Base-UI value straight to `number`. If the option value type ever
-changes, the cast hides the mismatch from the type checker.
-
-**Fix:** Type the callback via the generic Select value, or narrow with a runtime check
-before `setHours`/`setMinutes`.
+**File:** `lib/actions/sessions.ts:60-82, 99-123, 138`; `lib/actions/students.ts:52-58, 74-81, 96-99, 112-115`; `lib/validation/student.ts:18-20`
+**Issue:** None of the DB calls are wrapped in `try/catch`. A transient Neon failure, or an
+out-of-range value reaching an integer column, throws a raw error that surfaces to the client
+as a generic unhandled Server Action error rather than a controlled `fieldErrors` response.
+Note in particular that `rateDollars` is validated as
+`z.coerce.number(...).positive(...)` with no `.finite()` — `Number("Infinity")` coerces to
+`Infinity`, passes `.positive()`, and `Math.round(Infinity * 100)` would then flow into the
+`rateCents` integer insert. This is consistent across the codebase and acceptable for a solo,
+low-traffic app, hence Info rather than a defect.
+**Fix (optional hardening):** Add `.finite()` to the `rateDollars` schema and wrap DB writes
+in a `try/catch` returning `{ fieldErrors: { _form: ["Something went wrong, try again."] } }`.
 
 ---
 
-_Reviewed: 2026-07-05_
+_Reviewed: 2026-07-05T20:50:01Z_
 _Reviewer: Claude (gsd-code-reviewer)_
 _Depth: standard_
