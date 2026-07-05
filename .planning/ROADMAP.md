@@ -14,7 +14,7 @@ TutorInvoice ships as three usable, end-to-end vertical slices rather than horiz
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation — Auth Gate & Student Roster** - Tutor logs into a deployed, password-gated app and manages her student roster (completed 2026-07-04)
-- [ ] **Phase 2: Session Logging & Unbilled Dashboard** - Tutor logs sessions against students and sees who owes what at a glance
+- [x] **Phase 2: Session Logging & Unbilled Dashboard** - Tutor logs sessions against students and sees who owes what at a glance (completed 2026-07-05)
 - [ ] **Phase 3: Invoicing, Email & History** - Tutor turns unbilled sessions into an emailed invoice and can review past invoices
 
 ## Phase Details
@@ -80,7 +80,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 02-03-PLAN.md — Unbilled dashboard: LEFT JOIN + GROUP BY + FILTER aggregate (all active students, most-owed-first, billed excluded) + expandable DashboardTable with edit path (DASH-01, DASH-02)
+- [x] 02-03-PLAN.md — Unbilled dashboard: LEFT JOIN + GROUP BY + FILTER aggregate (all active students, most-owed-first, billed excluded) + expandable DashboardTable with edit path (DASH-01, DASH-02)
 
 **UI hint**: yes
 
@@ -109,5 +109,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
-| 2. Session Logging & Unbilled Dashboard | 2/3 | In Progress|  |
+| 2. Session Logging & Unbilled Dashboard | 3/3 | Complete   | 2026-07-05 |
 | 3. Invoicing, Email & History | 0/TBD | Not started | - |

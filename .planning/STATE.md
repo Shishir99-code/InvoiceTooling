@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-07-05T15:49:24.460Z"
+status: verifying
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-07-05T15:59:49.999Z"
 last_activity: 2026-07-05 -- Phase 02 execution started
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 8
-  completed_plans: 7
-  percent: 33
+  completed_plans: 8
+  percent: 67
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 
 Phase: 02 (session-logging-unbilled-dashboard) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-05 -- Phase 02 execution started
 
 Progress: [███░░░░░░░] 33% (1 of 3 phases complete)
@@ -59,6 +59,7 @@ Progress: [███░░░░░░░] 33% (1 of 3 phases complete)
 | Phase 01 P05 | ~20min | 1 tasks | 0 files |
 | Phase 02 P01 | 10min | 3 tasks | 17 files |
 | Phase 02 P02 | ~20min | 3 tasks | 8 files |
+| Phase 02 P03 | ~15min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,9 @@ Recent decisions affecting current work:
 - [Phase 02]: [Phase 02, Plan 02]: StudentCombobox requires itemToStringLabel in addition to itemToStringValue — Base UI Combobox resolves the displayed input label via itemToStringLabel separately from itemToStringValue; omitting it showed a serialized/garbled value instead of Name-parent email after selection (found via live SSR verification).
 - [Phase 02]: [Phase 02, Plan 02]: amountCents is always computed server-side from a fresh students.rateCents re-fetch on both add and edit — Client-submitted rate/amount is never trusted or read from FormData (T-02-01 mitigation); mirrors Phase 1's money-integrity precedent.
 - [Phase 02]: [Phase 02, Plan 02]: deleteSessionAction is a guarded hard DELETE (D-10), not a soft archive like students — Individual session rows are low-stakes and don't need a recoverable archive view; id must be a positive integer or the action throws before any DB write.
+- [Phase 02]: [Phase 02, Plan 03]: Unbilled dashboard uses LEFT JOIN + GROUP BY + aggregate FILTER (WHERE billed=false), not INNER JOIN / WHERE billed — so $0 and billed-only students still appear at $0 (D-12) while billed sessions are excluded from the sums (DASH-02, Pitfall 4)
+- [Phase 02]: [Phase 02, Plan 03]: Reusing the same Drizzle sql aggregate expression in both select and orderBy compiles cleanly on drizzle-orm 0.45.2 — the RESEARCH.md version-nuance flag required no workaround
+- [Phase 02]: [Phase 02, Plan 03]: Dashboard expanded rows expose Edit only (no Delete) — the single destructive entry point stays on the Sessions page (D-11 / UI-SPEC Surface 4)
 
 ### Pending Todos
 
@@ -108,6 +112,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-05T15:49:24.455Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-07-05T15:59:49.995Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None

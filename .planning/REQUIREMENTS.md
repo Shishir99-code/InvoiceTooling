@@ -31,8 +31,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Dashboard
 
-- [ ] **DASH-01**: User can see each student's total unbilled hours and amount owed at a glance
-- [ ] **DASH-02**: Billed sessions are excluded from the unbilled totals
+- [x] **DASH-01**: User can see each student's total unbilled hours and amount owed at a glance
+- [x] **DASH-02**: Billed sessions are excluded from the unbilled totals
 
 ### Invoicing
 
@@ -103,8 +103,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SESS-03 | Phase 2 | Complete |
 | SESS-04 | Phase 2 | Complete |
 | SESS-05 | Phase 2 | Complete |
-| DASH-01 | Phase 2 | Pending |
-| DASH-02 | Phase 2 | Pending |
+| DASH-01 | Phase 2 | Complete |
+| DASH-02 | Phase 2 | Complete |
 | SET-01 | Phase 3 | Pending |
 | SET-02 | Phase 3 | Pending |
 | INV-01 | Phase 3 | Pending |
