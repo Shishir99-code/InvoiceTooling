@@ -82,6 +82,10 @@ Plans:
 
 - [x] 02-03-PLAN.md — Unbilled dashboard: LEFT JOIN + GROUP BY + FILTER aggregate (all active students, most-owed-first, billed excluded) + expandable DashboardTable with edit path (DASH-01, DASH-02)
 
+**Gap Closure** *(post-verification, CR-01)*
+
+- [ ] 02-04-PLAN.md — Fix dialog auto-close on 2nd+ consecutive session/student save (Task 1 done, commit 6004050; Task 2 checkpoint:human-verify pending)
+
 **UI hint**: yes
 
 ### Phase 3: Invoicing, Email & History
