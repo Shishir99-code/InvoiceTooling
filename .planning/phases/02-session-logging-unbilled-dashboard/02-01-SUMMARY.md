@@ -43,7 +43,7 @@ key-decisions:
   - "sessions.studentId FK uses onDelete: restrict, never cascade, so archived-student history is preserved and an accidental hard delete errors loudly"
   - "TopNav computes Students-tab active state for both / and /archived (Archived stays a nested sub-tab, not a 4th top-level nav item, per D-02)"
 
-requirements-completed: [SESS-01, SESS-05]
+requirements-completed: []  # NOT marked complete in REQUIREMENTS.md — see note below (mirrors Phase 01 precedent)
 
 # Metrics
 duration: ~10min
@@ -110,6 +110,18 @@ None — plan executed exactly as written. The `textarea.tsx`/`input-group.tsx` 
 
 None - no external service configuration required. The `sessions` table push used the same `.env.local`/Neon connection already configured in Phase 1.
 
+## Requirements Note
+
+SESS-01 and SESS-05 are listed in this plan's frontmatter `requirements` field, but
+only the *schema groundwork* for them ships here (the `sessions` table, the
+FK/column shapes, and `lib/format.ts`'s display helpers). The actual "log a
+session via autocomplete/date/hours" flow (SESS-01) and the write-time
+`amountCents` computation (SESS-05) are implemented in Plan 02-02. Marking
+these complete in `REQUIREMENTS.md` now would be a false positive — mirroring
+the exact precedent set in Phase 01 (STUD-01..04/AUTH-04 were left unmarked
+after 01-01 for the same reason). Left unmarked; 02-02's SUMMARY should mark
+them complete instead.
+
 ## Next Phase Readiness
 - `sessions` table, `lib/format.ts`, the four shadcn primitives, and the `app/(app)/` route group + `TopNav` are all in place and verified live (Neon) and in the browser (Playwright: login has no nav, authenticated routes show nav + correct headings, `/archived` still resolves under the Students tab).
 - 02-02 (session logging) and 02-03 (unbilled dashboard) can now build directly on this schema, format helpers, shadcn primitives, and the `/sessions`/`/dashboard` placeholder routes without further scaffolding.
@@ -118,3 +130,7 @@ None - no external service configuration required. The `sessions` table push use
 ---
 *Phase: 02-session-logging-unbilled-dashboard*
 *Completed: 2026-07-05*
+
+## Self-Check: PASSED
+
+All claimed files and commit hashes verified present on disk and in `git log`. No missing items.

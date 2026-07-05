@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-07-04T02:40:06.833Z"
-last_activity: 2026-07-04
+status: executing
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-07-05T15:16:48.995Z"
+last_activity: 2026-07-05 -- Phase 02 execution started
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 8
+  completed_plans: 6
   percent: 33
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-03)
 
 **Core value:** Go from "I tutored these sessions" to "an invoice is in the parent's inbox asking them to Zelle me" in a couple of clicks — without touching a spreadsheet.
-**Current focus:** Phase 01 — foundation-auth-gate-student-roster
+**Current focus:** Phase 02 — session-logging-unbilled-dashboard
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
-Status: Phase 1 complete — deployed to live Vercel production URL (https://invoice-tooling-lovat.vercel.app), all 8 Phase 1 requirements (AUTH-01..04, STUD-01..04) verified end-to-end in production. Ready to plan Phase 2.
-Last activity: 2026-07-04
+Phase: 02 (session-logging-unbilled-dashboard) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-07-05 -- Phase 02 execution started
 
 Progress: [███░░░░░░░] 33% (1 of 3 phases complete)
 
@@ -57,6 +57,7 @@ Progress: [███░░░░░░░] 33% (1 of 3 phases complete)
 | Phase 01 P03 | 15min | 2 tasks | 5 files |
 | Phase 01 P04 | ~8min | 2 tasks | 5 files |
 | Phase 01 P05 | ~20min | 1 tasks | 0 files |
+| Phase 02 P01 | 10min | 3 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,10 @@ Recent decisions affecting current work:
 - [Phase 01, Plan 04]: Students/Archived tab pair inlined directly in each page rather than extracted into a shared component — the plan explicitly allowed either approach; inlining keeps each page's active-tab styling unambiguous for a two-link nav.
 - [Phase 01, Plan 05]: Vercel env vars (DATABASE_URL, APP_PASSWORD, SESSION_SECRET) scoped to both Production and Preview to avoid preview-deploy build failures in future phases
 - [Phase 01, Plan 05]: lib/db/index.ts calls neon(process.env.DATABASE_URL!) at module import time -- first Vercel build failed until DATABASE_URL was set in Vercel env; candidate future hardening is lazy-init the Neon client (not implemented, out of scope for 01-05)
+- [Phase 02]: sessions.amountCents is a write-time snapshot, not derived live from the student's current rate — Per 02-RESEARCH.md Assumptions Log A1 -- schema only in 02-01, computation lands in 02-02
+- [Phase 02]: sessions.studentId FK uses onDelete: restrict, never cascade — Preserves archived-student session history; an accidental hard delete errors loudly instead of silently wiping sessions
+- [Phase 02]: TopNav treats both / and /archived as the Students tab's active state — Archived stays a nested sub-tab under Students (D-02), not a 4th top-level nav item, so the two nav layers never disagree
+- [Phase 02]: SESS-01/SESS-05 not marked complete in REQUIREMENTS.md despite 02-01 frontmatter listing them — Only schema/format-helper groundwork ships in 02-01; the actual session-logging form and write-time amountCents computation land in 02-02 -- marking complete now would be a false positive (mirrors Phase 01 precedent)
 
 ### Pending Todos
 
@@ -99,6 +104,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-04T02:40:06.829Z
-Stopped at: Phase 2 UI-SPEC approved
-Resume file: .planning/phases/02-session-logging-unbilled-dashboard/02-UI-SPEC.md
+Last session: 2026-07-05T15:15:57.182Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None

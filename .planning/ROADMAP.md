@@ -72,7 +72,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 **Wave 1**
 
-- [ ] 02-01-PLAN.md — Foundation + nav shell: sessions table + schema push, shadcn combobox/select/popover/calendar, lib/format helpers, app/(app) route group + top nav (SESS-01, SESS-05)
+- [x] 02-01-PLAN.md — Foundation + nav shell: sessions table + schema push, shadcn combobox/select/popover/calendar, lib/format helpers, app/(app) route group + top nav (SESS-01, SESS-05)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -109,5 +109,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
-| 2. Session Logging & Unbilled Dashboard | 0/3 | Planned | - |
+| 2. Session Logging & Unbilled Dashboard | 1/3 | In Progress|  |
 | 3. Invoicing, Email & History | 0/TBD | Not started | - |
