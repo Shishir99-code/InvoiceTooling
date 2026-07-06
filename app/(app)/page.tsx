@@ -2,6 +2,7 @@ import Link from "next/link";
 import { eq } from "drizzle-orm";
 
 import { ArchiveConfirmDialog } from "@/components/archive-confirm-dialog";
+import { SendZoomLinkButton } from "@/components/send-zoom-link-button";
 import { StudentFormDialog } from "@/components/student-form-dialog";
 import { StudentTable } from "@/components/student-table";
 import { db } from "@/lib/db";
@@ -72,6 +73,11 @@ export default async function StudentsPage() {
               triggerLabel="Edit"
               triggerVariant="outline"
               triggerSize="sm"
+            />
+            <SendZoomLinkButton
+              studentName={student.name}
+              parentEmail={student.parentEmail}
+              zoomLink={student.zoomLink}
             />
             <ArchiveConfirmDialog
               studentId={student.id}
