@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { format } from "date-fns";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { InvoiceDeleteConfirmDialog } from "@/components/invoice-delete-confirm-dialog";
 import { formatCents } from "@/lib/format";
+import { buildGmailComposeUrl, isGmailUrlTooLong } from "@/lib/invoice/mailto";
 import { formatPeriod } from "@/lib/invoice/render";
+import { cn } from "@/lib/utils";
 
 export interface InvoiceViewProps {
   invoiceId: number;
@@ -27,17 +30,31 @@ export interface InvoiceViewProps {
 // Email Invoice + Delete Invoice, never the page.
 export function InvoiceView(props: InvoiceViewProps) {
   const {
+    invoiceId,
     studentName,
+    parentEmail,
     periodStart,
     periodEnd,
     totalCents,
     generatedAt,
     renderedSubject,
     renderedBody,
+    sessionCount,
   } = props;
 
   const [copyLabel, setCopyLabel] = useState("Copy Invoice Text");
   const [copyFailed, setCopyFailed] = useState(false);
+
+  // MAIL-01/MAIL-02/D-10: one-click Gmail compose draft, pre-filled with the
+  // parent's email, the frozen subject, and the frozen body. MAIL-04 note:
+  // parentEmail is guaranteed present (P1 D-13 required+unique) — no
+  // no-email guard UI is built (per CONTEXT Deferred Ideas).
+  const gmailUrl = buildGmailComposeUrl({
+    to: parentEmail,
+    subject: renderedSubject,
+    body: renderedBody,
+  });
+  const tooLong = isGmailUrlTooLong(gmailUrl);
 
   async function handleCopy() {
     try {
@@ -77,11 +94,42 @@ export function InvoiceView(props: InvoiceViewProps) {
         </div>
       </div>
 
+      {tooLong && (
+        // Pitfall 5: an over-length Gmail URL doesn't throw or reject — it
+        // silently truncates/garbles the draft. Hide the Email anchor
+        // entirely rather than open a corrupted compose window; the Copy
+        // button below is always present regardless (D-11).
+        <p className="text-sm text-zinc-600">
+          This invoice is too long for a pre-filled email draft — copy the
+          text below and paste it into a new email.
+        </p>
+      )}
+
       <div className="flex gap-2">
-        {/* Email Invoice + Delete Invoice added in Plan 03 */}
+        {!tooLong && (
+          <a
+            href={gmailUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              buttonVariants({ variant: "default" }),
+              "bg-blue-600 text-white hover:bg-blue-700",
+            )}
+          >
+            Email Invoice
+          </a>
+        )}
         <Button type="button" variant="outline" onClick={handleCopy}>
           {copyLabel}
         </Button>
+        {/* Sole delete entry point for an invoice (Surface 4) — not
+            duplicated on the History row. */}
+        <InvoiceDeleteConfirmDialog
+          invoiceId={invoiceId}
+          studentName={studentName}
+          period={formatPeriod(periodStart, periodEnd)}
+          sessionCount={sessionCount}
+        />
       </div>
 
       {copyFailed && (
