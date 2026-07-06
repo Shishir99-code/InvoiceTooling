@@ -5,8 +5,9 @@ import { ArchiveConfirmDialog } from "@/components/archive-confirm-dialog";
 import { SendZoomLinkButton } from "@/components/send-zoom-link-button";
 import { StudentFormDialog } from "@/components/student-form-dialog";
 import { StudentTable } from "@/components/student-table";
+import { WeeklyScheduleDialog } from "@/components/weekly-schedule-dialog";
 import { db } from "@/lib/db";
-import { students } from "@/lib/db/schema";
+import { scheduleSlots, students } from "@/lib/db/schema";
 
 // Protected roster landing page (D-04: a valid session lands here directly).
 // Interactive add/edit modal + table built in Plan 03; archive action +
@@ -16,6 +17,15 @@ export default async function StudentsPage() {
     .from(students)
     .where(eq(students.archived, false))
     .orderBy(students.name); // D-08: alphabetical
+
+  // Each student's weekly slots, grouped by studentId for the Schedule dialog.
+  const slots = await db.select().from(scheduleSlots);
+  const slotsByStudent = new Map<number, typeof slots>();
+  for (const slot of slots) {
+    const list = slotsByStudent.get(slot.studentId) ?? [];
+    list.push(slot);
+    slotsByStudent.set(slot.studentId, list);
+  }
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
@@ -82,6 +92,14 @@ export default async function StudentsPage() {
             <ArchiveConfirmDialog
               studentId={student.id}
               studentName={student.name}
+              triggerVariant="outline"
+              triggerSize="sm"
+            />
+            <WeeklyScheduleDialog
+              studentId={student.id}
+              studentName={student.name}
+              slots={slotsByStudent.get(student.id) ?? []}
+              triggerLabel="Schedule"
               triggerVariant="outline"
               triggerSize="sm"
             />
