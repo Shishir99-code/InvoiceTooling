@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { and, asc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 
@@ -147,4 +148,33 @@ export async function generateInvoiceAction(
   revalidatePath("/history");
 
   return { fieldErrors: null, invoiceId: row.id };
+}
+
+// D-16: the only supported mistake-recovery path — deleting an invoice
+// atomically un-bills every session it covered (billed: false, invoiceId:
+// null) and removes the invoice row, via db.batch (never the interactive
+// transaction() API, which throws at runtime on this project's neon-http
+// driver — Pitfall 2). Guarded by a positive-integer id check before any DB
+// write, mirroring deleteSessionAction.
+export async function deleteInvoiceAction(id: number): Promise<void> {
+  const invoiceId = Number(id);
+  if (!Number.isInteger(invoiceId) || invoiceId <= 0) {
+    throw new Error("Invalid invoice id.");
+  }
+
+  await db.batch([
+    db
+      .update(sessions)
+      .set({ billed: false, invoiceId: null })
+      .where(eq(sessions.invoiceId, invoiceId)),
+    db.delete(invoices).where(eq(invoices.id, invoiceId)),
+  ]);
+
+  revalidatePath("/dashboard");
+  revalidatePath("/history");
+
+  // Server Action throws-to-navigate — no client router plumbing needed;
+  // this is why the action returns void, unlike generate which needed to
+  // return the new id.
+  redirect("/history");
 }
