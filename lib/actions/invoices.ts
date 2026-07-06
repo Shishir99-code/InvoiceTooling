@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { and, asc, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/lib/db";
@@ -114,40 +114,75 @@ export async function generateInvoiceAction(
   const renderedBody = renderTemplate(bodyTemplate, mergeValues);
   const renderedSubject = renderTemplate(subjectTemplate, mergeValues);
 
-  // Pitfall 1 resolution 1 (single-user, low-concurrency app): a lone
-  // INSERT...RETURNING id first — a single INSERT is atomic per normal SQL
-  // semantics on its own — THEN a db.batch for the sessions UPDATE. The
-  // interactive transaction() API is NOT used (Pitfall 2 — it throws at
-  // runtime on the neon-http driver this project uses).
-  const [row] = await db
-    .insert(invoices)
-    .values({
-      studentId,
-      periodStart,
-      periodEnd,
-      totalCents,
-      lineItems,
-      renderedBody,
-      renderedSubject,
-    })
-    .returning({ id: invoices.id });
+  // T-03-05-01: the invoice INSERT and the sessions mark-billed UPDATE MUST
+  // commit as one unit — a crash between two separate writes (or a two-tab
+  // race) could otherwise leave sessions un-billed under a persisted
+  // invoice, or let the same sessions be billed twice. This is a single
+  // data-modifying CTE run via db.execute, wrapped in ONE db.batch call (the
+  // interactive transaction() API is NOT used — it throws at runtime on the
+  // neon-http driver this project uses). The INSERT is itself gated on all
+  // target sessions still being unbilled (double-billing guard): if a
+  // concurrent generation already claimed any of them, `ins` inserts zero
+  // rows and the trailing UPDATE (gated on `EXISTS (SELECT 1 FROM ins)`)
+  // updates zero rows too — no partial commit, no double invoice.
+  const sessionIds = unbilledSessions.map((session) => session.id);
+  const targetFilter = and(
+    inArray(sessions.id, sessionIds),
+    eq(sessions.billed, false),
+  );
 
-  await db.batch([
-    db
-      .update(sessions)
-      .set({ billed: true, invoiceId: row.id })
-      .where(
-        inArray(
-          sessions.id,
-          unbilledSessions.map((session) => session.id),
+  let newInvoiceId: number | null = null;
+
+  try {
+    const [result] = await db.batch([
+      db.execute<{ invoice_id: number }>(sql`
+        WITH target AS (
+          SELECT id FROM sessions WHERE ${targetFilter}
         ),
-      ),
-  ]);
+        ins AS (
+          INSERT INTO invoices (
+            student_id, period_start, period_end, total_cents,
+            line_items, rendered_body, rendered_subject
+          )
+          SELECT ${studentId}, ${periodStart}, ${periodEnd}, ${totalCents},
+            ${JSON.stringify(lineItems)}::jsonb, ${renderedBody}, ${renderedSubject}
+          WHERE (SELECT count(*) FROM target) = ${sessionIds.length}
+          RETURNING id
+        )
+        UPDATE sessions
+        SET billed = true, invoice_id = (SELECT id FROM ins)
+        WHERE ${targetFilter} AND EXISTS (SELECT 1 FROM ins)
+        RETURNING (SELECT id FROM ins) AS invoice_id
+      `),
+    ]);
+
+    newInvoiceId = result.rows[0]?.invoice_id ?? null;
+  } catch {
+    return {
+      fieldErrors: {
+        studentId: ["Couldn't generate the invoice — please try again."],
+      },
+      invoiceId: null,
+    };
+  }
+
+  if (newInvoiceId === null) {
+    // The race was lost: another generation already claimed one or more of
+    // these sessions between our re-SELECT above and this write.
+    return {
+      fieldErrors: {
+        studentId: [
+          "These sessions were already invoiced in another request. Please refresh and try again.",
+        ],
+      },
+      invoiceId: null,
+    };
+  }
 
   revalidatePath("/dashboard");
   revalidatePath("/history");
 
-  return { fieldErrors: null, invoiceId: row.id };
+  return { fieldErrors: null, invoiceId: newInvoiceId };
 }
 
 // D-16: the only supported mistake-recovery path — deleting an invoice
