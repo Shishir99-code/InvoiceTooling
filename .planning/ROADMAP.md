@@ -102,7 +102,21 @@ Plans:
   4. User can open a pre-filled email draft in their own email client addressed to the student's parent (invoice summary + Zelle instructions from the template), with a copy-to-clipboard fallback when the email client is unavailable or the body is too long, and a graceful guard when a student has no parent email on file.
   5. User can view a log of every previously generated invoice and open any one to see its frozen snapshot (student, sessions, total, generated date).
 
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Foundation schema (invoices + settings + sessions.invoiceId) + push, and the Settings slice: Zelle handle + editable subject/body templates (SET-01, SET-02)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 03-02-PLAN.md — Generate & freeze invoice: atomic db.batch snapshot + mark-billed, preview-then-confirm modal, Dashboard trigger, shared invoice view + copy, /history/[id] route (INV-01..04, MAIL-03)
+
+**Wave 3** *(blocked on Wave 2 completion; two plans run in parallel — no shared files)*
+
+- [ ] 03-03-PLAN.md — Gmail compose email handoff + over-length guard + delete/un-bill recovery (MAIL-01, MAIL-02, MAIL-04)
+- [ ] 03-04-PLAN.md — Invoice History log (flat newest-first) + open-snapshot view reuse + notes-are-parent-facing hint (HIST-01, HIST-02)
+
 **UI hint**: yes
 
 ## Progress
@@ -114,4 +128,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
 | 2. Session Logging & Unbilled Dashboard | 4/4 | Complete    | 2026-07-05 |
-| 3. Invoicing, Email & History | 0/TBD | Not started | - |
+| 3. Invoicing, Email & History | 0/4 | Planned | - |
