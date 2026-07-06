@@ -153,6 +153,21 @@ export function StudentFormDialog(props: StudentFormDialogProps) {
             )}
           </div>
 
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={`zoom-${fieldSuffix}`}>Zoom Link (optional)</Label>
+            <Input
+              id={`zoom-${fieldSuffix}`}
+              name="zoomLink"
+              type="url"
+              defaultValue={isEdit ? (props.student.zoomLink ?? "") : ""}
+            />
+            {state.fieldErrors?.zoomLink && (
+              <p className="text-sm text-red-600">
+                {state.fieldErrors.zoomLink[0]}
+              </p>
+            )}
+          </div>
+
           <DialogFooter>
             <DialogClose render={<Button type="button" variant="outline" />}>
               Discard
