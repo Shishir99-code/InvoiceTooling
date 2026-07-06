@@ -21,6 +21,7 @@ export default async function SettingsPage() {
           zelleHandle={row?.zelleHandle ?? ""}
           subjectTemplate={row?.subjectTemplate ?? DEFAULT_SUBJECT_TEMPLATE}
           bodyTemplate={row?.bodyTemplate ?? DEFAULT_BODY_TEMPLATE}
+          timezone={row?.timezone ?? null}
         />
       </div>
     </div>
