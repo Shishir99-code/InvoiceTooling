@@ -4,6 +4,7 @@ import { type ReactNode, useState } from "react";
 import { format } from "date-fns";
 import { ChevronDown } from "lucide-react";
 
+import { AutoLoggedMarker } from "@/components/auto-logged-marker";
 import { SessionDeleteConfirmDialog } from "@/components/session-delete-confirm-dialog";
 import { SessionFormDialog } from "@/components/session-form-dialog";
 import type { StudentComboboxOption } from "@/components/student-combobox";
@@ -145,7 +146,14 @@ function SessionGroupRow({
                   <TableBody>
                     {group.sessions.map((session) => (
                       <TableRow key={session.id}>
-                        <TableCell>{formatSessionDate(session.date)}</TableCell>
+                        <TableCell>
+                          <span className="flex items-center gap-1">
+                            {session.scheduleSlotId !== null && (
+                              <AutoLoggedMarker />
+                            )}
+                            {formatSessionDate(session.date)}
+                          </span>
+                        </TableCell>
                         <TableCell>
                           {formatDuration(session.durationMinutes)}
                         </TableCell>
@@ -183,7 +191,10 @@ function SessionGroupRow({
                     className="flex flex-col gap-2 rounded-lg border border-zinc-200 p-4"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-base font-medium text-zinc-900">
+                      <span className="flex items-center gap-1 text-base font-medium text-zinc-900">
+                        {session.scheduleSlotId !== null && (
+                          <AutoLoggedMarker />
+                        )}
                         {formatSessionDate(session.date)}
                       </span>
                       <div className="flex gap-2">
