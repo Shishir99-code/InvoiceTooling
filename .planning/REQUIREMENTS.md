@@ -58,17 +58,49 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **HIST-01**: User can view a log of all previously generated invoices
 - [x] **HIST-02**: User can open a past invoice to see its frozen snapshot (student, sessions, total, generated date)
 
+## v1.1 Requirements — Scheduling & Automation
+
+Current milestone. Continues REQ-ID numbering; phases continue from Phase 03.
+
+### Invoice Email
+
+- [ ] **MAIL-05**: Generating an invoice automatically opens the pre-filled email draft in the user's own email client (no extra click); sending stays client-side
+
+### Class Schedules
+
+- [ ] **SCHED-01**: User can define a student's recurring weekly class slots (weekday + start time + duration); a student can have multiple slots
+- [ ] **SCHED-02**: User can edit or remove any of a student's class slots
+- [ ] **SCHED-03**: On each scheduled class day, the app automatically logs a session for that slot, with the amount computed from the student's current rate (integer cents)
+- [ ] **SCHED-04**: Auto-logged sessions are visibly distinguishable from manually-logged ones and can be edited or deleted like any session when a class deviates (cancelled, rescheduled, ran long/short)
+
+### Scheduled Invoicing
+
+- [ ] **RINV-01**: User can set how often invoices are generated automatically (e.g. monthly on a chosen day)
+- [ ] **RINV-02**: On the cadence day, the app automatically generates an invoice snapshot for each student who has unbilled sessions (students with none are skipped; no double-billing)
+- [ ] **RINV-03**: User can adjust the session timeframe an invoice covers when generating (default = all currently-unbilled sessions)
+- [ ] **RINV-04**: Auto-generated invoices are never auto-sent — the user reviews and sends each with one click
+
+### Zoom Links
+
+- [ ] **ZOOM-01**: User can set and edit a Zoom link for each student
+- [ ] **ZOOM-02**: A student's Zoom link is surfaced where relevant (session view and/or invoice via a template token)
+
+### Settings
+
+- [ ] **SET-03**: User can set the local timezone used to determine class days and invoice cadence
+
 ## v2 Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
 
 ### Enhancements
 
-- **REC-01**: Recurring/standing sessions for weekly students
+- **REC-01**: ~~Recurring/standing sessions for weekly students~~ — promoted into v1.1 as the **SCHED-**\* requirements
 - **RPT-01**: Reporting — income over time
 - **PDF-01**: Downloadable/attachable PDF invoices with business branding
 - **SEND-01**: App-sent transactional email (in-app send instead of mailto handoff)
 - **TAX-01**: Tax/year-end summaries
+- **ZOOM-API-01**: Zoom-API auto-created meetings per session (OAuth app, token storage) — v1.1 ships static per-student links only
 
 ## Out of Scope
 
