@@ -110,7 +110,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 03-02-PLAN.md — Generate & freeze invoice: atomic db.batch snapshot + mark-billed, preview-then-confirm modal, Dashboard trigger, shared invoice view + copy, /history/[id] route (INV-01..04, MAIL-03)
+- [x] 03-02-PLAN.md — Generate & freeze invoice: atomic db.batch snapshot + mark-billed, preview-then-confirm modal, Dashboard trigger, shared invoice view + copy, /history/[id] route (INV-01..04, MAIL-03)
 
 **Wave 3** *(blocked on Wave 2 completion; two plans run in parallel — no shared files)*
 
@@ -128,4 +128,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
 | 2. Session Logging & Unbilled Dashboard | 4/4 | Complete    | 2026-07-05 |
-| 3. Invoicing, Email & History | 1/4 | In Progress|  |
+| 3. Invoicing, Email & History | 2/4 | In Progress|  |

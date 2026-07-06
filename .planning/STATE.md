@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-07-06T01:28:52.776Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-07-06T01:40:52.424Z"
 last_activity: 2026-07-06 -- Phase 03 execution started
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 13
-  completed_plans: 10
+  completed_plans: 11
   percent: 67
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 ## Current Position
 
 Phase: 03 (invoicing-email-history) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-07-06 -- Phase 03 execution started
 
@@ -63,6 +63,7 @@ Progress: [██████░░░░] 67% (2 of 3 phases complete)
 | Phase 02 P03 | ~15min | 2 tasks | 2 files |
 | Phase 02 P04 | 35min | 2 tasks | 2 files |
 | Phase 03 P01 | ~10min | 3 tasks | 8 files |
+| Phase 03 P02 | ~15min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,8 @@ Recent decisions affecting current work:
 - [Phase 02]: 02-04: dropped export of initialSessionActionState from sessions.ts (use-server file) after runtime crash discovered during checkpoint verification — A "use server" file may only export async functions; the unused plain-object export crashed /sessions at module evaluation, which npm run build did not catch
 - [Phase ?]: [Phase 03, Plan 01]: Single schema push for the whole phase (invoices + settings + sessions.invoiceId) so Waves 2-4 build against an already-pushed schema — no further push needed
 - [Phase ?]: [Phase 03, Plan 01]: invoices.lineItems left as jsonb without a TS generic since InvoiceLineItem's shape is owned by lib/invoice/render.ts (Plan 02, not yet created)
+- [Phase 03]: [Phase 3, Plan 02]: Pitfall 1 resolution 1 (single INSERT...RETURNING id, then a separate db.batch for the sessions UPDATE) used for generateInvoiceAction — Appropriate atomicity tradeoff for a single-user, low-concurrency app; db.transaction throws at runtime on neon-http
+- [Phase 03]: [Phase 3, Plan 02]: invoice-view.tsx destructures only the props it currently uses, keeping invoiceId/parentEmail/sessionCount in the exported InvoiceViewProps interface — Avoids unused-var lint noise while wiring the full prop surface Plan 03 needs for Email/Delete
 
 ### Pending Todos
 
@@ -118,6 +121,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-06T01:28:52.772Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-07-06T01:40:52.420Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None

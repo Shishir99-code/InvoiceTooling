@@ -36,16 +36,16 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Invoicing
 
-- [ ] **INV-01**: User can generate an invoice for a student that totals all their unbilled sessions
-- [ ] **INV-02**: Generating an invoice produces a copyable text summary of the sessions and total
-- [ ] **INV-03**: Generating an invoice atomically marks its sessions as billed and stores the invoice as an immutable point-in-time snapshot (line items + rendered text + total frozen at generation)
-- [ ] **INV-04**: Editing or deleting a session after billing does not alter any previously generated invoice snapshot
+- [x] **INV-01**: User can generate an invoice for a student that totals all their unbilled sessions
+- [x] **INV-02**: Generating an invoice produces a copyable text summary of the sessions and total
+- [x] **INV-03**: Generating an invoice atomically marks its sessions as billed and stores the invoice as an immutable point-in-time snapshot (line items + rendered text + total frozen at generation)
+- [x] **INV-04**: Editing or deleting a session after billing does not alter any previously generated invoice snapshot
 
 ### Email
 
 - [ ] **MAIL-01**: User can open a pre-filled email draft in their own email client for an invoice, addressed to the student's parent email
 - [ ] **MAIL-02**: The draft body contains the invoice summary plus Zelle payment instructions built from the settings template
-- [ ] **MAIL-03**: User can copy the invoice text to the clipboard as a fallback when the email client is unavailable or the body is too long for a mailto link
+- [x] **MAIL-03**: User can copy the invoice text to the clipboard as a fallback when the email client is unavailable or the body is too long for a mailto link
 - [ ] **MAIL-04**: The send action is guarded/handled gracefully when a student has no parent email on file
 
 ### Settings
@@ -107,13 +107,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DASH-02 | Phase 2 | Complete |
 | SET-01 | Phase 3 | Complete |
 | SET-02 | Phase 3 | Complete |
-| INV-01 | Phase 3 | Pending |
-| INV-02 | Phase 3 | Pending |
-| INV-03 | Phase 3 | Pending |
-| INV-04 | Phase 3 | Pending |
+| INV-01 | Phase 3 | Complete |
+| INV-02 | Phase 3 | Complete |
+| INV-03 | Phase 3 | Complete |
+| INV-04 | Phase 3 | Complete |
 | MAIL-01 | Phase 3 | Pending |
 | MAIL-02 | Phase 3 | Pending |
-| MAIL-03 | Phase 3 | Pending |
+| MAIL-03 | Phase 3 | Complete |
 | MAIL-04 | Phase 3 | Pending |
 | HIST-01 | Phase 3 | Pending |
 | HIST-02 | Phase 3 | Pending |
