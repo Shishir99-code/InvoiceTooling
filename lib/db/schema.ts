@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, integer, boolean, timestamp, date, text } from "drizzle-orm/pg-core";
+import { pgTable, serial, varchar, integer, boolean, timestamp, date, text, jsonb } from "drizzle-orm/pg-core";
 
 export const students = pgTable("students", {
   id: serial("id").primaryKey(),
@@ -7,6 +7,31 @@ export const students = pgTable("students", {
   parentEmail: varchar("parent_email", { length: 255 }).notNull(), // D-13: required
   archived: boolean("archived").notNull().default(false), // D-10/D-11: soft delete
   createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// invoices must be declared above sessions since sessions.invoiceId
+// references it — the `() => invoices.id` thunk would also handle a forward
+// reference, but declaring it here keeps the file read top-to-bottom.
+export const invoices = pgTable("invoices", {
+  id: serial("id").primaryKey(),
+  studentId: integer("student_id")
+    .notNull()
+    .references(() => students.id, { onDelete: "restrict" }), // Pitfall 3: mirrors sessions FK, protects history; D-04: no invoice number column
+  periodStart: date("period_start", { mode: "string" }).notNull(), // D-03: frozen min session date
+  periodEnd: date("period_end", { mode: "string" }).notNull(), // D-03: frozen max session date
+  totalCents: integer("total_cents").notNull(), // frozen sum at generation, integer cents per P2 D-14
+  // frozen line items: {date,durationMinutes,amountCents,notes}[] — see lib/invoice/render.ts
+  lineItems: jsonb("line_items").notNull(),
+  renderedBody: text("rendered_body").notNull(), // Pitfall 4: frozen full body, never re-rendered from live Settings
+  renderedSubject: varchar("rendered_subject", { length: 500 }).notNull(),
+  generatedAt: timestamp("generated_at").notNull().defaultNow(),
+});
+
+export const settings = pgTable("settings", {
+  id: integer("id").primaryKey().default(1), // single-row config, always id=1
+  zelleHandle: varchar("zelle_handle", { length: 255 }).notNull().default(""), // SET-01
+  subjectTemplate: varchar("subject_template", { length: 500 }).notNull(), // SET-02/D-13
+  bodyTemplate: text("body_template").notNull(), // SET-02/D-12
 });
 
 export const sessions = pgTable("sessions", {
@@ -19,6 +44,7 @@ export const sessions = pgTable("sessions", {
   amountCents: integer("amount_cents").notNull(), // D-14: frozen snapshot, computed server-side once at write time
   notes: text("notes"), // SESS-02: optional
   billed: boolean("billed").notNull().default(false), // Phase 3 sets true; Phase 2 only reads for DASH-02
+  invoiceId: integer("invoice_id").references(() => invoices.id, { onDelete: "set null" }), // null = unbilled; set at generation, un-links on invoice delete (D-16)
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
