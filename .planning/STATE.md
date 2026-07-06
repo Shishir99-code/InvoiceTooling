@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: — Scheduling & Automation
-status: executing
-stopped_at: Phase 4 complete — all 4 plans executed & verified
-last_updated: "2026-07-06T17:22:00Z"
-last_activity: 2026-07-06 — Phase 4 executed (MAIL-05, ZOOM-01/02, SET-03); tsc/lint/build green, schema pushed live
+status: MAIL-05 auto-open email, ZOOM-01/02 per-student Zoom links, SET-03 timezone capture — all shipped. Schema (students.zoomLink, settings.timezone) pushed live to Neon. tsc/lint/build green.
+stopped_at: Phase 05 context gathered
+last_updated: "2026-07-06T19:51:22.639Z"
+last_activity: 2026-07-06 — Phase 4 executed inline (subagents flaky here); all gates passed, VERIFICATION.md written
 progress:
   total_phases: 6
   completed_phases: 4
@@ -127,6 +127,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-06T16:32:42.458Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-quick-wins-auto-open-email-zoom-links-timezone/04-CONTEXT.md
+Last session: 2026-07-06T19:51:22.634Z
+Stopped at: Phase 05 context gathered
+Resume file: .planning/phases/05-recurring-class-schedules-auto-logged-sessions/05-CONTEXT.md
