@@ -1,0 +1,35 @@
+import { desc, eq } from "drizzle-orm";
+
+import { InvoiceHistoryTable } from "@/components/invoice-history-table";
+import { db } from "@/lib/db";
+import { invoices, students } from "@/lib/db/schema";
+
+// HIST-01/D-14: a flat, newest-first log of every generated invoice — no
+// grouping/filtering. Each row's View opens the shared invoice view built in
+// Plan 02 at /history/[id] (HIST-02).
+export default async function HistoryPage() {
+  const rows = await db
+    .select({
+      id: invoices.id,
+      studentName: students.name,
+      periodStart: invoices.periodStart,
+      periodEnd: invoices.periodEnd,
+      totalCents: invoices.totalCents,
+      generatedAt: invoices.generatedAt,
+    })
+    .from(invoices)
+    .leftJoin(students, eq(invoices.studentId, students.id))
+    .orderBy(desc(invoices.generatedAt));
+
+  return (
+    <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
+      <h1 className="text-[28px] leading-tight font-semibold text-zinc-900">
+        Invoice History
+      </h1>
+
+      <div className="mt-6">
+        <InvoiceHistoryTable rows={rows} />
+      </div>
+    </div>
+  );
+}
