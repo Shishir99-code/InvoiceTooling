@@ -23,6 +23,10 @@ import { invoiceGenerateSchema } from "@/lib/validation/invoice";
 export interface InvoiceActionState {
   fieldErrors: Record<string, string[]> | null;
   invoiceId: number | null;
+  // MAIL-05: on success, the raw pieces the CLIENT uses to build the Gmail
+  // compose URL and auto-open the draft (the action never builds the URL or
+  // sends — sending stays client-side). null on every failure path.
+  emailDraft: { to: string; subject: string; body: string } | null;
 }
 
 // INV-01..04: generating an invoice totals ALL of a student's unbilled
@@ -41,6 +45,7 @@ export async function generateInvoiceAction(
     return {
       fieldErrors: z.flattenError(parsed.error).fieldErrors,
       invoiceId: null,
+      emailDraft: null,
     };
   }
 
@@ -63,6 +68,7 @@ export async function generateInvoiceAction(
         studentId: ["This student has no unbilled sessions to invoice."],
       },
       invoiceId: null,
+      emailDraft: null,
     };
   }
 
@@ -75,6 +81,7 @@ export async function generateInvoiceAction(
     return {
       fieldErrors: { studentId: ["Select a student."] },
       invoiceId: null,
+      emailDraft: null,
     };
   }
 
@@ -163,6 +170,7 @@ export async function generateInvoiceAction(
         studentId: ["Couldn't generate the invoice — please try again."],
       },
       invoiceId: null,
+      emailDraft: null,
     };
   }
 
@@ -176,13 +184,24 @@ export async function generateInvoiceAction(
         ],
       },
       invoiceId: null,
+      emailDraft: null,
     };
   }
 
   revalidatePath("/dashboard");
   revalidatePath("/history");
 
-  return { fieldErrors: null, invoiceId: newInvoiceId };
+  return {
+    fieldErrors: null,
+    invoiceId: newInvoiceId,
+    // student.parentEmail is guaranteed present (P1 D-13 required); the client
+    // builds the Gmail URL from these frozen pieces and auto-opens the draft.
+    emailDraft: {
+      to: student.parentEmail,
+      subject: renderedSubject,
+      body: renderedBody,
+    },
+  };
 }
 
 // D-16: the only supported mistake-recovery path — deleting an invoice
