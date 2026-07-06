@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { db } from "@/lib/db";
 import { sessions, students } from "@/lib/db/schema";
+import { computeAmountCents } from "@/lib/sessions/amount";
 import { sessionFormSchema } from "@/lib/validation/session";
 
 export interface SessionActionState {
@@ -59,10 +60,9 @@ export async function addSessionAction(
     return { fieldErrors: { studentId: ["Select a student."] } };
   }
 
-  // Math.round avoids float drift (19.99 * 100 === 1998.999...999998 in JS) —
-  // single rounding step over integer inputs (SESS-05).
-  const amountCents = Math.round(
-    (parsed.data.durationMinutes * student.rateCents) / 60,
+  const amountCents = computeAmountCents(
+    parsed.data.durationMinutes,
+    student.rateCents,
   );
 
   await db.insert(sessions).values({
@@ -98,8 +98,9 @@ export async function editSessionAction(
     return { fieldErrors: { studentId: ["Select a student."] } };
   }
 
-  const amountCents = Math.round(
-    (parsed.data.durationMinutes * student.rateCents) / 60,
+  const amountCents = computeAmountCents(
+    parsed.data.durationMinutes,
+    student.rateCents,
   );
 
   // SESS-03: editing is allowed at any time, regardless of `billed` status —
