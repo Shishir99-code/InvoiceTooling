@@ -119,7 +119,7 @@ Plans:
 
 **Wave 4** *(gap closure — blocked on Wave 2; re-touches lib/actions/invoices.ts from 03-02)*
 
-- [ ] 03-05-PLAN.md — Gap closure: atomic invoice generation (single db.batch, double-billing guard) + rendered_subject->text + Settings .max bounds (INV-03; WR-01/WR-02/WR-03)
+- [x] 03-05-PLAN.md — Gap closure: atomic invoice generation (single db.batch, double-billing guard) + rendered_subject->text + Settings .max bounds (INV-03; WR-01/WR-02/WR-03)
 
 **UI hint**: yes
 
@@ -132,4 +132,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
 | 2. Session Logging & Unbilled Dashboard | 4/4 | Complete    | 2026-07-05 |
-| 3. Invoicing, Email & History | 4/4 | Complete   | 2026-07-06 |
+| 3. Invoicing, Email & History | 5/5 | Complete   | 2026-07-06 |

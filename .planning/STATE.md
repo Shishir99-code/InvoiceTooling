@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-04-PLAN.md
-last_updated: "2026-07-06T02:14:17.904Z"
-last_activity: 2026-07-06 -- Phase 03 execution started
+stopped_at: Completed 03-05-PLAN.md (gap closure — atomic invoice generation)
+last_updated: "2026-07-06T00:00:00.000Z"
+last_activity: 2026-07-06 -- Phase 03 gap-closure plan 03-05 complete (INV-03 atomicity)
 progress:
   total_phases: 3
   completed_phases: 3
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 14
+  completed_plans: 14
   percent: 100
 ---
 
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 
 ## Current Position
 
-Phase: 03 (invoicing-email-history) — EXECUTING
-Plan: 4 of 4
-Status: Ready to execute
-Last activity: 2026-07-06 -- Phase 03 execution started
+Phase: 03 (invoicing-email-history) — COMPLETE (5 of 5 plans)
+Plan: 5 of 5
+Status: Phase 03 gap closure complete — invoice generation is atomic (INV-03)
+Last activity: 2026-07-06 -- Phase 03 plan 03-05 (atomic invoice generation) complete
 
-Progress: [██████░░░░] 67% (2 of 3 phases complete)
+Progress: [██████████] 100% (3 of 3 phases complete)
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Progress: [██████░░░░] 67% (2 of 3 phases complete)
 | Phase 03 P02 | ~15min | 3 tasks | 8 files |
 | Phase 03 P03 | 5min | 3 tasks | 4 files |
 | Phase 03 P04 | ~10min | 2 tasks | 3 files |
+| Phase 03 P05 | ~25min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -106,6 +107,8 @@ Recent decisions affecting current work:
 - [Phase 03]: [Phase 3, Plan 03]: Email Invoice styled with cn(buttonVariants({variant:'default'}), 'bg-blue-600 text-white hover:bg-blue-700') to match this codebase's existing accent-button convention rather than the Button primitive's default CVA color
 - [Phase 03]: [Phase 3, Plan 03]: deleteInvoiceAction mirrors generateInvoiceAction's db.batch atomicity approach (never db.transaction, which throws at runtime on neon-http) for the un-bill + delete flow
 - [Phase ?]: InvoiceHistoryTable renders View/Go-to-Dashboard links via cn(buttonVariants) on next/link Link rather than the Button primitive (which renders a <button>, not an <a>), matching invoice-view.tsx's existing anchor precedent — Consistency with Plan 03's Email Invoice anchor styling convention
+- [Phase 03]: [Phase 3, Plan 05]: generateInvoiceAction's non-atomic write (Plan 02's "single INSERT...RETURNING then separate db.batch UPDATE") REPLACED with one db.batch wrapping a single data-modifying CTE (INSERT invoice + UPDATE sessions) — closes the INV-03 atomicity gap (03-VERIFICATION SC3 / 03-REVIEW WR-01). A double-billing guard gates the INSERT on all targets still being unbilled; a lost race returns a field error, not a duplicate invoice. Supersedes the "appropriate tradeoff" note under Plan 02.
+- [Phase 03]: [Phase 3, Plan 05]: invoices.rendered_subject widened varchar(500) -> text (applied to Neon via drizzle-kit push) so a {student} merge can't overflow the atomic INSERT; Settings validation gained .max() bounds (WR-02/WR-03)
 
 ### Pending Todos
 
