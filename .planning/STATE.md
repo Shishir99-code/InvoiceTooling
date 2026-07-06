@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: — Scheduling & Automation
-status: planning
-stopped_at: Phase 4 context gathered
-last_updated: "2026-07-06T16:32:42.463Z"
-last_activity: 2026-07-06 — Milestone v1.1 roadmap created (Phases 4–6, 12 requirements)
+status: executing
+stopped_at: Phase 4 complete — all 4 plans executed & verified
+last_updated: "2026-07-06T17:22:00Z"
+last_activity: 2026-07-06 — Phase 4 executed (MAIL-05, ZOOM-01/02, SET-03); tsc/lint/build green, schema pushed live
 progress:
   total_phases: 6
-  completed_phases: 3
-  total_plans: 14
-  completed_plans: 14
-  percent: 50
+  completed_phases: 4
+  total_plans: 18
+  completed_plans: 18
+  percent: 67
 ---
 
 # Project State
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 
 ## Current Position
 
-Phase: 04 — Quick Wins (Auto-Open Email, Zoom Links & Timezone) — not started
-Plan: — (run /gsd-plan-phase 04)
-Status: Milestone v1.1 initialized — requirements + roadmap done, ready to plan Phase 04
-Last activity: 2026-07-06 — Milestone v1.1 roadmap created (Phases 4–6, 12 requirements)
+Phase: 04 — Quick Wins (Auto-Open Email, Zoom Links & Timezone) — ✅ complete (verified)
+Plan: 04-01…04-04 all executed (2 waves); next: /gsd-plan-phase 05
+Status: MAIL-05 auto-open email, ZOOM-01/02 per-student Zoom links, SET-03 timezone capture — all shipped. Schema (students.zoomLink, settings.timezone) pushed live to Neon. tsc/lint/build green.
+Last activity: 2026-07-06 — Phase 4 executed inline (subagents flaky here); all gates passed, VERIFICATION.md written
 
 ## Performance Metrics
 

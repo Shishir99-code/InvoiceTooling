@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 ### Milestone v1.1 — Scheduling & Automation
 
-- [ ] **Phase 4: Quick Wins — Auto-Open Email, Zoom Links & Timezone** - Generating opens the email draft automatically, each student carries a Zoom link, and the local timezone is set for scheduling
+- [x] **Phase 4: Quick Wins — Auto-Open Email, Zoom Links & Timezone** - Generating opens the email draft automatically, each student carries a Zoom link, and the local timezone is set for scheduling
 - [ ] **Phase 5: Recurring Class Schedules & Auto-Logged Sessions** - Per-student weekly class schedules auto-log sessions daily via a secured cron, editable on deviation
 - [ ] **Phase 6: Scheduled Invoice Generation** - Invoices auto-generate on a configurable cadence for students with unbilled sessions; still sent manually
 
@@ -194,6 +194,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
 | 2. Session Logging & Unbilled Dashboard | 4/4 | Complete    | 2026-07-05 |
 | 3. Invoicing, Email & History | 5/5 | Complete   | 2026-07-06 |
-| 4. Quick Wins — Auto-Open Email, Zoom Links & Timezone | 0/– | Not started | — |
+| 4. Quick Wins — Auto-Open Email, Zoom Links & Timezone | 4/4 | Complete    | 2026-07-06 |
 | 5. Recurring Class Schedules & Auto-Logged Sessions | 0/– | Not started | — |
 | 6. Scheduled Invoice Generation | 0/– | Not started | — |
