@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -21,6 +21,7 @@ import {
 } from "@/lib/actions/invoices";
 import type { sessions as sessionsTable } from "@/lib/db/schema";
 import { formatCents } from "@/lib/format";
+import { buildGmailComposeUrl, isGmailUrlTooLong } from "@/lib/invoice/mailto";
 import {
   buildLineItems,
   formatPeriod,
@@ -33,6 +34,7 @@ type SessionRow = typeof sessionsTable.$inferSelect;
 const initialState: InvoiceActionState = {
   fieldErrors: null,
   invoiceId: null,
+  emailDraft: null,
 };
 
 interface InvoicePreviewDialogProps {
@@ -65,6 +67,16 @@ export function InvoicePreviewDialog({
     initialState,
   );
 
+  // MAIL-05 (RESEARCH §1): grab a blank window handle SYNCHRONOUSLY inside the
+  // click gesture so the browser trusts it as user-initiated (not a blocked
+  // pop-up). The Server Action then resolves and we point this handle at the
+  // Gmail compose URL. handleSubmit must NOT preventDefault — that would cancel
+  // the Server Action submission.
+  const popupRef = useRef<Window | null>(null);
+  function handleSubmit() {
+    popupRef.current = window.open("", "_blank");
+  }
+
   const sortedSessions = [...sessions].sort((a, b) =>
     a.date < b.date ? -1 : a.date > b.date ? 1 : 0,
   );
@@ -96,7 +108,9 @@ export function InvoicePreviewDialog({
 
   // Close + navigate only after a *real* successful submit — same
   // adjust-during-render idiom as SessionFormDialog (D-16 precedent), but
-  // navigates to the finished invoice (D-09) instead of just closing.
+  // navigates to the finished invoice (D-09) instead of just closing. The
+  // window-handle side effect lives in the effect below (refs may not be
+  // touched during render — react-hooks/refs).
   const [prevState, setPrevState] = useState(state);
   if (state !== prevState) {
     setPrevState(state);
@@ -105,6 +119,32 @@ export function InvoicePreviewDialog({
       router.push(`/history/${state.invoiceId}`);
     }
   }
+
+  // Point the pre-opened blank tab at the Gmail draft once the action resolves.
+  // The handle was grabbed synchronously in handleSubmit (inside the click
+  // gesture) so it is not treated as a blocked pop-up; here we only redirect or
+  // close it based on the result.
+  useEffect(() => {
+    if (state.fieldErrors === null && state.invoiceId !== null) {
+      // Success: open the draft (D-01) UNLESS the URL is over-length (D-03),
+      // the draft is missing, or the handle was blocked/null — then close the
+      // handle so no empty tab is orphaned and /history's copy-first UI takes
+      // over.
+      const gmailUrl = state.emailDraft
+        ? buildGmailComposeUrl(state.emailDraft)
+        : null;
+      if (gmailUrl && !isGmailUrlTooLong(gmailUrl) && popupRef.current) {
+        popupRef.current.location.href = gmailUrl;
+      } else {
+        popupRef.current?.close();
+      }
+      popupRef.current = null;
+    } else if (state.fieldErrors !== null) {
+      // Error: clean up any pre-opened blank tab (the dialog stays open).
+      popupRef.current?.close();
+      popupRef.current = null;
+    }
+  }, [state]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -122,7 +162,11 @@ export function InvoicePreviewDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form action={formAction} className="flex flex-col gap-4">
+        <form
+          action={formAction}
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4"
+        >
           <input type="hidden" name="studentId" value={student.id} />
 
           <div className="flex flex-col gap-2">
