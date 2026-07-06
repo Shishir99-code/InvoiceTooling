@@ -24,6 +24,7 @@ function parseAddForm(formData: FormData) {
     name: formData.get("name"),
     rateDollars: formData.get("rateDollars"),
     parentEmail: formData.get("parentEmail"),
+    zoomLink: formData.get("zoomLink"),
   });
 }
 
@@ -33,6 +34,7 @@ function parseEditForm(formData: FormData) {
     name: formData.get("name"),
     rateDollars: formData.get("rateDollars"),
     parentEmail: formData.get("parentEmail"),
+    zoomLink: formData.get("zoomLink"),
   });
 }
 
@@ -52,6 +54,7 @@ export async function addStudentAction(
     // Math.round avoids float drift (19.99 * 100 === 1998.999...999998 in JS).
     rateCents: Math.round(parsed.data.rateDollars * 100),
     parentEmail: parsed.data.parentEmail,
+    zoomLink: parsed.data.zoomLink ?? null,
     archived: false,
   });
 
@@ -75,6 +78,7 @@ export async function editStudentAction(
       name: parsed.data.name,
       rateCents: Math.round(parsed.data.rateDollars * 100),
       parentEmail: parsed.data.parentEmail,
+      zoomLink: parsed.data.zoomLink ?? null,
     })
     .where(eq(students.id, parsed.data.id));
 
