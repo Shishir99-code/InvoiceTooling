@@ -16,6 +16,7 @@ function parseSettingsForm(formData: FormData) {
     zelleHandle: formData.get("zelleHandle"),
     subjectTemplate: formData.get("subjectTemplate"),
     bodyTemplate: formData.get("bodyTemplate"),
+    timezone: formData.get("timezone"),
   });
 }
 
@@ -39,6 +40,7 @@ export async function saveSettingsAction(
       zelleHandle: parsed.data.zelleHandle,
       subjectTemplate: parsed.data.subjectTemplate,
       bodyTemplate: parsed.data.bodyTemplate,
+      timezone: parsed.data.timezone ?? null,
     })
     .onConflictDoUpdate({
       target: settings.id,
@@ -46,6 +48,7 @@ export async function saveSettingsAction(
         zelleHandle: parsed.data.zelleHandle,
         subjectTemplate: parsed.data.subjectTemplate,
         bodyTemplate: parsed.data.bodyTemplate,
+        timezone: parsed.data.timezone ?? null,
       },
     });
 
