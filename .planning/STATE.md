@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: — Scheduling & Automation
 status: completed
-stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-07-06T20:44:11.578Z"
+stopped_at: Phase 6 context gathered
+last_updated: "2026-07-06T21:32:55.569Z"
 last_activity: 2026-07-06 -- Phase 05 marked complete
 progress:
   total_phases: 6
@@ -127,6 +127,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-06T20:02:57.172Z
-Stopped at: Phase 5 UI-SPEC approved
-Resume file: .planning/phases/05-recurring-class-schedules-auto-logged-sessions/05-UI-SPEC.md
+Last session: 2026-07-06T21:32:55.564Z
+Stopped at: Phase 6 context gathered
+Resume file: .planning/phases/06-scheduled-invoice-generation/06-CONTEXT.md
