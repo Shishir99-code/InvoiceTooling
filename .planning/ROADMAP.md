@@ -140,7 +140,18 @@ Plans:
   2. User can set and edit a Zoom link per student, and the link is surfaced where relevant (session view and/or invoice via a `{zoom}` template token).
   3. User can set her local (IANA) timezone in Settings; it is the timezone downstream scheduling and invoice cadence use to determine the correct calendar day.
 
-**Plans**: TBD — run `/gsd-plan-phase 04`
+**Plans**: 4 plans
+Plans:
+**Wave 1**
+
+- [ ] 04-01-PLAN.md — Schema foundation: nullable `students.zoomLink` + `settings.timezone` + `drizzle-kit push` [BLOCKING] (ZOOM-01, SET-03)
+- [ ] 04-02-PLAN.md — MAIL-05 auto-open: widen `generateInvoiceAction` return + pop-up-safe window-handle auto-open in `invoice-preview-dialog.tsx` (MAIL-05)
+
+**Wave 2** *(blocked on 04-01 schema push)*
+
+- [ ] 04-03-PLAN.md — Zoom link: optional http(s) validation + student modal field + persist + built-in Zoom email + roster `Send Zoom link` button (ZOOM-01, ZOOM-02)
+- [ ] 04-04-PLAN.md — Timezone capture: US shortlist + IANA validator + Settings Select (browser-detect default) + persist (SET-03)
+
 **UI hint**: yes
 
 ### Phase 5: Recurring Class Schedules & Auto-Logged Sessions
