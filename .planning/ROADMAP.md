@@ -149,7 +149,7 @@ Plans:
 
 **Wave 2** *(blocked on 04-01 schema push)*
 
-- [ ] 04-03-PLAN.md — Zoom link: optional http(s) validation + student modal field + persist + built-in Zoom email + roster `Send Zoom link` button (ZOOM-01, ZOOM-02)
+- [x] 04-03-PLAN.md — Zoom link: optional http(s) validation + student modal field + persist + built-in Zoom email + roster `Send Zoom link` button (ZOOM-01, ZOOM-02)
 - [ ] 04-04-PLAN.md — Timezone capture: US shortlist + IANA validator + Settings Select (browser-detect default) + persist (SET-03)
 
 **UI hint**: yes
