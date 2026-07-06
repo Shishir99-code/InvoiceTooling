@@ -2,6 +2,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 import { settings } from "@/lib/db/schema";
+import { isValidIanaTimeZone } from "@/lib/settings/timezones";
 
 // Loose validation per SET-01 Claude's Discretion — non-empty only, NO
 // email/phone format enforcement on zelleHandle (it may hold either).
@@ -26,10 +27,24 @@ const baseSettingsSchema = createInsertSchema(settings, {
     .max(5000, "Message body is too long."),
 });
 
-export const settingsFormSchema = baseSettingsSchema.pick({
-  zelleHandle: true,
-  subjectTemplate: true,
-  bodyTemplate: true,
-});
+export const settingsFormSchema = baseSettingsSchema
+  .pick({
+    zelleHandle: true,
+    subjectTemplate: true,
+    bodyTemplate: true,
+  })
+  // SET-03: timezone is validated with the IANA check (not picked from
+  // createInsertSchema, which would only give a plain nullable string). Blank
+  // (untouched) → undefined (no error); when present it must be a recognized
+  // IANA zone. Phase 4 captures it only — nothing consumes it here.
+  .extend({
+    timezone: z.preprocess(
+      (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+      z
+        .string()
+        .refine(isValidIanaTimeZone, "Pick a valid timezone.")
+        .optional(),
+    ),
+  });
 
 export type SettingsFormValues = z.infer<typeof settingsFormSchema>;
