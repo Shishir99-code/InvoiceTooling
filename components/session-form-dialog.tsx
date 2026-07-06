@@ -216,6 +216,9 @@ export function SessionFormDialog(props: SessionFormDialogProps) {
 
           <div className="flex flex-col gap-2">
             <Label htmlFor={`notes-${fieldSuffix}`}>Notes (optional)</Label>
+            <p className="text-sm text-zinc-600">
+              Notes appear on invoices sent to parents.
+            </p>
             <Textarea
               id={`notes-${fieldSuffix}`}
               name="notes"
