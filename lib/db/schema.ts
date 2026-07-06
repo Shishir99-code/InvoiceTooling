@@ -23,7 +23,7 @@ export const invoices = pgTable("invoices", {
   // frozen line items: {date,durationMinutes,amountCents,notes}[] — see lib/invoice/render.ts
   lineItems: jsonb("line_items").notNull(),
   renderedBody: text("rendered_body").notNull(), // Pitfall 4: frozen full body, never re-rendered from live Settings
-  renderedSubject: varchar("rendered_subject", { length: 500 }).notNull(),
+  renderedSubject: text("rendered_subject").notNull(), // WR-03: text (not varchar 500) — a {student} merge can push a near-500 subject past the old bound and crash the atomic INSERT
   generatedAt: timestamp("generated_at").notNull().defaultNow(),
 });
 
