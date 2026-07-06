@@ -18,6 +18,19 @@ export const studentFormSchema = baseStudentSchema.pick({ name: true }).extend({
     .number({ error: "Rate must be a positive number." })
     .positive("Rate must be a positive number."),
   parentEmail: z.email("Enter a valid email."),
+  // ZOOM-01: optional per-student Zoom link. Blank → undefined (no error);
+  // when present it must be an http(s) URL. A scheme-less or javascript:/ftp:
+  // value is rejected (never coerced) so only a safe link ever reaches storage.
+  zoomLink: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+    z
+      .url("Enter a valid link starting with http:// or https://")
+      .refine(
+        (u) => /^https?:\/\//i.test(u),
+        "Link must start with http:// or https://",
+      )
+      .optional(),
+  ),
 });
 
 export type StudentFormValues = z.infer<typeof studentFormSchema>;
