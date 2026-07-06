@@ -55,8 +55,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Invoice History
 
-- [ ] **HIST-01**: User can view a log of all previously generated invoices
-- [ ] **HIST-02**: User can open a past invoice to see its frozen snapshot (student, sessions, total, generated date)
+- [x] **HIST-01**: User can view a log of all previously generated invoices
+- [x] **HIST-02**: User can open a past invoice to see its frozen snapshot (student, sessions, total, generated date)
 
 ## v2 Requirements
 
@@ -115,8 +115,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MAIL-02 | Phase 3 | Complete |
 | MAIL-03 | Phase 3 | Complete |
 | MAIL-04 | Phase 3 | Complete |
-| HIST-01 | Phase 3 | Pending |
-| HIST-02 | Phase 3 | Pending |
+| HIST-01 | Phase 3 | Complete |
+| HIST-02 | Phase 3 | Complete |
 
 **Coverage:**
 
