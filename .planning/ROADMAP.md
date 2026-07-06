@@ -102,7 +102,7 @@ Plans:
   4. User can open a pre-filled email draft in their own email client addressed to the student's parent (invoice summary + Zelle instructions from the template), with a copy-to-clipboard fallback when the email client is unavailable or the body is too long, and a graceful guard when a student has no parent email on file.
   5. User can view a log of every previously generated invoice and open any one to see its frozen snapshot (student, sessions, total, generated date).
 
-**Plans**: 4 plans
+**Plans**: 5 plans (4 original + 1 gap-closure)
 Plans:
 **Wave 1**
 
@@ -116,6 +116,10 @@ Plans:
 
 - [x] 03-03-PLAN.md — Gmail compose email handoff + over-length guard + delete/un-bill recovery (MAIL-01, MAIL-02, MAIL-04)
 - [x] 03-04-PLAN.md — Invoice History log (flat newest-first) + open-snapshot view reuse + notes-are-parent-facing hint (HIST-01, HIST-02)
+
+**Wave 4** *(gap closure — blocked on Wave 2; re-touches lib/actions/invoices.ts from 03-02)*
+
+- [ ] 03-05-PLAN.md — Gap closure: atomic invoice generation (single db.batch, double-billing guard) + rendered_subject->text + Settings .max bounds (INV-03; WR-01/WR-02/WR-03)
 
 **UI hint**: yes
 
