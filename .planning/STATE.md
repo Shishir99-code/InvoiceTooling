@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-07-06T01:19:05.919Z"
-last_activity: 2026-07-06 -- Phase 03 planning complete
+status: executing
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-07-06T01:28:52.776Z"
+last_activity: 2026-07-06 -- Phase 03 execution started
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 13
+  completed_plans: 10
   percent: 67
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-03)
 
 **Core value:** Go from "I tutored these sessions" to "an invoice is in the parent's inbox asking them to Zelle me" in a couple of clicks — without touching a spreadsheet.
-**Current focus:** Phase 03 — invoicing-email-history (not yet planned)
+**Current focus:** Phase 03 — invoicing-email-history
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
-Status: Phase 02 fully complete; Phase 3 (Invoicing, Email & History) ready to plan
-Last activity: 2026-07-06 -- Phase 03 planning complete
+Phase: 03 (invoicing-email-history) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
+Last activity: 2026-07-06 -- Phase 03 execution started
 
 Progress: [██████░░░░] 67% (2 of 3 phases complete)
 
@@ -62,6 +62,7 @@ Progress: [██████░░░░] 67% (2 of 3 phases complete)
 | Phase 02 P02 | ~20min | 3 tasks | 8 files |
 | Phase 02 P03 | ~15min | 2 tasks | 2 files |
 | Phase 02 P04 | 35min | 2 tasks | 2 files |
+| Phase 03 P01 | ~10min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,8 @@ Recent decisions affecting current work:
 - [Phase 02]: [Phase 02, Plan 03]: Reusing the same Drizzle sql aggregate expression in both select and orderBy compiles cleanly on drizzle-orm 0.45.2 — the RESEARCH.md version-nuance flag required no workaround
 - [Phase 02]: [Phase 02, Plan 03]: Dashboard expanded rows expose Edit only (no Delete) — the single destructive entry point stays on the Sessions page (D-11 / UI-SPEC Surface 4)
 - [Phase 02]: 02-04: dropped export of initialSessionActionState from sessions.ts (use-server file) after runtime crash discovered during checkpoint verification — A "use server" file may only export async functions; the unused plain-object export crashed /sessions at module evaluation, which npm run build did not catch
+- [Phase ?]: [Phase 03, Plan 01]: Single schema push for the whole phase (invoices + settings + sessions.invoiceId) so Waves 2-4 build against an already-pushed schema — no further push needed
+- [Phase ?]: [Phase 03, Plan 01]: invoices.lineItems left as jsonb without a TS generic since InvoiceLineItem's shape is owned by lib/invoice/render.ts (Plan 02, not yet created)
 
 ### Pending Todos
 
@@ -115,6 +118,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-05T22:07:57.734Z
-Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-invoicing-email-history/03-UI-SPEC.md
+Last session: 2026-07-06T01:28:52.772Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: None

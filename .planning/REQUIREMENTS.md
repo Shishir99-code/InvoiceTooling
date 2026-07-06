@@ -50,8 +50,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Settings
 
-- [ ] **SET-01**: User can set and edit the Zelle handle (email or phone) used in invoice payment instructions
-- [ ] **SET-02**: User can set and edit the email/invoice message template that fills into each send
+- [x] **SET-01**: User can set and edit the Zelle handle (email or phone) used in invoice payment instructions
+- [x] **SET-02**: User can set and edit the email/invoice message template that fills into each send
 
 ### Invoice History
 
@@ -105,8 +105,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SESS-05 | Phase 2 | Complete |
 | DASH-01 | Phase 2 | Complete |
 | DASH-02 | Phase 2 | Complete |
-| SET-01 | Phase 3 | Pending |
-| SET-02 | Phase 3 | Pending |
+| SET-01 | Phase 3 | Complete |
+| SET-02 | Phase 3 | Complete |
 | INV-01 | Phase 3 | Pending |
 | INV-02 | Phase 3 | Pending |
 | INV-03 | Phase 3 | Pending |

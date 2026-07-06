@@ -106,7 +106,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 03-01-PLAN.md — Foundation schema (invoices + settings + sessions.invoiceId) + push, and the Settings slice: Zelle handle + editable subject/body templates (SET-01, SET-02)
+- [x] 03-01-PLAN.md — Foundation schema (invoices + settings + sessions.invoiceId) + push, and the Settings slice: Zelle handle + editable subject/body templates (SET-01, SET-02)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -128,4 +128,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
 | 2. Session Logging & Unbilled Dashboard | 4/4 | Complete    | 2026-07-05 |
-| 3. Invoicing, Email & History | 0/4 | Planned | - |
+| 3. Invoicing, Email & History | 1/4 | In Progress|  |
