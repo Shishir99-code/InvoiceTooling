@@ -149,13 +149,26 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MAIL-04 | Phase 3 | Complete |
 | HIST-01 | Phase 3 | Complete |
 | HIST-02 | Phase 3 | Complete |
+| MAIL-05 | Phase 4 | Planned |
+| ZOOM-01 | Phase 4 | Planned |
+| ZOOM-02 | Phase 4 | Planned |
+| SET-03 | Phase 4 | Planned |
+| SCHED-01 | Phase 5 | Planned |
+| SCHED-02 | Phase 5 | Planned |
+| SCHED-03 | Phase 5 | Planned |
+| SCHED-04 | Phase 5 | Planned |
+| RINV-01 | Phase 6 | Planned |
+| RINV-02 | Phase 6 | Planned |
+| RINV-03 | Phase 6 | Planned |
+| RINV-04 | Phase 6 | Planned |
 
 **Coverage:**
 
-- v1 requirements: 27 total (corrected — previous count of 26 was a tally error; the full enumerated list above is 27 IDs across AUTH×4, STUD×4, SESS×5, DASH×2, INV×4, MAIL×4, SET×2, HIST×2)
-- Mapped to phases: 27/27 ✓
+- v1 requirements: 27 total (AUTH×4, STUD×4, SESS×5, DASH×2, INV×4, MAIL×4, SET×2, HIST×2) — all Complete
+- v1.1 requirements: 12 total (MAIL-05, ZOOM×2, SET-03, SCHED×4, RINV×4) — mapped to Phases 4–6
+- Mapped to phases: 39/39 ✓
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-07-03*
-*Last updated: 2026-07-03 after roadmap creation (traceability populated, coverage count corrected 26→27)*
+*Last updated: 2026-07-06 — milestone v1.1 roadmap (Phases 4–6, 12 new requirements mapped)*

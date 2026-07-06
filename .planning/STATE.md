@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-03)
 
 **Core value:** Go from "I tutored these sessions" to "an invoice is in the parent's inbox asking them to Zelle me" in a couple of clicks — without touching a spreadsheet.
-**Current focus:** Phase 03 — invoicing-email-history
+**Current focus:** Milestone v1.1 — Scheduling & Automation (Phases 4–6)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-07-06 — Milestone v1.1 started
+Phase: 04 — Quick Wins (Auto-Open Email, Zoom Links & Timezone) — not started
+Plan: — (run /gsd-plan-phase 04)
+Status: Milestone v1.1 initialized — requirements + roadmap done, ready to plan Phase 04
+Last activity: 2026-07-06 — Milestone v1.1 roadmap created (Phases 4–6, 12 requirements)
 
 ## Performance Metrics
 

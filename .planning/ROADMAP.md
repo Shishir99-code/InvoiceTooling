@@ -17,6 +17,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Session Logging & Unbilled Dashboard** - Tutor logs sessions against students and sees who owes what at a glance (completed 2026-07-05)
 - [x] **Phase 3: Invoicing, Email & History** - Tutor turns unbilled sessions into an emailed invoice and can review past invoices (completed 2026-07-06)
 
+### Milestone v1.1 — Scheduling & Automation
+
+- [ ] **Phase 4: Quick Wins — Auto-Open Email, Zoom Links & Timezone** - Generating opens the email draft automatically, each student carries a Zoom link, and the local timezone is set for scheduling
+- [ ] **Phase 5: Recurring Class Schedules & Auto-Logged Sessions** - Per-student weekly class schedules auto-log sessions daily via a secured cron, editable on deviation
+- [ ] **Phase 6: Scheduled Invoice Generation** - Invoices auto-generate on a configurable cadence for students with unbilled sessions; still sent manually
+
 ## Phase Details
 
 ### Phase 1: Foundation — Auth Gate & Student Roster
@@ -123,13 +129,60 @@ Plans:
 
 **UI hint**: yes
 
+### Phase 4: Quick Wins — Auto-Open Email, Zoom Links & Timezone
+
+**Goal**: Ship two low-risk wins immediately — generating an invoice auto-opens the email draft, and each student carries a Zoom link — and lay the scheduling foundation by capturing the tutor's local timezone.
+**Depends on**: Phase 3 (invoice generate + email flow; student model; settings)
+**Requirements**: MAIL-05, ZOOM-01, ZOOM-02, SET-03
+**Success Criteria** (what must be TRUE):
+
+  1. Generating an invoice automatically opens the pre-filled email draft in the tutor's own client (surviving the Server Action round-trip without being blocked as a pop-up); sending stays client-side — nothing app-sent.
+  2. User can set and edit a Zoom link per student, and the link is surfaced where relevant (session view and/or invoice via a `{zoom}` template token).
+  3. User can set her local (IANA) timezone in Settings; it is the timezone downstream scheduling and invoice cadence use to determine the correct calendar day.
+
+**Plans**: TBD — run `/gsd-plan-phase 04`
+**UI hint**: yes
+
+### Phase 5: Recurring Class Schedules & Auto-Logged Sessions
+
+**Goal**: The tutor sets each student's typical weekly class slots and the app auto-logs those sessions on the class day, leaving her to only edit the exceptions.
+**Depends on**: Phase 4 (local timezone for correct class-day resolution), Phase 2 (sessions model)
+**Requirements**: SCHED-01, SCHED-02, SCHED-03, SCHED-04
+**Success Criteria** (what must be TRUE):
+
+  1. User can define multiple recurring weekly class slots per student (weekday + start time + duration) and edit or remove any of them.
+  2. On each scheduled class day, the app auto-logs a session for that slot in the tutor's timezone, with the amount computed from the student's current rate (integer cents); a re-run of the daily job never creates a duplicate (idempotent).
+  3. Auto-logged sessions are visibly distinguishable from manually-logged ones and are fully editable/deletable like any session when a class deviates (cancelled, rescheduled, ran long/short).
+  4. The daily cron endpoint is reachable by the scheduler but rejects unauthenticated callers (via `CRON_SECRET`) and stays bypassed from the login gate — it is never publicly triggerable.
+
+**Plans**: TBD — run `/gsd-plan-phase 05`
+**UI hint**: yes
+
+### Phase 6: Scheduled Invoice Generation
+
+**Goal**: Invoices generate themselves on a cadence the tutor chooses, for every student who owes, while she stays in control of sending.
+**Depends on**: Phase 5 (cron dispatcher + `CRON_SECRET` + middleware allowlist), Phase 3 (atomic invoice generation + double-billing guard)
+**Requirements**: RINV-01, RINV-02, RINV-03, RINV-04
+**Success Criteria** (what must be TRUE):
+
+  1. User can set how often invoices are generated automatically (e.g. monthly on a chosen day-of-month).
+  2. On the cadence day, the app auto-generates an invoice snapshot for each student with unbilled sessions, reusing the existing atomic generation; students with no unbilled sessions are skipped, no session is double-billed, and the cadence cannot fire twice within one window.
+  3. User can adjust the session timeframe an invoice covers when generating (default = all currently-unbilled sessions).
+  4. Auto-generated invoices are never auto-sent — they appear in Invoice History for the tutor to review and send with one click.
+
+**Plans**: TBD — run `/gsd-plan-phase 06`
+**UI hint**: yes
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
 | 2. Session Logging & Unbilled Dashboard | 4/4 | Complete    | 2026-07-05 |
 | 3. Invoicing, Email & History | 5/5 | Complete   | 2026-07-06 |
+| 4. Quick Wins — Auto-Open Email, Zoom Links & Timezone | 0/– | Not started | — |
+| 5. Recurring Class Schedules & Auto-Logged Sessions | 0/– | Not started | — |
+| 6. Scheduled Invoice Generation | 0/– | Not started | — |
