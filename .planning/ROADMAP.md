@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 ### Milestone v1.1 — Scheduling & Automation
 
 - [x] **Phase 4: Quick Wins — Auto-Open Email, Zoom Links & Timezone** - Generating opens the email draft automatically, each student carries a Zoom link, and the local timezone is set for scheduling
-- [ ] **Phase 5: Recurring Class Schedules & Auto-Logged Sessions** - Per-student weekly class schedules auto-log sessions daily via a secured cron, editable on deviation
+- [x] **Phase 5: Recurring Class Schedules & Auto-Logged Sessions** - Per-student weekly class schedules auto-log sessions daily via a secured cron, editable on deviation (completed 2026-07-06)
 - [ ] **Phase 6: Scheduled Invoice Generation** - Invoices auto-generate on a configurable cadence for students with unbilled sessions; still sent manually
 
 ## Phase Details
@@ -167,11 +167,13 @@ Plans:
   4. The daily cron endpoint is reachable by the scheduler but rejects unauthenticated callers (via `CRON_SECRET`) and stays bypassed from the login gate — it is never publicly triggerable.
 
 **Plans** (5, planned 2026-07-06):
+
   - 05-01 (wave 1): Schema foundation — `schedule_slots` table + `sessions.scheduleSlotId` FK + shared `computeAmountCents` helper + Neon push
   - 05-02 (wave 2): Slot CRUD — timezone-safe date helpers, zod validator, add/edit/remove server actions
   - 05-03 (wave 2): Auto-log cron — idempotent HWM catch-up engine, `CRON_SECRET` bearer route, `vercel.json` daily cron, middleware exemption
   - 05-04 (wave 3): Schedule UI — per-student "Schedule" roster button, Weekly schedule dialog, slot form + remove-confirm dialogs
   - 05-05 (wave 2): Auto-logged marker — muted `Repeat` glyph in session table/card + dashboard expansion
+
 **UI hint**: yes
 
 ### Phase 6: Scheduled Invoice Generation
@@ -200,5 +202,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Session Logging & Unbilled Dashboard | 4/4 | Complete    | 2026-07-05 |
 | 3. Invoicing, Email & History | 5/5 | Complete   | 2026-07-06 |
 | 4. Quick Wins — Auto-Open Email, Zoom Links & Timezone | 4/4 | Complete    | 2026-07-06 |
-| 5. Recurring Class Schedules & Auto-Logged Sessions | 0/5 | Planned | — |
+| 5. Recurring Class Schedules & Auto-Logged Sessions | 5/5 | Complete   | 2026-07-06 |
 | 6. Scheduled Invoice Generation | 0/– | Not started | — |

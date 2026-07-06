@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: — Scheduling & Automation
-status: MAIL-05 auto-open email, ZOOM-01/02 per-student Zoom links, SET-03 timezone capture — all shipped. Schema (students.zoomLink, settings.timezone) pushed live to Neon. tsc/lint/build green.
-stopped_at: Phase 05 context gathered
-last_updated: "2026-07-06T19:51:22.639Z"
-last_activity: 2026-07-06 — Phase 4 executed inline (subagents flaky here); all gates passed, VERIFICATION.md written
+status: completed
+stopped_at: Phase 5 UI-SPEC approved
+last_updated: "2026-07-06T20:44:11.578Z"
+last_activity: 2026-07-06 -- Phase 05 marked complete
 progress:
   total_phases: 6
-  completed_phases: 4
-  total_plans: 18
-  completed_plans: 18
-  percent: 67
+  completed_phases: 5
+  total_plans: 23
+  completed_plans: 23
+  percent: 83
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-03)
 
 **Core value:** Go from "I tutored these sessions" to "an invoice is in the parent's inbox asking them to Zelle me" in a couple of clicks — without touching a spreadsheet.
-**Current focus:** Milestone v1.1 — Scheduling & Automation (Phases 4–6)
+**Current focus:** Phase 05 — recurring-class-schedules-auto-logged-sessions
 
 ## Current Position
 
-Phase: 04 — Quick Wins (Auto-Open Email, Zoom Links & Timezone) — ✅ complete (verified)
-Plan: 04-01…04-04 all executed (2 waves); next: /gsd-plan-phase 05
-Status: MAIL-05 auto-open email, ZOOM-01/02 per-student Zoom links, SET-03 timezone capture — all shipped. Schema (students.zoomLink, settings.timezone) pushed live to Neon. tsc/lint/build green.
-Last activity: 2026-07-06 — Phase 4 executed inline (subagents flaky here); all gates passed, VERIFICATION.md written
+Phase: 05 — COMPLETE
+Plan: 1 of 5
+Status: Phase 05 complete
+Last activity: 2026-07-06 -- Phase 05 marked complete
 
 ## Performance Metrics
 
@@ -127,6 +127,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-06T19:51:22.634Z
-Stopped at: Phase 05 context gathered
-Resume file: .planning/phases/05-recurring-class-schedules-auto-logged-sessions/05-CONTEXT.md
+Last session: 2026-07-06T20:02:57.172Z
+Stopped at: Phase 5 UI-SPEC approved
+Resume file: .planning/phases/05-recurring-class-schedules-auto-logged-sessions/05-UI-SPEC.md
