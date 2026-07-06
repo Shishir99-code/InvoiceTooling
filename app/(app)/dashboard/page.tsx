@@ -2,7 +2,11 @@ import { asc, desc, eq, sql } from "drizzle-orm";
 
 import { DashboardTable } from "@/components/dashboard-table";
 import { db } from "@/lib/db";
-import { sessions, students } from "@/lib/db/schema";
+import { sessions, settings, students } from "@/lib/db/schema";
+import {
+  DEFAULT_BODY_TEMPLATE,
+  DEFAULT_SUBJECT_TEMPLATE,
+} from "@/lib/invoice/defaults";
 
 // DASH-01/DASH-02 aggregate: LEFT JOIN (so $0/no-session students still show
 // per D-12) + GROUP BY + an aggregate FILTER (WHERE billed = false) so billed
@@ -19,28 +23,44 @@ const unbilledAmountExpr = sql<number>`coalesce(sum(${sessions.amountCents}) fil
 const isUnbilled = eq(sessions.billed, false);
 
 export default async function DashboardPage() {
-  const [dashboardRows, activeStudents, unbilledSessionRows, totalSessionCountRows] =
-    await Promise.all([
-      db
-        .select({
-          id: students.id,
-          name: students.name,
-          unbilledMinutes: unbilledMinutesExpr.mapWith(Number),
-          unbilledAmountCents: unbilledAmountExpr.mapWith(Number),
-        })
-        .from(students)
-        .leftJoin(sessions, eq(sessions.studentId, students.id))
-        .where(eq(students.archived, false)) // D-12/D-13: archived students never appear
-        .groupBy(students.id, students.name)
-        .orderBy(desc(unbilledAmountExpr), asc(students.name)), // most-owed first, alpha tiebreak
-      db
-        .select()
-        .from(students)
-        .where(eq(students.archived, false))
-        .orderBy(students.name),
-      db.select().from(sessions).where(isUnbilled).orderBy(desc(sessions.date)),
-      db.select({ count: sql<number>`count(*)`.mapWith(Number) }).from(sessions),
-    ]);
+  const [
+    dashboardRows,
+    activeStudents,
+    unbilledSessionRows,
+    totalSessionCountRows,
+    settingsRows,
+  ] = await Promise.all([
+    db
+      .select({
+        id: students.id,
+        name: students.name,
+        unbilledMinutes: unbilledMinutesExpr.mapWith(Number),
+        unbilledAmountCents: unbilledAmountExpr.mapWith(Number),
+      })
+      .from(students)
+      .leftJoin(sessions, eq(sessions.studentId, students.id))
+      .where(eq(students.archived, false)) // D-12/D-13: archived students never appear
+      .groupBy(students.id, students.name)
+      .orderBy(desc(unbilledAmountExpr), asc(students.name)), // most-owed first, alpha tiebreak
+    db
+      .select()
+      .from(students)
+      .where(eq(students.archived, false))
+      .orderBy(students.name),
+    db.select().from(sessions).where(isUnbilled).orderBy(desc(sessions.date)),
+    db.select({ count: sql<number>`count(*)`.mapWith(Number) }).from(sessions),
+    db.select().from(settings).where(eq(settings.id, 1)),
+  ]);
+
+  // Read once here and thread down to every row's Generate Invoice preview
+  // modal (Surface 3) — falls back to the shipped defaults on a first visit
+  // before Settings has ever been saved (mirrors /settings page precedent).
+  const settingsRow = settingsRows[0];
+  const invoiceSettings = {
+    zelleHandle: settingsRow?.zelleHandle ?? "",
+    subjectTemplate: settingsRow?.subjectTemplate ?? DEFAULT_SUBJECT_TEMPLATE,
+    bodyTemplate: settingsRow?.bodyTemplate ?? DEFAULT_BODY_TEMPLATE,
+  };
 
   // Group the unbilled session rows by student for each expanded row's
   // session list (D-11/D-13) — a plain object, not a Map, so it serializes
@@ -70,6 +90,7 @@ export default async function DashboardPage() {
           rows={dashboardRows}
           sessionsByStudentId={sessionsByStudentId}
           students={activeStudents}
+          settings={invoiceSettings}
         />
       </div>
     </div>
