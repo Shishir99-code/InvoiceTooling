@@ -43,10 +43,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Email
 
-- [ ] **MAIL-01**: User can open a pre-filled email draft in their own email client for an invoice, addressed to the student's parent email
-- [ ] **MAIL-02**: The draft body contains the invoice summary plus Zelle payment instructions built from the settings template
+- [x] **MAIL-01**: User can open a pre-filled email draft in their own email client for an invoice, addressed to the student's parent email
+- [x] **MAIL-02**: The draft body contains the invoice summary plus Zelle payment instructions built from the settings template
 - [x] **MAIL-03**: User can copy the invoice text to the clipboard as a fallback when the email client is unavailable or the body is too long for a mailto link
-- [ ] **MAIL-04**: The send action is guarded/handled gracefully when a student has no parent email on file
+- [x] **MAIL-04**: The send action is guarded/handled gracefully when a student has no parent email on file
 
 ### Settings
 
@@ -111,10 +111,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INV-02 | Phase 3 | Complete |
 | INV-03 | Phase 3 | Complete |
 | INV-04 | Phase 3 | Complete |
-| MAIL-01 | Phase 3 | Pending |
-| MAIL-02 | Phase 3 | Pending |
+| MAIL-01 | Phase 3 | Complete |
+| MAIL-02 | Phase 3 | Complete |
 | MAIL-03 | Phase 3 | Complete |
-| MAIL-04 | Phase 3 | Pending |
+| MAIL-04 | Phase 3 | Complete |
 | HIST-01 | Phase 3 | Pending |
 | HIST-02 | Phase 3 | Pending |
 

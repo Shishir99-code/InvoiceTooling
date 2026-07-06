@@ -114,7 +114,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion; two plans run in parallel — no shared files)*
 
-- [ ] 03-03-PLAN.md — Gmail compose email handoff + over-length guard + delete/un-bill recovery (MAIL-01, MAIL-02, MAIL-04)
+- [x] 03-03-PLAN.md — Gmail compose email handoff + over-length guard + delete/un-bill recovery (MAIL-01, MAIL-02, MAIL-04)
 - [ ] 03-04-PLAN.md — Invoice History log (flat newest-first) + open-snapshot view reuse + notes-are-parent-facing hint (HIST-01, HIST-02)
 
 **UI hint**: yes
@@ -128,4 +128,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation — Auth Gate & Student Roster | 5/5 | Complete    | 2026-07-04 |
 | 2. Session Logging & Unbilled Dashboard | 4/4 | Complete    | 2026-07-05 |
-| 3. Invoicing, Email & History | 2/4 | In Progress|  |
+| 3. Invoicing, Email & History | 3/4 | In Progress|  |
