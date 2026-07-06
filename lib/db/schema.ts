@@ -5,6 +5,7 @@ export const students = pgTable("students", {
   name: varchar("name", { length: 255 }).notNull(),
   rateCents: integer("rate_cents").notNull(), // D-07: integer cents, never float
   parentEmail: varchar("parent_email", { length: 255 }).notNull(), // D-13: required
+  zoomLink: varchar("zoom_link", { length: 512 }), // ZOOM-01: optional per-student Zoom link; nullable
   archived: boolean("archived").notNull().default(false), // D-10/D-11: soft delete
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -32,6 +33,7 @@ export const settings = pgTable("settings", {
   zelleHandle: varchar("zelle_handle", { length: 255 }).notNull().default(""), // SET-01
   subjectTemplate: varchar("subject_template", { length: 500 }).notNull(), // SET-02/D-13
   bodyTemplate: text("body_template").notNull(), // SET-02/D-12
+  timezone: varchar("timezone", { length: 64 }), // SET-03: IANA zone captured for Phase 5/6; nullable so the form can prefill the browser-detected zone (D-11/D-12)
 });
 
 export const sessions = pgTable("sessions", {
