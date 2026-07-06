@@ -145,7 +145,7 @@ Plans:
 **Wave 1**
 
 - [x] 04-01-PLAN.md — Schema foundation: nullable `students.zoomLink` + `settings.timezone` + `drizzle-kit push` [BLOCKING] (ZOOM-01, SET-03)
-- [ ] 04-02-PLAN.md — MAIL-05 auto-open: widen `generateInvoiceAction` return + pop-up-safe window-handle auto-open in `invoice-preview-dialog.tsx` (MAIL-05)
+- [x] 04-02-PLAN.md — MAIL-05 auto-open: widen `generateInvoiceAction` return + pop-up-safe window-handle auto-open in `invoice-preview-dialog.tsx` (MAIL-05)
 
 **Wave 2** *(blocked on 04-01 schema push)*
 
