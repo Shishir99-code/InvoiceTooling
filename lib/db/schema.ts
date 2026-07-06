@@ -36,6 +36,21 @@ export const settings = pgTable("settings", {
   timezone: varchar("timezone", { length: 64 }), // SET-03: IANA zone captured for Phase 5/6; nullable so the form can prefill the browser-detected zone (D-11/D-12)
 });
 
+// Declared above sessions since sessions.scheduleSlotId references it. Weekly
+// recurring class slots per student — the source the daily cron auto-logs from.
+export const scheduleSlots = pgTable("schedule_slots", {
+  id: serial("id").primaryKey(),
+  studentId: integer("student_id")
+    .notNull()
+    .references(() => students.id, { onDelete: "restrict" }), // mirror sessions — never cascade history
+  weekday: integer("weekday").notNull(), // 0=Sun … 6=Sat, getUTCDay convention
+  startTime: varchar("start_time", { length: 5 }).notNull(), // "HH:mm" 24h local wall-clock, TZ-naive
+  durationMinutes: integer("duration_minutes").notNull(),
+  effectiveDate: date("effective_date", { mode: "string" }).notNull(), // D-08: = creation date; auto-log floor, no retroactive backfill
+  lastLoggedDate: date("last_logged_date", { mode: "string" }), // D-05 high-water-mark; null = never processed
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const sessions = pgTable("sessions", {
   id: serial("id").primaryKey(),
   studentId: integer("student_id")
@@ -47,6 +62,7 @@ export const sessions = pgTable("sessions", {
   notes: text("notes"), // SESS-02: optional
   billed: boolean("billed").notNull().default(false), // Phase 3 sets true; Phase 2 only reads for DASH-02
   invoiceId: integer("invoice_id").references(() => invoices.id, { onDelete: "set null" }), // null = unbilled; set at generation, un-links on invoice delete (D-16)
+  scheduleSlotId: integer("schedule_slot_id").references(() => scheduleSlots.id, { onDelete: "set null" }), // D-04: null = manual; set = auto-logged from this slot (drives the D-03 marker). set null: slot delete preserves history (D-06), never cascades
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
