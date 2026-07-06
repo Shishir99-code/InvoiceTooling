@@ -3,13 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// App-level top nav (D-02): three flat destinations — Students / Dashboard /
-// Sessions. Archived is intentionally NOT a fourth item here; it stays
-// nested as the existing sub-tab pair under the Students page content.
+// App-level top nav (D-02): five flat destinations — Students / Dashboard /
+// Sessions / History / Settings. Archived is intentionally NOT a separate
+// item here; it stays nested as the existing sub-tab pair under the
+// Students page content.
 const NAV_ITEMS = [
   { href: "/", label: "Students" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/sessions", label: "Sessions" },
+  { href: "/history", label: "History" },
+  { href: "/settings", label: "Settings" },
 ] as const;
 
 export function TopNav() {
