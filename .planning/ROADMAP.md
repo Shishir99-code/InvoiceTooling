@@ -188,7 +188,7 @@ Plans:
   3. User can adjust the session timeframe an invoice covers when generating (default = all currently-unbilled sessions).
   4. Auto-generated invoices are never auto-sent — they appear in Invoice History for the tutor to review and send with one click.
 
-**Plans**: TBD — run `/gsd-plan-phase 06`
+**Plans**: 6 across 4 waves — 06-01 (schema+push), 06-02 (cadence UI), 06-03 (atomic core extract), 06-04 (manual cutoff), 06-05 (cadence cron), 06-06 (review queue)
 **UI hint**: yes
 
 ## Progress
@@ -203,4 +203,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Invoicing, Email & History | 5/5 | Complete   | 2026-07-06 |
 | 4. Quick Wins — Auto-Open Email, Zoom Links & Timezone | 4/4 | Complete    | 2026-07-06 |
 | 5. Recurring Class Schedules & Auto-Logged Sessions | 5/5 | Complete   | 2026-07-06 |
-| 6. Scheduled Invoice Generation | 0/– | Not started | — |
+| 6. Scheduled Invoice Generation | 0/6 | Planned | — |
