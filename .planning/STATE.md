@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: — Scheduling & Automation
-status: completed
+status: executing
 stopped_at: Phase 6 context gathered
-last_updated: "2026-07-06T21:32:55.569Z"
-last_activity: 2026-07-06 -- Phase 05 marked complete
+last_updated: "2026-07-07T23:16:43.201Z"
+last_activity: 2026-07-07 -- Phase 06 execution started
 progress:
   total_phases: 6
   completed_phases: 5
-  total_plans: 23
-  completed_plans: 23
+  total_plans: 29
+  completed_plans: 24
   percent: 83
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-03)
 
 **Core value:** Go from "I tutored these sessions" to "an invoice is in the parent's inbox asking them to Zelle me" in a couple of clicks — without touching a spreadsheet.
-**Current focus:** Phase 05 — recurring-class-schedules-auto-logged-sessions
+**Current focus:** Phase 06 — scheduled-invoice-generation
 
 ## Current Position
 
-Phase: 05 — COMPLETE
-Plan: 1 of 5
-Status: Phase 05 complete
-Last activity: 2026-07-06 -- Phase 05 marked complete
+Phase: 06 (scheduled-invoice-generation) — EXECUTING
+Plan: 2 of 6
+Status: Ready to execute
+Last activity: 2026-07-07 -- Phase 06 execution started
 
 ## Performance Metrics
 

@@ -75,10 +75,10 @@ Current milestone. Continues REQ-ID numbering; phases continue from Phase 03.
 
 ### Scheduled Invoicing
 
-- [ ] **RINV-01**: User can set how often invoices are generated automatically (e.g. monthly on a chosen day)
-- [ ] **RINV-02**: On the cadence day, the app automatically generates an invoice snapshot for each student who has unbilled sessions (students with none are skipped; no double-billing)
+- [x] **RINV-01**: User can set how often invoices are generated automatically (e.g. monthly on a chosen day)
+- [x] **RINV-02**: On the cadence day, the app automatically generates an invoice snapshot for each student who has unbilled sessions (students with none are skipped; no double-billing)
 - [ ] **RINV-03**: User can adjust the session timeframe an invoice covers when generating (default = all currently-unbilled sessions)
-- [ ] **RINV-04**: Auto-generated invoices are never auto-sent — the user reviews and sends each with one click
+- [x] **RINV-04**: Auto-generated invoices are never auto-sent — the user reviews and sends each with one click
 
 ### Zoom Links
 

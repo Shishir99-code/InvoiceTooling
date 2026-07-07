@@ -203,4 +203,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Invoicing, Email & History | 5/5 | Complete   | 2026-07-06 |
 | 4. Quick Wins — Auto-Open Email, Zoom Links & Timezone | 4/4 | Complete    | 2026-07-06 |
 | 5. Recurring Class Schedules & Auto-Logged Sessions | 5/5 | Complete   | 2026-07-06 |
-| 6. Scheduled Invoice Generation | 0/6 | Planned | — |
+| 6. Scheduled Invoice Generation | 1/6 | In Progress|  |
