@@ -40,6 +40,10 @@ export const settings = pgTable("settings", {
   invoiceCadenceDay: integer("invoice_cadence_day"), // RINV-01/D-02: day-of-month 1–28; ignored when invoiceCadenceLastDay is true
   invoiceCadenceLastDay: boolean("invoice_cadence_last_day").notNull().default(false), // D-02: 'last day of month' — avoids ambiguous 29/30/31
   lastInvoicedMonth: varchar("last_invoiced_month", { length: 7 }), // D-03 monthly high-water-mark 'YYYY-MM'; null = never run; guarantees at most once per calendar month
+  gmailUserEmail: varchar("gmail_user_email", { length: 255 }), // BULK-01: tutor's Gmail address; nullable until configured
+  gmailAppPassword: text("gmail_app_password"), // BULK-01: encrypted ciphertext (format: "iv:encrypted"); nullable until configured
+  gmailVerified: boolean("gmail_verified").notNull().default(false), // BULK-05: verification status after test send
+  gmailLastError: text("gmail_last_error"), // BULK-05: last verification error message for UI display
 });
 
 // Declared above sessions since sessions.scheduleSlotId references it. Weekly
