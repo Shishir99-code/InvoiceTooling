@@ -26,6 +26,7 @@ export default async function SettingsPage() {
           invoiceCadenceEnabled={row?.invoiceCadenceEnabled ?? false}
           invoiceCadenceDay={row?.invoiceCadenceDay ?? null}
           invoiceCadenceLastDay={row?.invoiceCadenceLastDay ?? false}
+          autoSendInvoices={row?.autoSendInvoices ?? false}
         />
         <div className="border-t pt-8">
           <EmailDeliveryForm

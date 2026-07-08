@@ -20,9 +20,11 @@ export async function runInvoiceCadence(): Promise<{
   generated: number;
   skipped: number;
   ranThisMonth: boolean;
+  invoiceIds: number[];
 }> {
   let generated = 0;
   let skipped = 0;
+  const invoiceIds: number[] = [];
 
   // Guard 1: Load settings and check if cadence is enabled.
   const [settingsRow] = await db
@@ -32,7 +34,7 @@ export async function runInvoiceCadence(): Promise<{
 
   if (!settingsRow?.invoiceCadenceEnabled) {
     // Cadence is off — early return.
-    return { generated, skipped, ranThisMonth: false };
+    return { generated, skipped, ranThisMonth: false, invoiceIds };
   }
 
   // Guard 2: Resolve timezone and compute today in the user's zone.
@@ -45,7 +47,7 @@ export async function runInvoiceCadence(): Promise<{
   // next day (today.day >= effectiveDay), but the HWM guarantees at most one run
   // per calendar month.
   if (settingsRow.lastInvoicedMonth === month) {
-    return { generated, skipped, ranThisMonth: false };
+    return { generated, skipped, ranThisMonth: false, invoiceIds };
   }
 
   // Guard 4: Resolve the effective cadence day.
@@ -59,7 +61,7 @@ export async function runInvoiceCadence(): Promise<{
 
   // If today is before the effective cadence day, we're not yet ready to run.
   if (Number(today.slice(8, 10)) < effectiveDay) {
-    return { generated, skipped, ranThisMonth: false };
+    return { generated, skipped, ranThisMonth: false, invoiceIds };
   }
 
   // Guard 5: Run the generation loop. Select DISTINCT studentId from sessions
@@ -80,6 +82,9 @@ export async function runInvoiceCadence(): Promise<{
 
       if (result.ok) {
         generated++;
+        if (result.invoiceId) {
+          invoiceIds.push(result.invoiceId);
+        }
       } else {
         skipped++;
       }
@@ -97,5 +102,5 @@ export async function runInvoiceCadence(): Promise<{
     .set({ lastInvoicedMonth: month })
     .where(eq(settings.id, 1));
 
-  return { generated, skipped, ranThisMonth: true };
+  return { generated, skipped, ranThisMonth: true, invoiceIds };
 }

@@ -27,6 +27,7 @@ interface SettingsFormProps {
   invoiceCadenceEnabled: boolean;
   invoiceCadenceDay: number | null;
   invoiceCadenceLastDay: boolean;
+  autoSendInvoices?: boolean;
 }
 
 // SET-01/SET-02: a PAGE form (not a modal) — persistent settings, no
@@ -228,6 +229,29 @@ export function SettingsForm(props: SettingsFormProps) {
         {state.fieldErrors?.invoiceCadenceDay && (
           <p className="text-sm text-red-600">
             {state.fieldErrors.invoiceCadenceDay[0]}
+          </p>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            id="autoSendInvoices"
+            name="autoSendInvoices"
+            defaultChecked={props.autoSendInvoices ?? false}
+            className="h-4 w-4 rounded border-zinc-300"
+          />
+          <Label htmlFor="autoSendInvoices" className="mt-0">
+            Auto-send invoices after monthly generation
+          </Label>
+        </div>
+        <p className="text-sm text-zinc-600">
+          When enabled, invoices will be automatically sent to parents via email on the scheduled generation date. Requires Gmail email delivery to be verified in Email Delivery settings.
+        </p>
+        {state.fieldErrors?.autoSendInvoices && (
+          <p className="text-sm text-red-600">
+            {state.fieldErrors.autoSendInvoices[0]}
           </p>
         )}
       </div>

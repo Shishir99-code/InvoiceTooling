@@ -65,6 +65,11 @@ export const settingsFormSchema = baseSettingsSchema
         .max(28, "Pick a day between 1 and 28.")
         .optional(),
     ),
+    // BULK-AUTO: auto-send invoices after monthly generation
+    autoSendInvoices: z.preprocess(
+      (v) => v === "on" || v === "true" || v === true,
+      z.boolean(),
+    ),
   });
 
 export type SettingsFormValues = z.infer<typeof settingsFormSchema>;

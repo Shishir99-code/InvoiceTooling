@@ -1,0 +1,1 @@
+ALTER TABLE "settings" ADD COLUMN "auto_send_invoices" boolean DEFAULT false NOT NULL;

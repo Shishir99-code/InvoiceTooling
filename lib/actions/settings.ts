@@ -22,6 +22,7 @@ function parseSettingsForm(formData: FormData) {
     invoiceCadenceEnabled: formData.get("invoiceCadenceEnabled"),
     invoiceCadenceDay: formData.get("invoiceCadenceDay"),
     invoiceCadenceLastDay: formData.get("invoiceCadenceLastDay"),
+    autoSendInvoices: formData.get("autoSendInvoices"),
   });
 }
 
@@ -49,6 +50,7 @@ export async function saveSettingsAction(
       invoiceCadenceEnabled: parsed.data.invoiceCadenceEnabled,
       invoiceCadenceDay: parsed.data.invoiceCadenceDay ?? null,
       invoiceCadenceLastDay: parsed.data.invoiceCadenceLastDay,
+      autoSendInvoices: parsed.data.autoSendInvoices,
     })
     .onConflictDoUpdate({
       target: settings.id,
@@ -60,6 +62,7 @@ export async function saveSettingsAction(
         invoiceCadenceEnabled: parsed.data.invoiceCadenceEnabled,
         invoiceCadenceDay: parsed.data.invoiceCadenceDay ?? null,
         invoiceCadenceLastDay: parsed.data.invoiceCadenceLastDay,
+        autoSendInvoices: parsed.data.autoSendInvoices,
       },
     });
 

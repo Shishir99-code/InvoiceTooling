@@ -44,6 +44,7 @@ export const settings = pgTable("settings", {
   gmailAppPassword: text("gmail_app_password"), // BULK-01: encrypted ciphertext (format: "iv:encrypted"); nullable until configured
   gmailVerified: boolean("gmail_verified").notNull().default(false), // BULK-05: verification status after test send
   gmailLastError: text("gmail_last_error"), // BULK-05: last verification error message for UI display
+  autoSendInvoices: boolean("auto_send_invoices").notNull().default(false), // BULK-AUTO: auto-send invoices after monthly generation (opt-in)
 });
 
 // Declared above sessions since sessions.scheduleSlotId references it. Weekly
