@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: — Scheduling & Automation
 status: phase-complete
-stopped_at: Phase 6 all plans executed (ready for Phase 7 deployment)
-last_updated: "2026-07-07T23:59:45.201Z"
-last_activity: 2026-07-07 -- Phase 06 execution complete — all 6 plans delivered (schema, settings UI, generation core, manual cutoff, cron cadence, review queue)
+stopped_at: Phase 7 all plans executed (bulk email sending complete, ready for v1.1 freeze)
+last_updated: "2026-07-08T12:30:00.000Z"
+last_activity: 2026-07-08 -- Phase 07 execution complete — all 4 waves delivered (schema + mailer, settings UI, invoice history UI, bulk send action)
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 29
-  completed_plans: 28
-  percent: 97
+  total_phases: 7
+  completed_phases: 7
+  total_plans: 32
+  completed_plans: 32
+  percent: 100
 ---
 
 # Project State
@@ -21,18 +21,18 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-03)
 
 **Core value:** Go from "I tutored these sessions" to "an invoice is in the parent's inbox asking them to Zelle me" in a couple of clicks — without touching a spreadsheet.
-**Current focus:** Phase 06 — scheduled-invoice-generation
+**Current focus:** Phase 07 — bulk-email-sending-gmail-smtp
 
 ## Current Position
 
-Phase: 06 (scheduled-invoice-generation) — **ALL 6 PLANS COMPLETE**
-Status: **Ready for Phase 7 (final system integration & deployment)**
+Phase: 07 (bulk-email-sending-gmail-smtp) — **ALL 4 PLANS COMPLETE**
+Status: **v1.1 Feature Complete — Ready for Deployment**
 Wave Summary:
-  - Wave 1 (Plan 01): Schema foundation — 6 columns pushed to Neon ✅
-  - Wave 2 (Plans 02-03): Settings UI + generation core refactor ✅
-  - Wave 3 (Plans 04-05): Manual "bill through" cutoff + cadence cron ✅
-  - Wave 4 (Plan 06): Review queue + sent tracking ✅
-Last activity: 2026-07-07T23:59:45 — Phase 06 execution complete via wave-parallel agents
+  - Wave 1 (Plan 01): Schema + backend mailer foundation ✅
+  - Wave 2 (Plan 02): Settings UI gmail credential setup ✅
+  - Wave 3 (Plan 03): Invoice history UI bulk selection & dialog ✅
+  - Wave 4 (Plan 04): Bulk send action & error handling polish ✅
+Last activity: 2026-07-08T12:30:00 — Phase 07 execution complete; all success criteria met
 
 ## Performance Metrics
 
