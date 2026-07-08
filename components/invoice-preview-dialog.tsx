@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   generateInvoiceAction,
   type InvoiceActionState,
@@ -77,24 +78,33 @@ export function InvoicePreviewDialog({
     popupRef.current = window.open("", "_blank");
   }
 
+  const [throughDate, setThroughDate] = useState("");
+
   const sortedSessions = [...sessions].sort((a, b) =>
     a.date < b.date ? -1 : a.date > b.date ? 1 : 0,
   );
-  const totalCents = sortedSessions.reduce(
+
+  // Plan 04: filter sessions by optional through-date cutoff (manual generate only).
+  // Blank throughDate = no cutoff (all unbilled, default behavior).
+  const cutoffSessions = sortedSessions.filter(
+    (s) => !throughDate || s.date <= throughDate,
+  );
+
+  const totalCents = cutoffSessions.reduce(
     (sum, session) => sum + session.amountCents,
     0,
   );
   const period =
-    sortedSessions.length > 0
+    cutoffSessions.length > 0
       ? formatPeriod(
-          sortedSessions[0].date,
-          sortedSessions[sortedSessions.length - 1].date,
+          cutoffSessions[0].date,
+          cutoffSessions[cutoffSessions.length - 1].date,
         )
       : "";
   const invoiceBlock = renderInvoiceText(
     student.name,
     period,
-    buildLineItems(sortedSessions),
+    buildLineItems(cutoffSessions),
   );
   const mergeValues = {
     invoice: invoiceBlock,
@@ -169,6 +179,24 @@ export function InvoicePreviewDialog({
         >
           <input type="hidden" name="studentId" value={student.id} />
 
+          <div className="flex flex-col gap-3">
+            <div>
+              <label className="block text-sm font-medium text-zinc-900 mb-1">
+                Bill Through Date (Optional)
+              </label>
+              <Input
+                type="date"
+                name="throughDate"
+                value={throughDate}
+                onChange={(e) => setThroughDate(e.target.value)}
+              />
+              <p className="text-xs text-zinc-600 mt-1">
+                Only bill sessions on or before this date. Leave blank to bill
+                all unbilled sessions.
+              </p>
+            </div>
+          </div>
+
           <div className="flex flex-col gap-2">
             <p className="text-sm font-semibold text-zinc-900">
               <span className="font-normal text-zinc-600">Subject: </span>
@@ -182,6 +210,11 @@ export function InvoicePreviewDialog({
                 {state.fieldErrors.studentId[0]}
               </p>
             )}
+            {cutoffSessions.length === 0 && (
+              <p className="text-sm text-amber-600">
+                No unbilled sessions on or before that date.
+              </p>
+            )}
           </div>
 
           <DialogFooter>
@@ -190,7 +223,7 @@ export function InvoicePreviewDialog({
             </DialogClose>
             <Button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || cutoffSessions.length === 0}
               className="bg-blue-600 text-white hover:bg-blue-700"
             >
               {isPending ? "Generating…" : "Generate & Freeze"}
