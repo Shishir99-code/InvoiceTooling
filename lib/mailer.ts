@@ -90,18 +90,24 @@ export async function sendInvoiceViaGmail(opts: {
 
     if (error instanceof Error) {
       const code = (error as any).code;
+      const status = (error as any).responseCode;
       const message = error.message || '';
 
-      if (code === 'EAUTH' || message.includes('Invalid credentials')) {
+      // Map specific SMTP error codes to user-friendly messages
+      if (code === 'EAUTH' || message.includes('Invalid credentials') || message.includes('535')) {
         errorMessage = 'Gmail credential invalid or expired — update in Settings';
       } else if (code === 'ETIMEDOUT' || message.includes('timeout')) {
         errorMessage = 'Network timeout — check connection and retry';
-      } else if (code === 'ENOTFOUND') {
+      } else if (code === 'ENOTFOUND' || message.includes('getaddrinfo')) {
         errorMessage = 'Unable to reach Gmail servers — try again later';
-      } else if (message.includes('454') || message.includes('Rate limit')) {
+      } else if (message.includes('454') || status === 454 || message.includes('Rate limited')) {
         errorMessage = 'Gmail rate limited — you can send ~100 emails/day. Try again tomorrow.';
-      } else if (message.includes('Invalid recipient') || message.includes('550')) {
+      } else if (message.includes('serviceUnavailable') || status === 421) {
+        errorMessage = 'Gmail temporarily unavailable — try again in a few minutes';
+      } else if (message.includes('Invalid recipient') || message.includes('550') || message.includes('553')) {
         errorMessage = 'Parent email invalid or blocked by Gmail';
+      } else if (message.includes('Message rejected') || status === 554) {
+        errorMessage = 'Message rejected by Gmail — check email content and retry';
       } else {
         errorMessage = `Failed to send: ${message.substring(0, 100)}`;
       }
