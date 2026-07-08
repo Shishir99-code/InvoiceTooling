@@ -64,12 +64,12 @@ export function DashboardTable({
 }: DashboardTableProps) {
   if (rows.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 py-16 text-center">
+      <div className="flex flex-col items-center gap-3 py-16 text-center">
         <h2 className="text-xl leading-tight font-semibold text-zinc-900">
           No active students yet
         </h2>
         <p className="text-base text-zinc-600">
-          Add a student to start tracking who owes what.
+          Add your first student to start tracking who owes what.
         </p>
       </div>
     );
@@ -109,7 +109,7 @@ function DashboardRowItem({
   const textClass = isZero ? "text-zinc-600" : "text-zinc-900";
 
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white">
+    <div className="rounded-lg border border-zinc-200 bg-white transition-all hover:shadow-[0_2px_6px_rgba(0,0,0,0.06)]">
       {/* Row header — a <button> can't nest a <button>, so the accordion
           toggle (chevron + name) and the Generate Invoice trigger are
           siblings inside a plain wrapper div, not one full-row button
@@ -118,10 +118,10 @@ function DashboardRowItem({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="flex flex-1 items-center gap-2 text-left"
+          className="group flex flex-1 items-center gap-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded transition-colors hover:bg-zinc-50"
         >
           <ChevronDown
-            className={`size-4 shrink-0 text-zinc-500 transition-transform ${
+            className={`size-4 shrink-0 text-zinc-400 transition-all duration-150 group-hover:text-zinc-600 ${
               open ? "rotate-180" : ""
             }`}
           />
@@ -152,7 +152,7 @@ function DashboardRowItem({
         <div className="border-t border-zinc-200 p-4">
           {sessions.length === 0 ? (
             <p className="text-sm text-zinc-600">
-              No unbilled sessions for {row.name}.
+              All sessions for {row.name} have been billed.
             </p>
           ) : (
             <>
@@ -209,10 +209,10 @@ function DashboardRowItem({
                 {sessions.map((session) => (
                   <div
                     key={session.id}
-                    className="flex flex-col gap-2 rounded-lg border border-zinc-200 p-4"
+                    className="flex flex-col gap-3 rounded-lg border border-zinc-200 p-4 transition-all hover:shadow-[0_2px_6px_rgba(0,0,0,0.04)]"
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="flex items-center gap-1 text-base font-medium text-zinc-900">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="flex items-center gap-1.5 text-base font-medium text-zinc-900">
                         {session.scheduleSlotId !== null && (
                           <AutoLoggedMarker />
                         )}
@@ -227,12 +227,11 @@ function DashboardRowItem({
                         triggerSize="sm"
                       />
                     </div>
-                    <span className="text-base text-zinc-600">
-                      {formatDuration(session.durationMinutes)} ·{" "}
-                      {formatCents(session.amountCents)}
+                    <span className="text-sm text-zinc-600">
+                      {formatDuration(session.durationMinutes)} · {formatCents(session.amountCents)}
                     </span>
                     {session.notes && (
-                      <span className="text-base text-zinc-600">
+                      <span className="text-sm text-zinc-700">
                         {session.notes}
                       </span>
                     )}

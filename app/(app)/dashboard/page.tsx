@@ -74,14 +74,13 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
-      <h1 className="text-[28px] leading-tight font-semibold text-zinc-900">
+      <h1 className="text-[28px] leading-tight font-semibold text-zinc-900 text-wrap-balance">
         Dashboard
       </h1>
       {/* Glance view — no primary CTA here (D-11: "a path to edit," not add). */}
       {!hasAnySessions && (
-        <p className="mt-2 text-sm text-zinc-600">
-          No sessions logged yet — amounts will appear here once you log your
-          first session.
+        <p className="mt-3 text-base text-zinc-600">
+          No sessions logged yet. Log your first session to see who owes what.
         </p>
       )}
 
