@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import { SettingsForm } from "@/components/settings-form";
+import { EmailDeliveryForm } from "@/components/email-delivery-form";
 import { db } from "@/lib/db";
 import { settings } from "@/lib/db/schema";
 import {
@@ -16,7 +17,7 @@ export default async function SettingsPage() {
       <h1 className="text-[28px] leading-tight font-semibold text-zinc-900">
         Settings
       </h1>
-      <div className="mt-6">
+      <div className="mt-6 flex flex-col gap-8">
         <SettingsForm
           zelleHandle={row?.zelleHandle ?? ""}
           subjectTemplate={row?.subjectTemplate ?? DEFAULT_SUBJECT_TEMPLATE}
@@ -26,6 +27,13 @@ export default async function SettingsPage() {
           invoiceCadenceDay={row?.invoiceCadenceDay ?? null}
           invoiceCadenceLastDay={row?.invoiceCadenceLastDay ?? false}
         />
+        <div className="border-t pt-8">
+          <EmailDeliveryForm
+            gmailUserEmail={row?.gmailUserEmail}
+            gmailVerified={row?.gmailVerified}
+            gmailLastError={row?.gmailLastError}
+          />
+        </div>
       </div>
     </div>
   );
