@@ -50,6 +50,7 @@ export default async function InvoiceDetailPage({
         renderedSubject={row.invoice.renderedSubject}
         renderedBody={row.invoice.renderedBody}
         sessionCount={sessionCount}
+        sent={row.invoice.sent}
       />
     </div>
   );

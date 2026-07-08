@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   generateInvoiceAction,
+  markInvoiceSentAction,
   type InvoiceActionState,
 } from "@/lib/actions/invoices";
 import type { sessions as sessionsTable } from "@/lib/db/schema";
@@ -145,6 +146,8 @@ export function InvoicePreviewDialog({
         : null;
       if (gmailUrl && !isGmailUrlTooLong(gmailUrl) && popupRef.current) {
         popupRef.current.location.href = gmailUrl;
+        // Mark the invoice sent when the draft actually opens (D-09)
+        void markInvoiceSentAction(state.invoiceId, true);
       } else {
         popupRef.current?.close();
       }

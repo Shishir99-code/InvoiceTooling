@@ -113,3 +113,25 @@ export async function deleteInvoiceAction(id: number): Promise<void> {
   // return the new id.
   redirect("/history");
 }
+
+// D-09: mark an invoice sent or unsent — a reversible best-effort flag
+// that controls the review queue (unsent invoices show "Not sent yet" badge).
+// Guarded by positive-integer id check before any DB write, mirroring
+// deleteInvoiceAction. The sent flag is never auto-set by the app — only
+// draft-open (History or manual generate) or explicit toggle can flip it.
+export async function markInvoiceSentAction(
+  id: number,
+  sent: boolean,
+): Promise<void> {
+  const invoiceId = Number(id);
+  if (!Number.isInteger(invoiceId) || invoiceId <= 0) {
+    throw new Error("Invalid invoice id.");
+  }
+
+  const nextSent = sent === true;
+
+  await db.update(invoices).set({ sent: nextSent }).where(eq(invoices.id, invoiceId));
+
+  revalidatePath("/history");
+  revalidatePath(`/history/${invoiceId}`);
+}

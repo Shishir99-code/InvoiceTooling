@@ -5,6 +5,7 @@ import { format } from "date-fns";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { InvoiceDeleteConfirmDialog } from "@/components/invoice-delete-confirm-dialog";
+import { markInvoiceSentAction } from "@/lib/actions/invoices";
 import { formatCents } from "@/lib/format";
 import { buildGmailComposeUrl, isGmailUrlTooLong } from "@/lib/invoice/mailto";
 import { formatPeriod } from "@/lib/invoice/render";
@@ -21,6 +22,7 @@ export interface InvoiceViewProps {
   renderedSubject: string;
   renderedBody: string;
   sessionCount: number;
+  sent: boolean;
 }
 
 // Shared frozen-snapshot view — reused by the post-generate landing (D-09)
@@ -40,10 +42,12 @@ export function InvoiceView(props: InvoiceViewProps) {
     renderedSubject,
     renderedBody,
     sessionCount,
+    sent: initialSent,
   } = props;
 
   const [copyLabel, setCopyLabel] = useState("Copy Invoice Text");
   const [copyFailed, setCopyFailed] = useState(false);
+  const [sent, setSent] = useState(initialSent);
 
   // MAIL-01/MAIL-02/D-10: one-click Gmail compose draft, pre-filled with the
   // parent's email, the frozen subject, and the frozen body. MAIL-04 note:
@@ -105,31 +109,69 @@ export function InvoiceView(props: InvoiceViewProps) {
         </p>
       )}
 
-      <div className="flex gap-2">
-        {!tooLong && (
-          <a
-            href={gmailUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              buttonVariants({ variant: "default" }),
-              "bg-blue-600 text-white hover:bg-blue-700",
-            )}
-          >
-            Email Invoice
-          </a>
-        )}
-        <Button type="button" variant="outline" onClick={handleCopy}>
-          {copyLabel}
-        </Button>
-        {/* Sole delete entry point for an invoice (Surface 4) — not
-            duplicated on the History row. */}
-        <InvoiceDeleteConfirmDialog
-          invoiceId={invoiceId}
-          studentName={studentName}
-          period={formatPeriod(periodStart, periodEnd)}
-          sessionCount={sessionCount}
-        />
+      <div className="flex flex-col gap-4">
+        <div className="flex gap-2">
+          {!tooLong && (
+            <a
+              href={gmailUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => {
+                void markInvoiceSentAction(invoiceId, true);
+                setSent(true);
+              }}
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "bg-blue-600 text-white hover:bg-blue-700",
+              )}
+            >
+              Email Invoice
+            </a>
+          )}
+          <Button type="button" variant="outline" onClick={handleCopy}>
+            {copyLabel}
+          </Button>
+          {/* Sole delete entry point for an invoice (Surface 4) — not
+              duplicated on the History row. */}
+          <InvoiceDeleteConfirmDialog
+            invoiceId={invoiceId}
+            studentName={studentName}
+            period={formatPeriod(periodStart, periodEnd)}
+            sessionCount={sessionCount}
+          />
+        </div>
+
+        {/* Mark sent/unsent toggle — shows status and action buttons */}
+        <div className="flex items-center gap-3">
+          {!sent && (
+            <p className="text-sm text-zinc-600">Not sent yet</p>
+          )}
+          {!sent ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                void markInvoiceSentAction(invoiceId, true);
+                setSent(true);
+              }}
+            >
+              Mark sent
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                void markInvoiceSentAction(invoiceId, false);
+                setSent(false);
+              }}
+            >
+              Mark unsent
+            </Button>
+          )}
+        </div>
       </div>
 
       {copyFailed && (
