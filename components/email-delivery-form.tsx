@@ -145,7 +145,7 @@ export function EmailDeliveryForm({
             id="gmail-email"
             type="email"
             placeholder="your.email@gmail.com"
-            value={email}
+            value={email || ""}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -154,13 +154,14 @@ export function EmailDeliveryForm({
         <div>
           <Label htmlFor="app-password">App Password</Label>
           <div className="flex gap-2">
-            <Input
+            <input
               id="app-password"
               type={showPassword ? "text" : "password"}
               placeholder="xxxx xxxx xxxx xxxx"
-              value={password}
+              value={password || ""}
               onChange={(e) => setPassword(e.target.value.toUpperCase())}
               maxLength={20}
+              className="flex h-10 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
             <Button
               type="button"
