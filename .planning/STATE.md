@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: — Scheduling & Automation
-status: executing
-stopped_at: Phase 6 Plan 06 complete
-last_updated: "2026-07-07T23:59:00.000Z"
-last_activity: 2026-07-07 -- Phase 06 Plan 06 delivered review-not-send experience with auto/sent badges and mark-sent controls
+status: phase-complete
+stopped_at: Phase 6 all plans executed (ready for Phase 7 deployment)
+last_updated: "2026-07-07T23:59:45.201Z"
+last_activity: 2026-07-07 -- Phase 06 execution complete — all 6 plans delivered (schema, settings UI, generation core, manual cutoff, cron cadence, review queue)
 progress:
   total_phases: 6
   completed_phases: 6
@@ -25,10 +25,14 @@ See: .planning/PROJECT.md (updated 2026-07-03)
 
 ## Current Position
 
-Phase: 06 (scheduled-invoice-generation) — COMPLETE
-Plan: 6 of 6 (Complete)
-Status: Ready for Phase 7 (final system integration & deployment)
-Last activity: 2026-07-07 -- Phase 06 Plan 06 delivered review-not-send experience with auto/sent badges and mark-sent controls
+Phase: 06 (scheduled-invoice-generation) — **ALL 6 PLANS COMPLETE**
+Status: **Ready for Phase 7 (final system integration & deployment)**
+Wave Summary:
+  - Wave 1 (Plan 01): Schema foundation — 6 columns pushed to Neon ✅
+  - Wave 2 (Plans 02-03): Settings UI + generation core refactor ✅
+  - Wave 3 (Plans 04-05): Manual "bill through" cutoff + cadence cron ✅
+  - Wave 4 (Plan 06): Review queue + sent tracking ✅
+Last activity: 2026-07-07T23:59:45 — Phase 06 execution complete via wave-parallel agents
 
 ## Performance Metrics
 
