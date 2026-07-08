@@ -73,7 +73,7 @@ export default async function SessionsPage() {
             mode="add"
             students={activeStudents}
             triggerLabel="Log Session"
-            triggerClassName="bg-blue-600 text-white hover:bg-blue-700"
+            triggerClassName="bg-primary text-primary-foreground hover:bg-primary/90"
           />
         )}
       </div>
@@ -86,7 +86,7 @@ export default async function SessionsPage() {
             mode="add"
             students={activeStudents}
             triggerLabel="Log Session"
-            triggerClassName="mt-4 bg-blue-600 text-white hover:bg-blue-700"
+            triggerClassName="mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
           />
         }
       />

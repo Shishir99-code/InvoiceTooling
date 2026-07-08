@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-07T00:00:00Z",
+  "title": "Design System: TutorInvoice",
+  "extensions": {
+    "colorMeta": {
+      "neutral-white": {
+        "role": "neutral",
+        "displayName": "Pure White",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0 0)",
+          "oklch(0.3 0 0)",
+          "oklch(0.45 0 0)",
+          "oklch(0.6 0 0)",
+          "oklch(0.75 0 0)",
+          "oklch(0.85 0 0)",
+          "oklch(0.93 0 0)",
+          "oklch(1 0 0)"
+        ]
+      },
+      "neutral-ink": {
+        "role": "neutral",
+        "displayName": "Near-Black",
+        "canonical": "oklch(0.145 0 0)",
+        "tonalRamp": [
+          "oklch(0.05 0 0)",
+          "oklch(0.1 0 0)",
+          "oklch(0.145 0 0)",
+          "oklch(0.25 0 0)",
+          "oklch(0.4 0 0)",
+          "oklch(0.6 0 0)",
+          "oklch(0.8 0 0)",
+          "oklch(0.95 0 0)"
+        ]
+      },
+      "neutral-surface": {
+        "role": "neutral",
+        "displayName": "Near-White",
+        "canonical": "oklch(0.97 0 0)",
+        "tonalRamp": [
+          "oklch(0.3 0 0)",
+          "oklch(0.45 0 0)",
+          "oklch(0.6 0 0)",
+          "oklch(0.75 0 0)",
+          "oklch(0.85 0 0)",
+          "oklch(0.93 0 0)",
+          "oklch(0.97 0 0)",
+          "oklch(1 0 0)"
+        ]
+      },
+      "neutral-border": {
+        "role": "neutral",
+        "displayName": "Light Grey",
+        "canonical": "oklch(0.922 0 0)",
+        "tonalRamp": [
+          "oklch(0.4 0 0)",
+          "oklch(0.55 0 0)",
+          "oklch(0.7 0 0)",
+          "oklch(0.8 0 0)",
+          "oklch(0.87 0 0)",
+          "oklch(0.922 0 0)",
+          "oklch(0.96 0 0)",
+          "oklch(1 0 0)"
+        ]
+      },
+      "neutral-muted": {
+        "role": "neutral",
+        "displayName": "Medium Grey",
+        "canonical": "oklch(0.556 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0 0)",
+          "oklch(0.25 0 0)",
+          "oklch(0.35 0 0)",
+          "oklch(0.45 0 0)",
+          "oklch(0.556 0 0)",
+          "oklch(0.7 0 0)",
+          "oklch(0.85 0 0)",
+          "oklch(0.95 0 0)"
+        ]
+      },
+      "accent-primary": {
+        "role": "primary",
+        "displayName": "Slate-Teal",
+        "canonical": "oklch(0.40 0.08 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.08 250)",
+          "oklch(0.22 0.08 250)",
+          "oklch(0.28 0.08 250)",
+          "oklch(0.35 0.08 250)",
+          "oklch(0.40 0.08 250)",
+          "oklch(0.55 0.08 250)",
+          "oklch(0.72 0.08 250)",
+          "oklch(0.88 0.05 250)"
+        ]
+      },
+      "accent-destructive": {
+        "role": "destructive",
+        "displayName": "Red-Orange",
+        "canonical": "oklch(0.577 0.245 27.325)",
+        "tonalRamp": [
+          "oklch(0.25 0.2 27)",
+          "oklch(0.35 0.24 27)",
+          "oklch(0.45 0.25 27)",
+          "oklch(0.52 0.245 27)",
+          "oklch(0.577 0.245 27.325)",
+          "oklch(0.68 0.2 27)",
+          "oklch(0.78 0.15 27)",
+          "oklch(0.88 0.08 27)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page titles and hero headlines. Rare; only one per screen."
+      },
+      "heading": {
+        "displayName": "Heading",
+        "purpose": "Section titles, card headers, dialog titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paragraph text, table cells, form content. Capped at 65–75 characters per line."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form labels, badges, helper text. Slightly bolder than body for semantic distinction."
+      }
+    },
+    "shadows": [
+      {
+        "name": "subtle-lift",
+        "value": "0 2px 6px rgba(0, 0, 0, 0.06)",
+        "purpose": "Hover state on buttons, input focus, interactive row hover. Minimal, soft; signals interactivity without visual weight."
+      },
+      {
+        "name": "focus-glow",
+        "value": "0 0 0 3px oklch(0.40 0.08 250 / 20%)",
+        "purpose": "Focus ring on buttons and inputs. Thin halo in accent color at reduced opacity for keyboard navigation visibility."
+      },
+      {
+        "name": "modal-elevation",
+        "value": "0 10px 32px rgba(0, 0, 0, 0.10)",
+        "purpose": "Dialog/modal elevation above backdrop. Lifts the modal visually while maintaining restraint."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-transition",
+        "value": "transition: all 150ms ease-out",
+        "purpose": "Default transition for state changes (hover, focus, active). Smooth, responsive feedback without choreography."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "640px",
+        "purpose": "Tablet and up; the single responsive breakpoint for this single-user app."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main call-to-action. Use for primary actions (Add, Save, Generate Invoice). Slate-teal background with white text.",
+      "html": "<button class=\"ds-btn-primary\">Save Changes</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; background: oklch(0.40 0.08 250); color: white; padding: 8px 16px; height: 32px; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; font-family: Geist, system-ui, -apple-system, sans-serif; cursor: pointer; transition: all 150ms ease-out; outline: none; } .ds-btn-primary:hover { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); opacity: 0.9; } .ds-btn-primary:focus-visible { outline: 3px solid oklch(0.40 0.08 250 / 20%); outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Alternative action. Use for Cancel, Back, or secondary navigation. Light grey background with dark text.",
+      "html": "<button class=\"ds-btn-secondary\">Cancel</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; background: oklch(0.97 0 0); color: oklch(0.145 0 0); padding: 8px 16px; height: 32px; border: 1px solid oklch(0.922 0 0); border-radius: 8px; font-size: 0.875rem; font-weight: 500; font-family: Geist, system-ui, -apple-system, sans-serif; cursor: pointer; transition: all 150ms ease-out; outline: none; } .ds-btn-secondary:hover { background: oklch(0.92 0 0); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04); } .ds-btn-secondary:focus-visible { outline: 3px solid oklch(0.40 0.08 250 / 20%); outline-offset: 2px; } .ds-btn-secondary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Minimal action. Use for tertiary actions or navigation links that don't need visual prominence.",
+      "html": "<button class=\"ds-btn-ghost\">Learn more</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; background: transparent; color: oklch(0.145 0 0); padding: 8px 16px; height: 32px; border: 1px solid transparent; border-radius: 8px; font-size: 0.875rem; font-weight: 500; font-family: Geist, system-ui, -apple-system, sans-serif; cursor: pointer; transition: all 150ms ease-out; outline: none; } .ds-btn-ghost:hover { background: oklch(0.97 0 0); } .ds-btn-ghost:focus-visible { outline: 3px solid oklch(0.40 0.08 250 / 20%); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "Standard text field for forms. White background, light grey border, dark text.",
+      "html": "<input type=\"text\" class=\"ds-input\" placeholder=\"Enter student name\">",
+      "css": ".ds-input { width: 100%; height: 32px; padding: 8px 10px; border: 1px solid oklch(0.922 0 0); border-radius: 8px; background: oklch(1 0 0); color: oklch(0.145 0 0); font-size: 1rem; font-family: Geist, system-ui, -apple-system, sans-serif; transition: all 150ms ease-out; outline: none; } .ds-input::placeholder { color: oklch(0.556 0 0); } .ds-input:focus { border-color: oklch(0.40 0.08 250); box-shadow: 0 0 0 3px oklch(0.40 0.08 250 / 20%); } .ds-input:invalid { border-color: oklch(0.577 0.245 27.325); box-shadow: 0 0 0 3px oklch(0.577 0.245 27.325 / 20%); } .ds-input:disabled { background: oklch(0.922 0 0 / 50%); color: oklch(0.556 0 0); cursor: not-allowed; }"
+    },
+    {
+      "name": "Card / Container",
+      "kind": "card",
+      "refersTo": "card-default",
+      "description": "Content container. White background, light border, 10px radius. No shadow at rest.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Unbilled Sessions</h3><p class=\"ds-card-text\">5 hours pending invoice</p></div>",
+      "css": ".ds-card { background: oklch(1 0 0); border: 1px solid oklch(0.922 0 0); border-radius: 10px; padding: 16px; transition: all 150ms ease-out; } .ds-card:hover { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); } .ds-card-title { font-size: 1.25rem; font-weight: 600; color: oklch(0.145 0 0); margin: 0 0 8px 0; font-family: Geist, system-ui, -apple-system, sans-serif; } .ds-card-text { font-size: 1rem; font-weight: 400; color: oklch(0.556 0 0); margin: 0; font-family: Geist, system-ui, -apple-system, sans-serif; }"
+    },
+    {
+      "name": "Navigation Tab (Active)",
+      "kind": "nav",
+      "refersTo": "nav-tab",
+      "description": "Top navigation active state. Slate-teal text with underline border. Signals current location.",
+      "html": "<nav class=\"ds-nav\"><a href=\"/\" class=\"ds-nav-item ds-nav-item--active\">Students</a><a href=\"/dashboard\" class=\"ds-nav-item\">Dashboard</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 24px; border-bottom: 1px solid oklch(0.922 0 0); padding: 0; margin: 0; font-family: Geist, system-ui, -apple-system, sans-serif; } .ds-nav-item { padding: 8px 0 8px 0; text-decoration: none; color: oklch(0.556 0 0); font-size: 1rem; font-weight: 500; border-bottom: 2px solid transparent; transition: all 150ms ease-out; cursor: pointer; } .ds-nav-item:hover { color: oklch(0.145 0 0); } .ds-nav-item--active { color: oklch(0.40 0.08 250); border-bottom-color: oklch(0.40 0.08 250); }"
+    },
+    {
+      "name": "Modal / Dialog",
+      "kind": "custom",
+      "refersTo": "dialog-default",
+      "description": "Modal dialog overlay. White background, 10px radius, prominent shadow to elevate above backdrop.",
+      "html": "<div class=\"ds-dialog-backdrop\"><div class=\"ds-dialog\"><h2 class=\"ds-dialog-title\">Generate Invoice</h2><p class=\"ds-dialog-content\">Create an invoice for this student?</p><div class=\"ds-dialog-footer\"><button class=\"ds-btn-secondary\">Cancel</button><button class=\"ds-btn-primary\">Generate</button></div></div></div>",
+      "css": ".ds-dialog-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.3); display: flex; align-items: center; justify-content: center; z-index: 50; } .ds-dialog { background: oklch(1 0 0); border-radius: 10px; padding: 24px; max-width: 480px; width: 90%; box-shadow: 0 10px 32px rgba(0, 0, 0, 0.10); } .ds-dialog-title { font-size: 1.25rem; font-weight: 600; color: oklch(0.145 0 0); margin: 0 0 12px 0; font-family: Geist, system-ui, -apple-system, sans-serif; } .ds-dialog-content { font-size: 1rem; font-weight: 400; color: oklch(0.145 0 0); line-height: 1.5; margin: 0 0 20px 0; font-family: Geist, system-ui, -apple-system, sans-serif; } .ds-dialog-footer { display: flex; gap: 12px; justify-content: flex-end; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Expert's Desktop",
+    "overview": "This system is built for a solo business owner who values clarity, control, and speed. Every interface element serves a purpose—there is no decoration, no animation for its own sake, no visual noise. The palette is neutral and grounded, with a single refined accent color used sparingly to draw focus to the most important interactions. The design philosophy rejects startup-trendy aesthetics, overly corporate formality, and generic UI-kit defaults.",
+    "keyCharacteristics": [
+      "Neutral, grayscale foundation with one refined accent color",
+      "Clean, purposeful hierarchy—nothing uniform, nothing redundant",
+      "Minimal shadows and subtle hover states for interactivity feedback",
+      "No decorative elements; every pixel has a function",
+      "Fast, efficient workflows with clear visual order"
+    ],
+    "rules": [
+      {
+        "name": "The Restraint Rule",
+        "body": "The accent color (slate-teal) appears on ≤10% of any screen—active tabs, a primary CTA, a link. Its rarity is the entire point: when it appears, it commands focus.",
+        "section": "colors"
+      },
+      {
+        "name": "The Contrast Rule",
+        "body": "All text must meet WCAG AA minimum (4.5:1 for normal text, 3:1 for large text). Muted text on white backgrounds reaches exactly 4.5:1.",
+        "section": "colors"
+      },
+      {
+        "name": "The Weight Rule",
+        "body": "Only two weights in active use: 400 (body) and 600 (headings/labels). Hierarchy comes from size and color, not thickness.",
+        "section": "typography"
+      },
+      {
+        "name": "The Line-Length Rule",
+        "body": "Body text and prose maxes at 75 characters per line. Narrow text blocks may be shorter. Readability is non-negotiable.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-by-Default Rule",
+        "body": "At rest, every surface is flat. No drop shadows, no ambient glows. Shadows appear only as a response to state (hover, focus, active modal).",
+        "section": "elevation"
+      },
+      {
+        "name": "The Focus Rule",
+        "body": "Every interactive element has a visible focus state. Buttons receive a subtle glow; inputs receive a border shift or soft ring. Keyboard users must never lose track.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the slate-teal accent (oklch(0.40 0.08 250)) for interactive focus. Keep it ≤10% of any screen.",
+      "Do maintain high contrast: body text must reach 4.5:1 WCAG AA minimum.",
+      "Do keep backgrounds white or near-white. Tinted or warm-beige backgrounds are forbidden.",
+      "Do use 8px and 16px as your foundational spacing scale.",
+      "Do use 8px radius for buttons and inputs, 10px for cards.",
+      "Do apply subtle shadows only on hover or focus, never at rest.",
+      "Do keep typography to one family (Geist) in two weights (400 and 600).",
+      "Do ensure every interactive element has a visible focus ring for keyboard users."
+    ],
+    "donts": [
+      "Don't use the default bright blue. The system's accent is a refined slate-teal.",
+      "Don't use startup-trendy effects: no gradients, no glassmorphism, no decorative animations.",
+      "Don't layer unnecessary shadows or add depth effects 'for visual interest.'",
+      "Don't use light grey for body text. Dark text on white is mandatory.",
+      "Don't use warm or cream-tinted backgrounds. Backgrounds are pure white or near-white.",
+      "Don't create uniform card grids with identical visual weight.",
+      "Don't add decorative icons or illustrations. Icons are functional; no ornament.",
+      "Don't make buttons or cards overly rounded (>12px radius).",
+      "Don't create dense, cramped layouts. Generous padding is part of the 'expert desktop' feel.",
+      "Don't override focus states or hide focus rings 'for aesthetics.' Keyboard users depend on them."
+    ]
+  }
+}

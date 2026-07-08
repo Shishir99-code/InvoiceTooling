@@ -35,7 +35,7 @@ export function TopNav() {
               href={item.href}
               className={
                 isActive
-                  ? "-mb-px border-b-2 border-blue-600 pb-2 text-base font-medium text-blue-600"
+                  ? "-mb-px border-b-2 border-primary pb-2 text-base font-medium text-primary"
                   : "border-b-2 border-transparent pb-2 text-base font-medium text-zinc-600 hover:text-zinc-900"
               }
             >

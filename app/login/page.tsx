@@ -51,7 +51,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             disabled={isPending}
-            className="h-11 w-full bg-blue-600 text-white hover:bg-blue-700"
+            className="h-11 w-full bg-primary text-primary-foreground hover:bg-primary/90"
           >
             {isPending ? "Unlocking…" : "Unlock"}
           </Button>

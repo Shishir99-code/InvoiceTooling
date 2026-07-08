@@ -39,7 +39,7 @@ export default async function StudentsPage() {
           <StudentFormDialog
             mode="add"
             triggerLabel="Add Student"
-            triggerClassName="bg-blue-600 text-white hover:bg-blue-700"
+            triggerClassName="bg-primary text-primary-foreground hover:bg-primary/90"
           />
         )}
       </div>
@@ -50,7 +50,7 @@ export default async function StudentsPage() {
       <div className="mb-6 flex gap-6 border-b border-zinc-200">
         <Link
           href="/"
-          className="-mb-px border-b-2 border-blue-600 pb-2 text-base font-medium text-blue-600"
+          className="-mb-px border-b-2 border-primary pb-2 text-base font-medium text-primary"
         >
           Students
         </Link>
@@ -71,7 +71,7 @@ export default async function StudentsPage() {
             <StudentFormDialog
               mode="add"
               triggerLabel="Add Student"
-              triggerClassName="mt-4 bg-blue-600 text-white hover:bg-blue-700"
+              triggerClassName="mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
             />
           ),
         }}

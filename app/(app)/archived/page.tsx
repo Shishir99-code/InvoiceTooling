@@ -35,7 +35,7 @@ export default async function ArchivedStudentsPage() {
         </Link>
         <Link
           href="/archived"
-          className="-mb-px border-b-2 border-blue-600 pb-2 text-base font-medium text-blue-600"
+          className="-mb-px border-b-2 border-primary pb-2 text-base font-medium text-primary"
         >
           Archived
         </Link>
@@ -56,7 +56,7 @@ export default async function ArchivedStudentsPage() {
               type="submit"
               variant="outline"
               size="sm"
-              className="text-blue-600 hover:text-blue-700"
+              className="text-primary hover:text-primary/80"
             >
               Restore
             </Button>
