@@ -1,14 +1,17 @@
-// Test endpoint for cron auto-log (development only)
+// Test endpoint for cron auto-log
 // This allows you to manually trigger the cron without waiting for Vercel's schedule
+// Requires CRON_SECRET for authentication in production
 // Use: curl http://localhost:3000/api/cron/test-auto-log
+// Or: curl -H "Authorization: Bearer YOUR_CRON_SECRET" https://your-vercel-url/api/cron/test-auto-log
 
+import { isAuthorizedCronRequest } from "@/lib/cron/auth";
 import { runAutoLog } from "@/lib/schedule/auto-log";
 import { runInvoiceCadence } from "@/lib/invoice/cadence";
 
 export async function GET(req: Request) {
-  // In production, this should be deleted or protected. For dev, it's open.
-  if (process.env.NODE_ENV === "production") {
-    return Response.json({ error: "Not available in production" }, { status: 403 });
+  // In production, require CRON_SECRET. In dev, allow open access.
+  if (process.env.NODE_ENV === "production" && !isAuthorizedCronRequest(req)) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
