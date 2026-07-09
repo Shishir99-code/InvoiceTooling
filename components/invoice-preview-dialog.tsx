@@ -127,13 +127,18 @@ export function InvoicePreviewDialog({
   // The Email Invoice link below uses this to open Gmail.
   useEffect(() => {
     if (state.fieldErrors === null && state.invoiceId !== null) {
+      console.log("[invoice-dialog] Success, emailDraft:", state.emailDraft);
       const url = state.emailDraft
         ? buildGmailComposeUrl(state.emailDraft)
         : null;
+      console.log("[invoice-dialog] Generated URL:", url?.slice(0, 100), "tooLong:", url ? isGmailUrlTooLong(url) : "N/A");
       if (url && !isGmailUrlTooLong(url)) {
         setGmailUrl(url);
+        console.log("[invoice-dialog] Set gmailUrl");
         // Mark sent when draft opens (user clicks the link)
         void markInvoiceSentAction(state.invoiceId, true);
+      } else {
+        console.log("[invoice-dialog] URL invalid or too long");
       }
     }
   }, [state]);
