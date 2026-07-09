@@ -116,6 +116,10 @@ export function InvoicePreviewDialog({
   const isSuccess = state.fieldErrors === null && state.invoiceId !== null;
   const hasError = state.fieldErrors !== null;
 
+  if (typeof window !== "undefined") {
+    console.log("[invoice-dialog-render] isSuccess:", isSuccess, "gmailUrl:", gmailUrl ? "SET" : "null", "invoiceId:", state.invoiceId, "emailDraft:", state.emailDraft ? "SET" : "null");
+  }
+
   function handleClose() {
     setOpen(false);
     if (isSuccess) {
