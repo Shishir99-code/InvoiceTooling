@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -69,15 +69,9 @@ export function InvoicePreviewDialog({
     initialState,
   );
 
-  // MAIL-05 (RESEARCH §1): grab a blank window handle SYNCHRONOUSLY inside the
-  // click gesture so the browser trusts it as user-initiated (not a blocked
-  // pop-up). The Server Action then resolves and we point this handle at the
-  // Gmail compose URL. handleSubmit must NOT preventDefault — that would cancel
-  // the Server Action submission.
-  const popupRef = useRef<Window | null>(null);
-  function handleSubmit() {
-    popupRef.current = window.open("", "_blank");
-  }
+  // MAIL-05: after server action succeeds, use gmailUrl state to open Gmail
+  // via simple link. Avoids popup/timing issues of pre-opening blank window.
+  const [gmailUrl, setGmailUrl] = useState<string | null>(null);
 
   const [throughDate, setThroughDate] = useState("");
 
@@ -117,45 +111,30 @@ export function InvoicePreviewDialog({
   const previewSubject = renderTemplate(settings.subjectTemplate, mergeValues);
   const previewBody = renderTemplate(settings.bodyTemplate, mergeValues);
 
-  // Close + navigate only after a *real* successful submit — same
-  // adjust-during-render idiom as SessionFormDialog (D-16 precedent), but
-  // navigates to the finished invoice (D-09) instead of just closing. The
-  // window-handle side effect lives in the effect below (refs may not be
-  // touched during render — react-hooks/refs).
-  const [prevState, setPrevState] = useState(state);
-  if (state !== prevState) {
-    setPrevState(state);
-    if (state.fieldErrors === null && state.invoiceId !== null) {
-      setOpen(false);
+  // After successful generation, keep dialog open so user can click Email button.
+  // Only close after they navigate away or click the close button.
+  const isSuccess = state.fieldErrors === null && state.invoiceId !== null;
+  const hasError = state.fieldErrors !== null;
+
+  function handleClose() {
+    setOpen(false);
+    if (isSuccess) {
       router.push(`/history/${state.invoiceId}`);
     }
   }
 
-  // Point the pre-opened blank tab at the Gmail draft once the action resolves.
-  // The handle was grabbed synchronously in handleSubmit (inside the click
-  // gesture) so it is not treated as a blocked pop-up; here we only redirect or
-  // close it based on the result.
+  // After successful generation, build and store the Gmail URL (if valid).
+  // The Email Invoice link below uses this to open Gmail.
   useEffect(() => {
     if (state.fieldErrors === null && state.invoiceId !== null) {
-      // Success: open the draft (D-01) UNLESS the URL is over-length (D-03),
-      // the draft is missing, or the handle was blocked/null — then close the
-      // handle so no empty tab is orphaned and /history's copy-first UI takes
-      // over.
-      const gmailUrl = state.emailDraft
+      const url = state.emailDraft
         ? buildGmailComposeUrl(state.emailDraft)
         : null;
-      if (gmailUrl && !isGmailUrlTooLong(gmailUrl) && popupRef.current) {
-        popupRef.current.location.href = gmailUrl;
-        // Mark the invoice sent when the draft actually opens (D-09)
+      if (url && !isGmailUrlTooLong(url)) {
+        setGmailUrl(url);
+        // Mark sent when draft opens (user clicks the link)
         void markInvoiceSentAction(state.invoiceId, true);
-      } else {
-        popupRef.current?.close();
       }
-      popupRef.current = null;
-    } else if (state.fieldErrors !== null) {
-      // Error: clean up any pre-opened blank tab (the dialog stays open).
-      popupRef.current?.close();
-      popupRef.current = null;
     }
   }, [state]);
 
@@ -177,7 +156,6 @@ export function InvoicePreviewDialog({
 
         <form
           action={formAction}
-          onSubmit={handleSubmit}
           className="flex flex-col gap-4"
         >
           <input type="hidden" name="studentId" value={student.id} />
@@ -221,16 +199,44 @@ export function InvoicePreviewDialog({
           </div>
 
           <DialogFooter>
-            <DialogClose render={<Button type="button" variant="outline" />}>
-              Cancel
-            </DialogClose>
-            <Button
-              type="submit"
-              disabled={isPending || cutoffSessions.length === 0}
-              className="bg-blue-600 text-white hover:bg-blue-700"
-            >
-              {isPending ? "Generating…" : "Generate & Freeze"}
-            </Button>
+            {isSuccess && gmailUrl ? (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}
+                >
+                  Done
+                </Button>
+                <a
+                  href={gmailUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-medium text-sm"
+                >
+                  Email Invoice
+                </a>
+              </>
+            ) : (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}
+                >
+                  {isSuccess ? "Done" : "Cancel"}
+                </Button>
+                {!isSuccess && (
+                  <Button
+                    type="submit"
+                    disabled={isPending || cutoffSessions.length === 0}
+                    className="bg-blue-600 text-white hover:bg-blue-700"
+                  >
+                    {isPending ? "Generating…" : "Generate & Freeze"}
+                  </Button>
+                )}
+              </>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>
