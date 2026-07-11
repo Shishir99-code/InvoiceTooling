@@ -61,14 +61,14 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
   );
   const [open, setOpen] = useState(false);
 
-  const [weekday, setWeekday] = useState<number>(
-    isEdit ? props.slot.weekday : 1, // default Monday
+  const [weekday, setWeekday] = useState<string>(
+    String(isEdit ? props.slot.weekday : 1) // default Monday, as string
   );
 
   const initialHours = isEdit ? Math.floor(props.slot.durationMinutes / 60) : 1;
   const initialMinutes = isEdit ? props.slot.durationMinutes % 60 : 0;
-  const [hours, setHours] = useState<number>(initialHours);
-  const [minutes, setMinutes] = useState<number>(initialMinutes);
+  const [hours, setHours] = useState<string>(String(initialHours));
+  const [minutes, setMinutes] = useState<string>(String(initialMinutes));
 
   // Close the dialog only after a *real* successful submit — same
   // adjust-during-render pattern as SessionFormDialog.
@@ -84,7 +84,7 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
   const primaryLabel = isEdit ? "Save changes" : "Add slot";
   const pendingLabel = isEdit ? "Saving…" : "Adding…";
 
-  const totalMinutes = hours * 60 + minutes;
+  const totalMinutes = Number(hours) * 60 + Number(minutes);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -115,12 +115,12 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
             <Label>Day</Label>
             <Select
               value={weekday}
-              onValueChange={(value) => setWeekday(value as number)}
+              onValueChange={setWeekday}
             >
               <SelectTrigger>
                 <SelectValue>
-                  {(value: number) =>
-                    WEEKDAY_OPTIONS.find((o) => o.value === value)?.label ?? ""
+                  {(value: string) =>
+                    WEEKDAY_OPTIONS.find((o) => o.value === Number(value))?.label ?? ""
                   }
                 </SelectValue>
               </SelectTrigger>
@@ -160,11 +160,11 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
             <div className="flex gap-2">
               <Select
                 value={hours}
-                onValueChange={(value) => setHours(value as number)}
+                onValueChange={setHours}
               >
                 <SelectTrigger className="flex-1">
                   <SelectValue>
-                    {(value: number) => `${value} ${value === 1 ? "hr" : "hrs"}`}
+                    {(value: string) => `${value} ${Number(value) === 1 ? "hr" : "hrs"}`}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
@@ -177,10 +177,10 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
               </Select>
               <Select
                 value={minutes}
-                onValueChange={(value) => setMinutes(value as number)}
+                onValueChange={setMinutes}
               >
                 <SelectTrigger className="flex-1">
-                  <SelectValue>{(value: number) => `${value} min`}</SelectValue>
+                  <SelectValue>{(value: string) => `${value} min`}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {MINUTE_OPTIONS.map((m) => (

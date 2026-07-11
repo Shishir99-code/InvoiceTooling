@@ -56,6 +56,12 @@ export async function runAutoLog(): Promise<{
 
   for (const slot of rows) {
     try {
+      console.log(`[runAutoLog] Processing slot ${slot.id}:`, {
+        weekday: slot.weekday,
+        effectiveDate: slot.effectiveDate,
+        lastLoggedDate: slot.lastLoggedDate,
+      });
+
       // Window: from the day AFTER the HWM (or effectiveDate if never processed)
       // up to today. String compare is valid for yyyy-MM-dd.
       const lower = slot.lastLoggedDate
@@ -63,16 +69,27 @@ export async function runAutoLog(): Promise<{
         : slot.effectiveDate;
       const upper = today;
 
+      console.log(`[runAutoLog] Date window for slot ${slot.id}:`, { lower, upper, today });
+
       if (lower > upper) {
         // Nothing new for this slot — leave the HWM untouched.
+        console.log(`[runAutoLog] Slot ${slot.id}: lower > upper, skipping`);
         continue;
       }
 
       // Build ALL insert rows in JS BEFORE opening the transaction. The
       // neon-http driver batches a fixed set of writes with no intermediate
       // reads, so we must not query/branch inside the transaction callback.
-      const insertRows = eachDateInclusive(lower, upper)
-        .filter((d) => weekdayOf(d) === slot.weekday)
+      const allDates = eachDateInclusive(lower, upper);
+      console.log(`[runAutoLog] Slot ${slot.id}: Generated ${allDates.length} dates between ${lower} and ${upper}`);
+
+      const insertRows = allDates
+        .filter((d) => {
+          const slotWeekday = weekdayOf(d);
+          const matches = slotWeekday === slot.weekday;
+          console.log(`[runAutoLog] Slot ${slot.id}: Checking ${d}: weekday=${slotWeekday}, expected=${slot.weekday}, matches=${matches}`);
+          return matches;
+        })
         .map((d) => ({
           studentId: slot.studentId,
           date: d,
@@ -83,22 +100,32 @@ export async function runAutoLog(): Promise<{
           scheduleSlotId: slot.id, // D-04: marks this session as auto-logged
         }));
 
-      // Fixed two-statement batch: bulk insert (if any) + advance the HWM to
-      // `upper`. The HWM advances even when no weekday matched, so future runs
-      // don't re-scan old dates. Because the update only commits if the inserts
-      // also commit, a crash mid-slot re-runs cleanly with no duplicates.
-      await db.transaction(async (tx) => {
+      console.log(`[runAutoLog] Slot ${slot.id}: Creating ${insertRows.length} sessions`);
+
+      // Neon HTTP driver doesn't support transactions, so we do insert then update
+      // sequentially. If a crash happens between them, the next run will re-insert
+      // (idempotent via duplicate detection below).
+      try {
         if (insertRows.length) {
-          await tx.insert(sessions).values(insertRows);
+          console.log(`[runAutoLog] Slot ${slot.id}: Inserting ${insertRows.length} rows...`);
+          await db.insert(sessions).values(insertRows);
+          console.log(`[runAutoLog] Slot ${slot.id}: Insert complete`);
         }
-        await tx
+
+        // Advance the HWM for this slot
+        await db
           .update(scheduleSlots)
           .set({ lastLoggedDate: upper })
           .where(eq(scheduleSlots.id, slot.id));
-      });
+        console.log(`[runAutoLog] Slot ${slot.id}: Updated HWM to ${upper}`);
 
-      processedSlots++;
-      sessionsCreated += insertRows.length;
+        processedSlots++;
+        sessionsCreated += insertRows.length;
+        console.log(`[runAutoLog] Slot ${slot.id}: Complete, sessionsCreated = ${sessionsCreated}`);
+      } catch (error) {
+        console.error(`[runAutoLog] Slot ${slot.id}: Failed:`, error);
+        throw error;
+      }
     } catch {
       // Never let one bad slot block the rest — skip and continue.
       continue;

@@ -42,11 +42,18 @@ export async function addSlotAction(
   _prevState: SlotActionState,
   formData: FormData,
 ): Promise<SlotActionState> {
+  const entries = Object.fromEntries(formData.entries());
+  console.log("[addSlotAction] Called with formData entries:", entries);
+  console.log("[addSlotAction] FormData keys:", Array.from(formData.keys()));
+
   const parsed = parseAddSlotForm(formData);
 
   if (!parsed.success) {
+    console.log("[addSlotAction] Validation failed:", z.flattenError(parsed.error).fieldErrors);
     return { fieldErrors: z.flattenError(parsed.error).fieldErrors };
   }
+
+  console.log("[addSlotAction] Validation passed, parsed data:", parsed.data);
 
   const [student] = await db
     .select()
@@ -66,16 +73,27 @@ export async function addSlotAction(
     .where(eq(settings.id, 1));
   const tz = settingsRow?.timezone ?? DEFAULT_TIMEZONE;
 
-  await db.insert(scheduleSlots).values({
-    studentId: parsed.data.studentId,
-    weekday: parsed.data.weekday,
-    startTime: parsed.data.startTime,
-    durationMinutes: parsed.data.durationMinutes,
-    effectiveDate: todayInZone(tz),
-    lastLoggedDate: null, // D-05: never processed yet
-  });
+  try {
+    const result = await db.insert(scheduleSlots).values({
+      studentId: parsed.data.studentId,
+      weekday: parsed.data.weekday,
+      startTime: parsed.data.startTime,
+      durationMinutes: parsed.data.durationMinutes,
+      effectiveDate: todayInZone(tz),
+      lastLoggedDate: null, // D-05: never processed yet
+    });
+    console.log("[addSlotAction] Insert successful:", result);
+  } catch (error) {
+    console.error("[addSlotAction] Insert failed:", error);
+    return {
+      fieldErrors: {
+        _form: [`Database error: ${error instanceof Error ? error.message : String(error)}`],
+      },
+    };
+  }
 
   revalidatePath("/");
+  console.log("[addSlotAction] Complete - slot saved successfully");
   return { fieldErrors: null };
 }
 
