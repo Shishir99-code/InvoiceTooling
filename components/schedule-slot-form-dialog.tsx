@@ -115,7 +115,7 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
             <Label>Day</Label>
             <Select
               value={weekday}
-              onValueChange={setWeekday}
+              onValueChange={(value) => value && setWeekday(value)}
             >
               <SelectTrigger>
                 <SelectValue>
@@ -160,7 +160,7 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
             <div className="flex gap-2">
               <Select
                 value={hours}
-                onValueChange={setHours}
+                onValueChange={(value) => value && setHours(value)}
               >
                 <SelectTrigger className="flex-1">
                   <SelectValue>
@@ -177,7 +177,7 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
               </Select>
               <Select
                 value={minutes}
-                onValueChange={setMinutes}
+                onValueChange={(value) => value && setMinutes(value)}
               >
                 <SelectTrigger className="flex-1">
                   <SelectValue>{(value: string) => `${value} min`}</SelectValue>
