@@ -32,7 +32,7 @@ Wave Summary:
   - Wave 2 (Plan 02): Settings UI gmail credential setup ✅
   - Wave 3 (Plan 03): Invoice history UI bulk selection & dialog ✅
   - Wave 4 (Plan 04): Bulk send action & error handling polish ✅
-Last activity: 2026-07-08T12:30:00 — Phase 07 execution complete; all success criteria met
+Last activity: 2026-07-30 — Completed quick task 260730-hjn: Replace cron automation with calendar tab and bulk email sending
 
 ## Performance Metrics
 
@@ -125,6 +125,12 @@ None yet.
 
 - REQUIREMENTS.md's original Traceability section stated "26 total" v1 requirements, but the actual v1 list (AUTH×4, STUD×4, SESS×5, DASH×2, INV×4, MAIL×4, SET×2, HIST×2) totals 27. Corrected during roadmap creation — see updated Coverage counts in REQUIREMENTS.md.
 - ~~Plan 01-01 paused at checkpoint:human-action (Task 3)~~ RESOLVED 2026-07-04 — Neon DB provisioned and `.env.local` populated; `drizzle-kit push` succeeded, tables live.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260730-hjn | Replace cron automation with calendar tab and bulk email sending — removed all cron/auto-log/auto-send machinery (Phases 6/7 async paths superseded); added Calendar tab with derived pending occurrences + confirm-to-log | 2026-07-30 | 9060c1e | [260730-hjn-replace-cron-automation-with-calendar-ta](./quick/260730-hjn-replace-cron-automation-with-calendar-ta/) |
 
 ## Deferred Items
 
