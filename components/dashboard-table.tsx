@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { ChevronDown } from "lucide-react";
 
@@ -108,6 +108,19 @@ function DashboardRowItem({
   const isZero = row.unbilledAmountCents === 0;
   const textClass = isZero ? "text-zinc-600" : "text-zinc-900";
 
+  // Generating an invoice bills every unbilled session (the common case),
+  // which makes generateInvoiceAction's revalidatePath("/dashboard") flip
+  // this row's live unbilledAmountCents to 0 mid-flow — unmounting
+  // InvoicePreviewDialog (and its open/success state inside) before the user
+  // ever sees "Done" or gets to click "Email Invoice". Latching this true
+  // once keeps the trigger (and an already-open dialog) mounted for the rest
+  // of this row's lifetime on the page, so a mid-generation revalidation
+  // can't yank it out from under the user.
+  const [hadUnbilled, setHadUnbilled] = useState(!isZero);
+  useEffect(() => {
+    if (!isZero) setHadUnbilled(true);
+  }, [isZero]);
+
   return (
     <div className="rounded-lg border border-zinc-200 bg-white transition-all hover:shadow-[0_2px_6px_rgba(0,0,0,0.06)]">
       {/* Row header — a <button> can't nest a <button>, so the accordion
@@ -138,8 +151,10 @@ function DashboardRowItem({
           </span>
         </span>
         {/* D-08: hidden (not disabled) at $0 unbilled — a $0 row already
-            reads as de-emphasized, a disabled button adds no information. */}
-        {row.unbilledAmountCents !== 0 && (
+            reads as de-emphasized, a disabled button adds no information.
+            Gated on the latched `hadUnbilled`, not the live amount — see
+            comment above. */}
+        {hadUnbilled && (
           <InvoicePreviewDialog
             student={{ id: row.id, name: row.name }}
             sessions={sessions}

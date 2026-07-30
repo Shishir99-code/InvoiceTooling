@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useActionState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -311,13 +311,30 @@ function ConfirmOccurrenceDialog({
   );
   const [minutes, setMinutes] = useState<number>(chip.durationMinutes % 60);
 
-  const [prevState, setPrevState] = useState(state);
-  if (state !== prevState) {
-    setPrevState(state);
-    if (state.fieldErrors === null) {
-      onClose();
+  // Close on real success only. Unlike SessionFormDialog's local `setOpen`,
+  // onClose() here reaches up into the PARENT's state (CalendarView's
+  // `selected`) — updating another component's state during this
+  // component's render is unsafe (React warns), so the close has to happen
+  // in an effect. Two StrictMode-dev pitfalls to avoid here:
+  //   1. onClose is a fresh inline function on every CalendarView render, so
+  //      it's read via a ref rather than listed as a dependency — depending
+  //      on it would re-fire this effect (and close the dialog) on any
+  //      unrelated parent re-render.
+  //   2. A mutable "isFirstRender" ref does NOT reliably skip the initial
+  //      run — dev StrictMode intentionally double-invokes a fresh effect
+  //      (setup → cleanup → setup again) on the SAME instance, and the
+  //      ref's mutation survives that replay, so the second invocation would
+  //      wrongly see "already ran" and fire early. Comparing against the
+  //      module-level `initialConfirmState` object identity instead is
+  //      replay-safe: it's only unequal after a REAL useActionState dispatch
+  //      returns a new state object, however many times the effect runs.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  useEffect(() => {
+    if (state !== initialConfirmState && state.fieldErrors === null) {
+      onCloseRef.current();
     }
-  }
+  }, [state]);
 
   const totalMinutes = hours * 60 + minutes;
   // Client-side preview only — the Server Action recomputes from the live rate.

@@ -108,17 +108,25 @@ export function InvoicePreviewDialog({
     zelle: settings.zelleHandle,
     period,
   };
-  const previewSubject = renderTemplate(settings.subjectTemplate, mergeValues);
-  const previewBody = renderTemplate(settings.bodyTemplate, mergeValues);
-
   // After successful generation, keep dialog open so user can click Email button.
   // Only close after they navigate away or click the close button.
   const isSuccess = state.fieldErrors === null && state.invoiceId !== null;
   const hasError = state.fieldErrors !== null;
 
-  if (typeof window !== "undefined") {
-    console.log("[invoice-dialog-render] isSuccess:", isSuccess, "gmailUrl:", gmailUrl ? "SET" : "null", "invoiceId:", state.invoiceId, "emailDraft:", state.emailDraft ? "SET" : "null");
-  }
+  // generateInvoiceAction revalidates /dashboard, which — since Generate
+  // Invoice typically bills everything unbilled — flips this row's `sessions`
+  // prop to empty right after success. Recomputing the preview from that
+  // live (now-stale) prop would blank out the invoice text while the success
+  // buttons are still showing. Once successful, show the server-FROZEN
+  // subject/body from emailDraft (what was actually generated) instead.
+  const previewSubject =
+    isSuccess && state.emailDraft
+      ? state.emailDraft.subject
+      : renderTemplate(settings.subjectTemplate, mergeValues);
+  const previewBody =
+    isSuccess && state.emailDraft
+      ? state.emailDraft.body
+      : renderTemplate(settings.bodyTemplate, mergeValues);
 
   function handleClose() {
     setOpen(false);
@@ -128,21 +136,17 @@ export function InvoicePreviewDialog({
   }
 
   // After successful generation, build and store the Gmail URL (if valid).
-  // The Email Invoice link below uses this to open Gmail.
+  // The Email Invoice link below uses this to open Gmail. Marking the
+  // invoice sent happens on the link's own click handler, not here — this
+  // effect only builds the URL, it doesn't mean the tutor has actually sent
+  // anything yet.
   useEffect(() => {
     if (state.fieldErrors === null && state.invoiceId !== null) {
-      console.log("[invoice-dialog] Success, emailDraft:", state.emailDraft);
       const url = state.emailDraft
         ? buildGmailComposeUrl(state.emailDraft)
         : null;
-      console.log("[invoice-dialog] Generated URL:", url?.slice(0, 100), "tooLong:", url ? isGmailUrlTooLong(url) : "N/A");
       if (url && !isGmailUrlTooLong(url)) {
         setGmailUrl(url);
-        console.log("[invoice-dialog] Set gmailUrl");
-        // Mark sent when draft opens (user clicks the link)
-        void markInvoiceSentAction(state.invoiceId, true);
-      } else {
-        console.log("[invoice-dialog] URL invalid or too long");
       }
     }
   }, [state]);
@@ -221,6 +225,11 @@ export function InvoicePreviewDialog({
                   href={gmailUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    if (state.invoiceId !== null) {
+                      void markInvoiceSentAction(state.invoiceId, true);
+                    }
+                  }}
                   className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-medium text-sm"
                 >
                   Email Invoice
