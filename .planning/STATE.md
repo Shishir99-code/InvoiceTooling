@@ -131,6 +131,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260730-hjn | Replace cron automation with calendar tab and bulk email sending — removed all cron/auto-log/auto-send machinery (Phases 6/7 async paths superseded); added Calendar tab with derived pending occurrences + confirm-to-log | 2026-07-30 | 9060c1e | [260730-hjn-replace-cron-automation-with-calendar-ta](./quick/260730-hjn-replace-cron-automation-with-calendar-ta/) |
+| fast | Force dynamic rendering on all data pages — Vercel served build-time prerendered snapshots, so DB writes not routed through a Server Action (e.g. cron-logged sessions) never appeared on the deployed site | 2026-07-30 | 4cc0e51 | — |
 
 ## Deferred Items
 
