@@ -7,6 +7,11 @@ import { invoices, students, settings } from "@/lib/db/schema";
 // HIST-01/D-14: a flat, newest-first log of every generated invoice — no
 // grouping/filtering. Each row's View opens the shared invoice view built in
 // Plan 02 at /history/[id] (HIST-02).
+// Render from the live DB on every request — never serve a build-time
+// prerendered snapshot (sessions written outside a Server Action were
+// invisible on Vercel until the next deploy).
+export const dynamic = "force-dynamic";
+
 export default async function HistoryPage() {
   const [settingsRow] = await db
     .select({ gmailVerified: settings.gmailVerified })

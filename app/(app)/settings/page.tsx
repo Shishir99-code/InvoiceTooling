@@ -9,6 +9,11 @@ import {
   DEFAULT_SUBJECT_TEMPLATE,
 } from "@/lib/invoice/defaults";
 
+// Render from the live DB on every request — never serve a build-time
+// prerendered snapshot (sessions written outside a Server Action were
+// invisible on Vercel until the next deploy).
+export const dynamic = "force-dynamic";
+
 export default async function SettingsPage() {
   const [row] = await db.select().from(settings).where(eq(settings.id, 1));
 

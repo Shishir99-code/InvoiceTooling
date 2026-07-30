@@ -7,6 +7,11 @@ import { sessions, students } from "@/lib/db/schema";
 
 // Sessions route (D-08..D-10): grouped-by-student session log with
 // add/edit/delete wired to Plan 02-02's Server Actions.
+// Render from the live DB on every request — never serve a build-time
+// prerendered snapshot (sessions written outside a Server Action were
+// invisible on Vercel until the next deploy).
+export const dynamic = "force-dynamic";
+
 export default async function SessionsPage() {
   const [activeStudents, sessionRows] = await Promise.all([
     db

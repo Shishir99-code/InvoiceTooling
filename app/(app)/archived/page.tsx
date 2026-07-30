@@ -10,6 +10,11 @@ import { restoreStudentAction } from "@/lib/actions/students";
 // Protected by the same middleware.ts choke point as "/" (deny-by-default
 // matcher covers every route except /login). D-11: view archived students
 // and restore them; D-10: the row is preserved, restore just flips the flag.
+// Render from the live DB on every request — never serve a build-time
+// prerendered snapshot (sessions written outside a Server Action were
+// invisible on Vercel until the next deploy).
+export const dynamic = "force-dynamic";
+
 export default async function ArchivedStudentsPage() {
   const rows = await db.select()
     .from(students)

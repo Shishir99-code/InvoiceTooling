@@ -12,6 +12,11 @@ import { scheduleSlots, students } from "@/lib/db/schema";
 // Protected roster landing page (D-04: a valid session lands here directly).
 // Interactive add/edit modal + table built in Plan 03; archive action +
 // Students/Archived tabs added in Plan 04.
+// Render from the live DB on every request — never serve a build-time
+// prerendered snapshot (sessions written outside a Server Action were
+// invisible on Vercel until the next deploy).
+export const dynamic = "force-dynamic";
+
 export default async function StudentsPage() {
   const rows = await db.select()
     .from(students)

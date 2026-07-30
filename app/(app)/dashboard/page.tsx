@@ -22,6 +22,11 @@ const unbilledAmountExpr = sql<number>`coalesce(sum(${sessions.amountCents}) fil
 // above does.
 const isUnbilled = eq(sessions.billed, false);
 
+// Render from the live DB on every request — never serve a build-time
+// prerendered snapshot (sessions written outside a Server Action were
+// invisible on Vercel until the next deploy).
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const [
     dashboardRows,
