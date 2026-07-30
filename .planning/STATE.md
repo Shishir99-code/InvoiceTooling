@@ -132,6 +132,7 @@ None yet.
 |---|-------------|------|--------|-----------|
 | 260730-hjn | Replace cron automation with calendar tab and bulk email sending — removed all cron/auto-log/auto-send machinery (Phases 6/7 async paths superseded); added Calendar tab with derived pending occurrences + confirm-to-log | 2026-07-30 | 9060c1e | [260730-hjn-replace-cron-automation-with-calendar-ta](./quick/260730-hjn-replace-cron-automation-with-calendar-ta/) |
 | fast | Force dynamic rendering on all data pages — Vercel served build-time prerendered snapshots, so DB writes not routed through a Server Action (e.g. cron-logged sessions) never appeared on the deployed site | 2026-07-30 | 4cc0e51 | — |
+| fast | Full E2E pass (tests/e2e-core-flows.spec.ts) surfaced and fixed 3 real bugs: InvoicePreviewDialog unmounting mid-flow on revalidation (never showed Done/Email Invoice when an invoice billed 100% of unbilled), its preview text going blank for the same reason, markInvoiceSentAction firing before the tutor actually clicked Email Invoice, and a calendar-view.tsx StrictMode double-invoke bug that closed the confirm dialog immediately after opening | 2026-07-30 | 1264d72 | — |
 
 ## Deferred Items
 
