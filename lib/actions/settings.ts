@@ -19,10 +19,6 @@ function parseSettingsForm(formData: FormData) {
     subjectTemplate: formData.get("subjectTemplate"),
     bodyTemplate: formData.get("bodyTemplate"),
     timezone: formData.get("timezone"),
-    invoiceCadenceEnabled: formData.get("invoiceCadenceEnabled"),
-    invoiceCadenceDay: formData.get("invoiceCadenceDay"),
-    invoiceCadenceLastDay: formData.get("invoiceCadenceLastDay"),
-    autoSendInvoices: formData.get("autoSendInvoices"),
   });
 }
 
@@ -47,10 +43,6 @@ export async function saveSettingsAction(
       subjectTemplate: parsed.data.subjectTemplate,
       bodyTemplate: parsed.data.bodyTemplate,
       timezone: parsed.data.timezone ?? null,
-      invoiceCadenceEnabled: parsed.data.invoiceCadenceEnabled,
-      invoiceCadenceDay: parsed.data.invoiceCadenceDay ?? null,
-      invoiceCadenceLastDay: parsed.data.invoiceCadenceLastDay,
-      autoSendInvoices: parsed.data.autoSendInvoices,
     })
     .onConflictDoUpdate({
       target: settings.id,
@@ -59,10 +51,6 @@ export async function saveSettingsAction(
         subjectTemplate: parsed.data.subjectTemplate,
         bodyTemplate: parsed.data.bodyTemplate,
         timezone: parsed.data.timezone ?? null,
-        invoiceCadenceEnabled: parsed.data.invoiceCadenceEnabled,
-        invoiceCadenceDay: parsed.data.invoiceCadenceDay ?? null,
-        invoiceCadenceLastDay: parsed.data.invoiceCadenceLastDay,
-        autoSendInvoices: parsed.data.autoSendInvoices,
       },
     });
 

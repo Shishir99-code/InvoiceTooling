@@ -24,10 +24,6 @@ interface SettingsFormProps {
   subjectTemplate: string;
   bodyTemplate: string;
   timezone: string | null;
-  invoiceCadenceEnabled: boolean;
-  invoiceCadenceDay: number | null;
-  invoiceCadenceLastDay: boolean;
-  autoSendInvoices?: boolean;
 }
 
 // SET-01/SET-02: a PAGE form (not a modal) — persistent settings, no
@@ -77,22 +73,6 @@ export function SettingsForm(props: SettingsFormProps) {
     tz && !US_TIMEZONES.some((option) => option.value === tz)
       ? [{ value: tz, label: `${tz} (detected)` }, ...US_TIMEZONES]
       : US_TIMEZONES;
-
-  // RINV-01: cadence configuration state
-  const [cadenceEnabled, setCadenceEnabled] = useState<string>(
-    props.invoiceCadenceEnabled ? "on" : "off",
-  );
-  const cadenceDaySel =
-    props.invoiceCadenceLastDay ? "last" : (props.invoiceCadenceDay?.toString() ?? "1");
-  const [cadenceDay, setCadenceDay] = useState<string>(cadenceDaySel);
-
-  const handleCadenceEnabledChange = (value: string | null) => {
-    if (value !== null) setCadenceEnabled(value);
-  };
-
-  const handleCadenceDayChange = (value: string | null) => {
-    if (value !== null) setCadenceDay(value);
-  };
 
   return (
     <form action={formAction} noValidate className="flex flex-col gap-6">
@@ -179,79 +159,6 @@ export function SettingsForm(props: SettingsFormProps) {
         {state.fieldErrors?.timezone && (
           <p className="text-sm text-red-600">
             {state.fieldErrors.timezone[0]}
-          </p>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <Label>Automatic Invoicing</Label>
-        <p className="text-sm text-zinc-600">
-          Enable to auto-generate invoices on a monthly cadence.
-        </p>
-        <Select value={cadenceEnabled} onValueChange={handleCadenceEnabledChange}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="on">On</SelectItem>
-            <SelectItem value="off">Off</SelectItem>
-          </SelectContent>
-        </Select>
-        <input type="hidden" name="invoiceCadenceEnabled" value={cadenceEnabled} />
-
-        <Label className="mt-4">Invoice Day of Month</Label>
-        <p className="text-sm text-zinc-600">
-          The run fires monthly on this day; late/skipped runs self-heal the next day.
-        </p>
-        <Select value={cadenceDay} onValueChange={handleCadenceDayChange}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select day" />
-          </SelectTrigger>
-          <SelectContent>
-            {Array.from({ length: 28 }, (_, i) => i + 1).map((day) => (
-              <SelectItem key={day} value={day.toString()}>
-                {day}
-              </SelectItem>
-            ))}
-            <SelectItem value="last">Last day of month</SelectItem>
-          </SelectContent>
-        </Select>
-        <input
-          type="hidden"
-          name="invoiceCadenceLastDay"
-          value={cadenceDay === "last" ? "on" : "off"}
-        />
-        <input
-          type="hidden"
-          name="invoiceCadenceDay"
-          value={cadenceDay === "last" ? "" : cadenceDay}
-        />
-        {state.fieldErrors?.invoiceCadenceDay && (
-          <p className="text-sm text-red-600">
-            {state.fieldErrors.invoiceCadenceDay[0]}
-          </p>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            id="autoSendInvoices"
-            name="autoSendInvoices"
-            defaultChecked={props.autoSendInvoices ?? false}
-            className="h-4 w-4 rounded border-zinc-300"
-          />
-          <Label htmlFor="autoSendInvoices" className="mt-0">
-            Auto-send invoices after monthly generation
-          </Label>
-        </div>
-        <p className="text-sm text-zinc-600">
-          When enabled, invoices will be automatically sent to parents via email on the scheduled generation date. Requires Gmail email delivery to be verified in Email Delivery settings.
-        </p>
-        {state.fieldErrors?.autoSendInvoices && (
-          <p className="text-sm text-red-600">
-            {state.fieldErrors.autoSendInvoices[0]}
           </p>
         )}
       </div>

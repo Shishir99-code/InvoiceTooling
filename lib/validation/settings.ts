@@ -45,31 +45,6 @@ export const settingsFormSchema = baseSettingsSchema
         .refine(isValidIanaTimeZone, "Pick a valid timezone.")
         .optional(),
     ),
-    // RINV-01: auto-invoicing cadence configuration
-    invoiceCadenceEnabled: z.preprocess(
-      (v) => v === "on" || v === "true" || v === true,
-      z.boolean(),
-    ),
-    invoiceCadenceLastDay: z.preprocess(
-      (v) => v === "on" || v === "true" || v === true,
-      z.boolean(),
-    ),
-    invoiceCadenceDay: z.preprocess(
-      (v) =>
-        typeof v === "string" && v.trim() === "" ? undefined : v,
-      z
-        .coerce
-        .number()
-        .int()
-        .min(1, "Pick a day between 1 and 28.")
-        .max(28, "Pick a day between 1 and 28.")
-        .optional(),
-    ),
-    // BULK-AUTO: auto-send invoices after monthly generation
-    autoSendInvoices: z.preprocess(
-      (v) => v === "on" || v === "true" || v === true,
-      z.boolean(),
-    ),
   });
 
 export type SettingsFormValues = z.infer<typeof settingsFormSchema>;

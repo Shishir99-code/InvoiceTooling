@@ -23,10 +23,6 @@ export default async function SettingsPage() {
           subjectTemplate={row?.subjectTemplate ?? DEFAULT_SUBJECT_TEMPLATE}
           bodyTemplate={row?.bodyTemplate ?? DEFAULT_BODY_TEMPLATE}
           timezone={row?.timezone ?? null}
-          invoiceCadenceEnabled={row?.invoiceCadenceEnabled ?? false}
-          invoiceCadenceDay={row?.invoiceCadenceDay ?? null}
-          invoiceCadenceLastDay={row?.invoiceCadenceLastDay ?? false}
-          autoSendInvoices={row?.autoSendInvoices ?? false}
         />
         <div className="border-t pt-8">
           <EmailDeliveryForm
