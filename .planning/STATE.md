@@ -32,7 +32,7 @@ Wave Summary:
   - Wave 2 (Plan 02): Settings UI gmail credential setup ✅
   - Wave 3 (Plan 03): Invoice history UI bulk selection & dialog ✅
   - Wave 4 (Plan 04): Bulk send action & error handling polish ✅
-Last activity: 2026-07-30 — Completed quick task 260730-hjn: Replace cron automation with calendar tab and bulk email sending
+Last activity: 2026-08-02 — Completed quick task 260802-m9a: Fix falsy-zero guard blocking Sunday and 0 hrs/0 min in schedule slot dialog
 
 ## Performance Metrics
 
@@ -133,6 +133,7 @@ None yet.
 | 260730-hjn | Replace cron automation with calendar tab and bulk email sending — removed all cron/auto-log/auto-send machinery (Phases 6/7 async paths superseded); added Calendar tab with derived pending occurrences + confirm-to-log | 2026-07-30 | 9060c1e | [260730-hjn-replace-cron-automation-with-calendar-ta](./quick/260730-hjn-replace-cron-automation-with-calendar-ta/) |
 | fast | Force dynamic rendering on all data pages — Vercel served build-time prerendered snapshots, so DB writes not routed through a Server Action (e.g. cron-logged sessions) never appeared on the deployed site | 2026-07-30 | 4cc0e51 | — |
 | fast | Full E2E pass (tests/e2e-core-flows.spec.ts) surfaced and fixed 3 real bugs: InvoicePreviewDialog unmounting mid-flow on revalidation (never showed Done/Email Invoice when an invoice billed 100% of unbilled), its preview text going blank for the same reason, markInvoiceSentAction firing before the tutor actually clicked Email Invoice, and a calendar-view.tsx StrictMode double-invoke bug that closed the confirm dialog immediately after opening | 2026-07-30 | 1264d72 | — |
+| 260802-m9a | Fix falsy-zero guard blocking Sunday and 0 hrs/0 min in schedule slot dialog — three Base UI Select handlers used `value && setX(value)`, and Base UI emits the SelectItem's raw numeric value, so the 0-valued option (Sunday, 0 hrs, 0 min) was silently discarded | 2026-08-02 | 0372cdf | [260802-m9a-fix-falsy-zero-guard-blocking-sunday-and](./quick/260802-m9a-fix-falsy-zero-guard-blocking-sunday-and/) | 
 
 ## Deferred Items
 
