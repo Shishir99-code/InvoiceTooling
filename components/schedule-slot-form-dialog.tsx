@@ -115,7 +115,12 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
             <Label>Day</Label>
             <Select
               value={weekday}
-              onValueChange={(value) => value && setWeekday(value)}
+              // Base UI hands back the SelectItem's raw value — a number here.
+              // A truthiness guard would swallow Sunday (0); only a null
+              // emission (selection cleared) should be ignored. String()
+              // normalises back to the string this state and the hidden
+              // input below are typed for.
+              onValueChange={(value) => value != null && setWeekday(String(value))}
             >
               <SelectTrigger>
                 <SelectValue>
@@ -160,7 +165,7 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
             <div className="flex gap-2">
               <Select
                 value={hours}
-                onValueChange={(value) => value && setHours(value)}
+                onValueChange={(value) => value != null && setHours(String(value))}
               >
                 <SelectTrigger className="flex-1">
                   <SelectValue>
@@ -177,7 +182,7 @@ export function ScheduleSlotFormDialog(props: ScheduleSlotFormDialogProps) {
               </Select>
               <Select
                 value={minutes}
-                onValueChange={(value) => value && setMinutes(value)}
+                onValueChange={(value) => value != null && setMinutes(String(value))}
               >
                 <SelectTrigger className="flex-1">
                   <SelectValue>{(value: string) => `${value} min`}</SelectValue>
