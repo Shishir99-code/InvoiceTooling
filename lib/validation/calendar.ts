@@ -19,6 +19,14 @@ export const confirmOccurrenceSchema = z.object({
   ),
 });
 
+// DISM-01: dismiss/restore identify an occurrence by the same (slotId, date)
+// pair as every other calendar path. No duration/notes — nothing is written to
+// sessions, so there is nothing else to validate.
+export const dismissOccurrenceSchema = z.object({
+  slotId: z.coerce.number("Invalid slot.").int().positive("Invalid slot."),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date."),
+});
+
 // Bulk confirm: a list of derived occurrences the client currently shows as
 // pending. Each is fully re-validated server-side against the live slot.
 export const bulkConfirmSchema = z

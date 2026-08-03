@@ -21,6 +21,20 @@ import { formatCents, formatDuration } from "@/lib/format";
 
 type SessionRow = typeof sessions.$inferSelect;
 
+// MK-01: internal-only marker for a rescheduled class. Deliberately quiet —
+// it sits alongside the date without competing with the amount, and never
+// reaches the invoice a parent receives.
+function MakeupBadge() {
+  return (
+    <span
+      title="Makeup session — internal note, not shown on invoices"
+      className="rounded bg-violet-100 px-1.5 py-0.5 text-xs font-medium text-violet-700"
+    >
+      Makeup
+    </span>
+  );
+}
+
 export interface SessionGroup {
   studentId: number;
   studentName: string;
@@ -152,6 +166,7 @@ function SessionGroupRow({
                               <AutoLoggedMarker />
                             )}
                             {formatSessionDate(session.date)}
+                            {session.makeup && <MakeupBadge />}
                           </span>
                         </TableCell>
                         <TableCell>
@@ -212,9 +227,10 @@ function SessionGroupRow({
                         />
                       </div>
                     </div>
-                    <span className="text-base text-zinc-600">
+                    <span className="flex items-center gap-1.5 text-base text-zinc-600">
                       {formatDuration(session.durationMinutes)} ·{" "}
                       {formatCents(session.amountCents)}
+                      {session.makeup && <MakeupBadge />}
                     </span>
                     {session.notes && (
                       <span className="text-base text-zinc-600">

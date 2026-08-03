@@ -26,6 +26,8 @@ function parseAddSessionForm(formData: FormData) {
     date: formData.get("date"),
     durationMinutes: formData.get("durationMinutes"),
     notes: formData.get("notes"),
+    makeup: formData.get("makeup") === "on" || formData.get("makeup") === "true",
+    amountDollars: formData.get("amountDollars"),
   });
 }
 
@@ -36,6 +38,8 @@ function parseEditSessionForm(formData: FormData) {
     date: formData.get("date"),
     durationMinutes: formData.get("durationMinutes"),
     notes: formData.get("notes"),
+    makeup: formData.get("makeup") === "on" || formData.get("makeup") === "true",
+    amountDollars: formData.get("amountDollars"),
   });
 }
 
@@ -60,10 +64,12 @@ export async function addSessionAction(
     return { fieldErrors: { studentId: ["Select a student."] } };
   }
 
-  const amountCents = computeAmountCents(
-    parsed.data.durationMinutes,
-    student.rateCents,
-  );
+  // PRICE-01: an explicit amount wins; otherwise derive from the live rate.
+  // Math.round mirrors the student-rate conversion — never store a raw float.
+  const amountCents =
+    parsed.data.amountDollars !== undefined
+      ? Math.round(parsed.data.amountDollars * 100)
+      : computeAmountCents(parsed.data.durationMinutes, student.rateCents);
 
   await db.insert(sessions).values({
     studentId: parsed.data.studentId,
@@ -71,6 +77,7 @@ export async function addSessionAction(
     durationMinutes: parsed.data.durationMinutes,
     amountCents,
     notes: parsed.data.notes ?? null,
+    makeup: parsed.data.makeup,
     billed: false,
   });
 
@@ -98,21 +105,51 @@ export async function editSessionAction(
     return { fieldErrors: { studentId: ["Select a student."] } };
   }
 
-  const amountCents = computeAmountCents(
-    parsed.data.durationMinutes,
-    student.rateCents,
-  );
+  // PRICE-01: the amount is frozen once the session has been billed onto an
+  // invoice. That invoice stores its own rendered body and total (Pitfall 4),
+  // so letting the amount drift afterwards would leave a sent invoice
+  // permanently disagreeing with the session list it was built from. Read the
+  // live row rather than trusting anything the form submitted.
+  const [current] = await db
+    .select({ billed: sessions.billed, invoiceId: sessions.invoiceId })
+    .from(sessions)
+    .where(eq(sessions.id, parsed.data.id));
 
-  // SESS-03: editing is allowed at any time, regardless of `billed` status —
-  // `billed` only affects dashboard exclusion (DASH-02), never edit eligibility.
+  if (!current) {
+    return { fieldErrors: { _form: ["That session no longer exists."] } };
+  }
+
+  const isBilled = current.billed || current.invoiceId !== null;
+
+  if (isBilled && parsed.data.amountDollars !== undefined) {
+    return {
+      fieldErrors: {
+        amountDollars: [
+          "This session is already on an invoice — its price is locked. Delete the invoice first to change it.",
+        ],
+      },
+    };
+  }
+
+  // A billed session's amount stays exactly as invoiced. For unbilled ones an
+  // explicit amount wins, else recompute from the live rate as before.
+  const amountCents = isBilled
+    ? undefined
+    : parsed.data.amountDollars !== undefined
+      ? Math.round(parsed.data.amountDollars * 100)
+      : computeAmountCents(parsed.data.durationMinutes, student.rateCents);
+
+  // SESS-03: the other fields stay editable at any time — `billed` gates the
+  // amount only, never date/notes/duration/makeup.
   await db
     .update(sessions)
     .set({
       studentId: parsed.data.studentId,
       date: parsed.data.date,
       durationMinutes: parsed.data.durationMinutes,
-      amountCents,
+      ...(amountCents !== undefined ? { amountCents } : {}),
       notes: parsed.data.notes ?? null,
+      makeup: parsed.data.makeup,
     })
     .where(eq(sessions.id, parsed.data.id));
 

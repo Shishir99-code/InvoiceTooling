@@ -1,6 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { formatCents } from "@/lib/format";
 import { formatPeriod } from "@/lib/invoice/render";
 import { InvoiceHistoryRow } from "./invoice-history-table";
@@ -13,6 +20,10 @@ interface BulkSendConfirmationDialogProps {
   onCancel: () => void;
 }
 
+// Built on the shared Dialog primitive like every other modal here. It was
+// previously a bare fixed-position <div>, which meant no dialog role for
+// screen readers, no focus trap, and — worst for the one screen that sends
+// real email — no Escape to back out.
 export function BulkSendConfirmationDialog({
   isOpen,
   invoices,
@@ -20,26 +31,34 @@ export function BulkSendConfirmationDialog({
   onConfirm,
   onCancel,
 }: BulkSendConfirmationDialogProps) {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-        <h2 className="text-lg font-semibold text-zinc-900">
-          Send {invoices.length} Invoice{invoices.length === 1 ? "" : "s"}?
-        </h2>
+    <Dialog
+      open={isOpen}
+      // Ignore dismissals while the send is in flight: emails are already
+      // going out and closing would strand the tutor with no result message.
+      onOpenChange={(open) => {
+        if (!open && !isPending) onCancel();
+      }}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            Send {invoices.length} Invoice{invoices.length === 1 ? "" : "s"}?
+          </DialogTitle>
+        </DialogHeader>
 
-        <p className="mt-2 text-sm text-zinc-600">
-          Emails will be sent from your Gmail account to each parent's email on file.
+        <p className="text-sm text-zinc-600">
+          Emails will be sent from your Gmail account to each parent&apos;s
+          email on file.
         </p>
 
-        <div className="mt-4 max-h-64 space-y-2 overflow-y-auto rounded-md border border-zinc-200 bg-zinc-50 p-3">
+        <div className="max-h-64 space-y-2 overflow-y-auto rounded-md border border-zinc-200 bg-zinc-50 p-3">
           {invoices.map((invoice) => (
             <div key={invoice.id} className="text-sm">
-              <div className="font-medium text-zinc-900">{invoice.studentName}</div>
-              <div className="text-xs text-zinc-600">
-                {invoice.parentEmail}
+              <div className="font-medium text-zinc-900">
+                {invoice.studentName}
               </div>
+              <div className="text-xs text-zinc-600">{invoice.parentEmail}</div>
               <div className="text-xs text-zinc-600">
                 {formatPeriod(invoice.periodStart, invoice.periodEnd)} •{" "}
                 {formatCents(invoice.totalCents)}
@@ -48,12 +67,8 @@ export function BulkSendConfirmationDialog({
           ))}
         </div>
 
-        <div className="mt-6 flex gap-3 justify-end">
-          <Button
-            onClick={onCancel}
-            variant="outline"
-            disabled={isPending}
-          >
+        <DialogFooter>
+          <Button onClick={onCancel} variant="outline" disabled={isPending}>
             Cancel
           </Button>
           <Button
@@ -63,8 +78,8 @@ export function BulkSendConfirmationDialog({
           >
             {isPending ? "Sending..." : "Send"}
           </Button>
-        </div>
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

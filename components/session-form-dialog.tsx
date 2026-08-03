@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -102,6 +103,12 @@ export function SessionFormDialog(props: SessionFormDialogProps) {
   const title = isEdit ? "Edit Session" : "Log Session";
   const primaryLabel = isEdit ? "Save Changes" : "Log Session";
   const pendingLabel = isEdit ? "Saving…" : "Logging…";
+
+  // PRICE-01: a session that has been billed onto an invoice has a frozen
+  // amount. The server enforces this independently (editSessionAction re-reads
+  // the row); this just avoids showing an input that would be rejected.
+  const isLocked =
+    isEdit && (props.session.billed || props.session.invoiceId !== null);
 
   const totalMinutes = hours * 60 + minutes;
   // Non-authoritative client-side estimate only — never submitted as form
@@ -212,6 +219,81 @@ export function SessionFormDialog(props: SessionFormDialogProps) {
                 {state.fieldErrors.date[0]}
               </p>
             )}
+          </div>
+
+          {/* PRICE-01: the amount normally follows duration x rate. This makes
+              that default visible and overridable, and locks it once the
+              session has been invoiced (the invoice's total is frozen). */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={`amount-${fieldSuffix}`}>Price</Label>
+            {isLocked ? (
+              <>
+                <p className="text-base text-zinc-900">
+                  {formatCents(props.session!.amountCents)}
+                </p>
+                <p className="text-sm text-zinc-600">
+                  Locked — this session is already on an invoice. Delete that
+                  invoice from History to change the price.
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="relative">
+                  <span className="pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2 text-base text-zinc-500">
+                    $
+                  </span>
+                  <Input
+                    id={`amount-${fieldSuffix}`}
+                    name="amountDollars"
+                    type="text"
+                    inputMode="decimal"
+                    className="pl-6"
+                    placeholder={
+                      previewAmountCents !== null
+                        ? (previewAmountCents / 100).toFixed(2)
+                        : "0.00"
+                    }
+                    defaultValue={
+                      isEdit ? (props.session.amountCents / 100).toFixed(2) : ""
+                    }
+                  />
+                </div>
+                <p className="text-sm text-zinc-600">
+                  Leave blank to use the rate
+                  {previewAmountCents !== null
+                    ? ` (${formatCents(previewAmountCents)})`
+                    : ""}
+                  .
+                </p>
+              </>
+            )}
+            {state.fieldErrors?.amountDollars && (
+              <p className="text-sm text-red-600">
+                {state.fieldErrors.amountDollars[0]}
+              </p>
+            )}
+          </div>
+
+          {/* MK-01: internal-only marker. Deliberately not surfaced on the
+              invoice — see lib/invoice/render.ts. */}
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor={`makeup-${fieldSuffix}`}
+              className="flex items-center gap-2 text-base text-zinc-900"
+            >
+              <input
+                id={`makeup-${fieldSuffix}`}
+                name="makeup"
+                type="checkbox"
+                defaultChecked={isEdit ? props.session.makeup : false}
+                className="h-4 w-4 rounded border-zinc-300"
+              />
+              Makeup session
+            </label>
+            <p className="text-sm text-zinc-600">
+              For your own tracking only — parents never see this on the
+              invoice, and it doesn&apos;t change the price.
+            </p>
           </div>
 
           <div className="flex flex-col gap-2">

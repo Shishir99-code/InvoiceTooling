@@ -6,7 +6,13 @@ import {
   type CalendarDay,
 } from "@/components/calendar-view";
 import { db } from "@/lib/db";
-import { scheduleSlots, sessions, settings, students } from "@/lib/db/schema";
+import {
+  dismissedOccurrences,
+  scheduleSlots,
+  sessions,
+  settings,
+  students,
+} from "@/lib/db/schema";
 import { occurrencesInRange } from "@/lib/schedule/occurrences";
 import { DEFAULT_TIMEZONE, todayInZone } from "@/lib/schedule/time";
 
@@ -49,7 +55,7 @@ export default async function CalendarPage({
   const monthStart = `${month}-01`;
   const monthEnd = `${month}-${String(daysInMonth(month)).padStart(2, "0")}`;
 
-  const [slotRows, sessionRows] = await Promise.all([
+  const [slotRows, sessionRows, dismissedRows] = await Promise.all([
     db
       .select({
         id: scheduleSlots.id,
@@ -74,6 +80,18 @@ export default async function CalendarPage({
       .from(sessions)
       .leftJoin(students, eq(sessions.studentId, students.id))
       .where(and(gte(sessions.date, monthStart), lte(sessions.date, monthEnd))),
+    db
+      .select({
+        scheduleSlotId: dismissedOccurrences.scheduleSlotId,
+        date: dismissedOccurrences.date,
+      })
+      .from(dismissedOccurrences)
+      .where(
+        and(
+          gte(dismissedOccurrences.date, monthStart),
+          lte(dismissedOccurrences.date, monthEnd),
+        ),
+      ),
   ]);
 
   const slotsById = new Map(slotRows.map((s) => [s.id, s]));
@@ -86,10 +104,16 @@ export default async function CalendarPage({
       .map((s) => `${s.scheduleSlotId}:${s.date}`),
   );
 
+  // DISM-01: occurrences the tutor explicitly discarded. Same (slot, date) key
+  // shape as loggedOccurrences so both filters read alike below.
+  const dismissedKeys = new Set(
+    dismissedRows.map((d) => `${d.scheduleSlotId}:${d.date}`),
+  );
+
   const days = new Map<string, CalendarDay>();
   for (let i = 1; i <= daysInMonth(month); i++) {
     const date = `${month}-${String(i).padStart(2, "0")}`;
-    days.set(date, { date, logged: [], pending: [], upcoming: [] });
+    days.set(date, { date, logged: [], pending: [], upcoming: [], dismissed: [] });
   }
 
   for (const session of sessionRows) {
@@ -114,7 +138,12 @@ export default async function CalendarPage({
       durationMinutes: slot.durationMinutes,
       rateCents: slot.rateCents,
     };
-    if (occ.date <= today) {
+    // Dismissed wins over pending/upcoming: the tutor said this class did not
+    // happen, so it must never sit in the "needs logging" pile or be swept up
+    // by "Log all pending".
+    if (dismissedKeys.has(`${occ.slotId}:${occ.date}`)) {
+      day.dismissed.push(chip);
+    } else if (occ.date <= today) {
       day.pending.push(chip);
     } else {
       day.upcoming.push(chip);
@@ -124,6 +153,7 @@ export default async function CalendarPage({
   for (const day of days.values()) {
     day.pending.sort((a, b) => a.startTime.localeCompare(b.startTime));
     day.upcoming.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    day.dismissed.sort((a, b) => a.startTime.localeCompare(b.startTime));
   }
 
   return (

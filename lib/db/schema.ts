@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, integer, boolean, timestamp, date, text, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, serial, varchar, integer, boolean, timestamp, date, text, jsonb, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const students = pgTable("students", {
   id: serial("id").primaryKey(),
@@ -71,11 +71,38 @@ export const sessions = pgTable("sessions", {
   durationMinutes: integer("duration_minutes").notNull(), // hours+minutes combine into this
   amountCents: integer("amount_cents").notNull(), // D-14: frozen snapshot, computed server-side once at write time
   notes: text("notes"), // SESS-02: optional
+  makeup: boolean("makeup").notNull().default(false), // MK-01: internal-only label for a rescheduled class. Never affects amountCents and never renders on an invoice — see lib/invoice/render.ts
   billed: boolean("billed").notNull().default(false), // Phase 3 sets true; Phase 2 only reads for DASH-02
   invoiceId: integer("invoice_id").references(() => invoices.id, { onDelete: "set null" }), // null = unbilled; set at generation, un-links on invoice delete (D-16)
   scheduleSlotId: integer("schedule_slot_id").references(() => scheduleSlots.id, { onDelete: "set null" }), // D-04: null = manual; set = auto-logged from this slot (drives the D-03 marker). set null: slot delete preserves history (D-06), never cascades
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// DISM-01: a pending occurrence the tutor explicitly discarded (class cancelled,
+// student away). Pending occurrences are *derived* from scheduleSlots on every
+// request and never stored, so "don't show this one again" needs its own row —
+// there is no session record to mark. Keyed by (slotId, date), the same pair
+// that identifies an occurrence everywhere else in the calendar code.
+// onDelete cascade (not restrict, unlike sessions/invoices): a dismissal is a
+// UI preference about a slot, not billing history — deleting the slot makes it
+// meaningless, and orphans would silently suppress nothing.
+export const dismissedOccurrences = pgTable(
+  "dismissed_occurrences",
+  {
+    id: serial("id").primaryKey(),
+    scheduleSlotId: integer("schedule_slot_id")
+      .notNull()
+      .references(() => scheduleSlots.id, { onDelete: "cascade" }),
+    date: date("date", { mode: "string" }).notNull(), // mode "string": avoids TZ-shift, matches sessions.date
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [
+    // Makes "dismiss" idempotent — a double-click or a replayed Server Action
+    // can't create two rows for the same occurrence, and restore stays a
+    // single unambiguous delete.
+    uniqueIndex("dismissed_occurrences_slot_date_idx").on(t.scheduleSlotId, t.date),
+  ],
+);
 
 export const loginAttempts = pgTable("login_attempts", {
   ipAddress: varchar("ip_address", { length: 45 }).primaryKey(), // IPv6-safe length

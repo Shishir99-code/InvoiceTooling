@@ -5,12 +5,19 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { db } from "@/lib/db";
-import { scheduleSlots, sessions, settings, students } from "@/lib/db/schema";
+import {
+  dismissedOccurrences,
+  scheduleSlots,
+  sessions,
+  settings,
+  students,
+} from "@/lib/db/schema";
 import { DEFAULT_TIMEZONE, todayInZone, weekdayOf } from "@/lib/schedule/time";
 import { computeAmountCents } from "@/lib/sessions/amount";
 import {
   bulkConfirmSchema,
   confirmOccurrenceSchema,
+  dismissOccurrenceSchema,
 } from "@/lib/validation/calendar";
 
 export interface ConfirmOccurrenceState {
@@ -119,6 +126,83 @@ export async function confirmOccurrenceAction(
   revalidatePath("/sessions");
   revalidatePath("/dashboard");
   return { fieldErrors: null };
+}
+
+export interface DismissOccurrenceResult {
+  ok: boolean;
+  error?: string;
+}
+
+// DISM-01: discard a pending occurrence instead of logging it (class cancelled,
+// student away). Writes the "don't show this again" row that the derived
+// pending list is filtered against — no session is created, so nothing becomes
+// billable. Deliberately NOT gated on `date <= today`: a tutor who already
+// knows next Tuesday is cancelled should be able to clear it ahead of time.
+export async function dismissOccurrenceAction(
+  slotId: number,
+  date: string,
+): Promise<DismissOccurrenceResult> {
+  const parsed = dismissOccurrenceSchema.safeParse({ slotId, date });
+  if (!parsed.success) {
+    return { ok: false, error: "Invalid class." };
+  }
+
+  const [slot] = await db
+    .select({ id: scheduleSlots.id, weekday: scheduleSlots.weekday })
+    .from(scheduleSlots)
+    .where(eq(scheduleSlots.id, parsed.data.slotId));
+  if (!slot) return { ok: false, error: "This class slot no longer exists." };
+  if (weekdayOf(parsed.data.date) !== slot.weekday) {
+    return { ok: false, error: "That date doesn't fall on this slot's class day." };
+  }
+
+  // An already-logged occurrence is a real session, not a pending chip —
+  // dismissing it would hide nothing and imply the session went away.
+  const [existing] = await db
+    .select({ id: sessions.id })
+    .from(sessions)
+    .where(
+      and(
+        eq(sessions.scheduleSlotId, parsed.data.slotId),
+        eq(sessions.date, parsed.data.date),
+      ),
+    );
+  if (existing) {
+    return { ok: false, error: "This session is already logged — delete it from Sessions instead." };
+  }
+
+  // onConflictDoNothing: the unique (slot, date) index makes a repeated
+  // dismiss a no-op rather than an error, so a double-click is harmless.
+  await db
+    .insert(dismissedOccurrences)
+    .values({ scheduleSlotId: parsed.data.slotId, date: parsed.data.date })
+    .onConflictDoNothing();
+
+  revalidatePath("/calendar");
+  return { ok: true };
+}
+
+// Undo a dismissal — the chip returns to pending and can be logged normally.
+export async function restoreOccurrenceAction(
+  slotId: number,
+  date: string,
+): Promise<DismissOccurrenceResult> {
+  const parsed = dismissOccurrenceSchema.safeParse({ slotId, date });
+  if (!parsed.success) {
+    return { ok: false, error: "Invalid class." };
+  }
+
+  await db
+    .delete(dismissedOccurrences)
+    .where(
+      and(
+        eq(dismissedOccurrences.scheduleSlotId, parsed.data.slotId),
+        eq(dismissedOccurrences.date, parsed.data.date),
+      ),
+    );
+
+  revalidatePath("/calendar");
+  return { ok: true };
 }
 
 export interface BulkConfirmResult {

@@ -15,6 +15,13 @@
       "when": 1783531865483,
       "tag": "0001_amusing_frog_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785722063220,
+      "tag": "0002_blue_wilson_fisk",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { useState } from "react";
 
@@ -39,6 +40,7 @@ interface InvoiceHistoryTableProps {
 }
 
 export function InvoiceHistoryTable({ rows, gmailVerified }: InvoiceHistoryTableProps) {
+  const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -79,7 +81,10 @@ export function InvoiceHistoryTable({ rows, gmailVerified }: InvoiceHistoryTable
         });
         setSelectedIds(new Set());
         setConfirmDialogOpen(false);
-        // In a real app, would revalidate the data here
+        // Pull the fresh `sent` flags from the server. Without this the rows
+        // keep their stale "Not sent yet" badge and stay selectable, so a
+        // second click would re-send invoices that already went out.
+        router.refresh();
       } else {
         setResultMessage({
           type: "error",

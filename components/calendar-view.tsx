@@ -25,6 +25,8 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   bulkConfirmOccurrencesAction,
   confirmOccurrenceAction,
+  dismissOccurrenceAction,
+  restoreOccurrenceAction,
   type ConfirmOccurrenceState,
 } from "@/lib/actions/calendar";
 import { formatCents } from "@/lib/format";
@@ -51,6 +53,7 @@ export interface CalendarDay {
   logged: LoggedChip[];
   pending: OccurrenceChip[];
   upcoming: OccurrenceChip[];
+  dismissed: OccurrenceChip[]; // DISM-01: discarded — shown struck-through, click to restore
 }
 
 interface CalendarViewProps {
@@ -96,6 +99,7 @@ export function CalendarView({
   const [selected, setSelected] = useState<OccurrenceChip | null>(null);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [isBulkPending, startBulkTransition] = useTransition();
+  const [isRestoring, startRestoreTransition] = useTransition();
   const [resultMessage, setResultMessage] = useState<string | null>(null);
 
   const allPending = days.flatMap((d) => d.pending);
@@ -112,6 +116,20 @@ export function CalendarView({
               result.skipped > 0 ? `, ${result.skipped} skipped` : ""
             }.`
           : (result.error ?? "Could not log sessions."),
+      );
+    });
+  };
+
+  // DISM-01: clicking a struck-through chip undoes the discard. Kept separate
+  // from the confirm dialog — restoring is a single reversible click, so it
+  // doesn't warrant a confirmation step.
+  const handleRestore = (chip: OccurrenceChip) => {
+    startRestoreTransition(async () => {
+      const result = await restoreOccurrenceAction(chip.slotId, chip.date);
+      setResultMessage(
+        result.ok
+          ? `Restored ${chip.studentName}'s class — it's pending again.`
+          : (result.error ?? "Could not restore that class."),
       );
     });
   };
@@ -232,6 +250,19 @@ export function CalendarView({
                       {firstName(chip.studentName)}
                     </span>
                   ))}
+
+                  {day.dismissed.map((chip) => (
+                    <button
+                      key={`dismissed-${chip.slotId}`}
+                      type="button"
+                      onClick={() => handleRestore(chip)}
+                      disabled={isRestoring}
+                      title={`${chip.studentName} · ${formatStartTime(chip.startTime)} · discarded — click to restore`}
+                      className="truncate rounded px-1.5 py-0.5 text-left text-xs text-zinc-400 line-through hover:bg-zinc-50 hover:text-zinc-600 disabled:opacity-50"
+                    >
+                      {firstName(chip.studentName)}
+                    </button>
+                  ))}
                 </div>
               );
             })}
@@ -252,6 +283,10 @@ export function CalendarView({
           <span className="h-3 w-3 rounded bg-zinc-100 ring-1 ring-zinc-300" />
           Upcoming
         </span>
+        <span className="flex items-center gap-1.5">
+          <span className="text-zinc-400 line-through">Abc</span>
+          Discarded — click to restore
+        </span>
       </div>
 
       {selected && (
@@ -259,6 +294,7 @@ export function CalendarView({
           key={`${selected.slotId}:${selected.date}`}
           chip={selected}
           onClose={() => setSelected(null)}
+          onResult={setResultMessage}
         />
       )}
 
@@ -297,9 +333,11 @@ export function CalendarView({
 function ConfirmOccurrenceDialog({
   chip,
   onClose,
+  onResult,
 }: {
   chip: OccurrenceChip;
   onClose: () => void;
+  onResult: (message: string) => void;
 }) {
   const [state, formAction, isPending] = useActionState(
     confirmOccurrenceAction,
@@ -335,6 +373,23 @@ function ConfirmOccurrenceDialog({
       onCloseRef.current();
     }
   }, [state]);
+
+  const [isDismissing, startDismissTransition] = useTransition();
+
+  // Discard = "this class did not happen". Writes a dismissal row so the
+  // pending chip stops coming back on every render, then closes. No session is
+  // created, so nothing becomes billable.
+  const handleDismiss = () => {
+    startDismissTransition(async () => {
+      const result = await dismissOccurrenceAction(chip.slotId, chip.date);
+      onResult(
+        result.ok
+          ? `Discarded ${chip.studentName}'s class — click the struck-through name to undo.`
+          : (result.error ?? "Could not discard that class."),
+      );
+      if (result.ok) onCloseRef.current();
+    });
+  };
 
   const totalMinutes = hours * 60 + minutes;
   // Client-side preview only — the Server Action recomputes from the live rate.
@@ -432,12 +487,23 @@ function ConfirmOccurrenceDialog({
           </div>
 
           <DialogFooter>
-            <DialogClose render={<Button type="button" variant="outline" />}>
-              Discard
+            {/* Three distinct outcomes, so three buttons: back out and change
+                nothing (Cancel), record that the class did not happen
+                (Discard — removes the pending chip for good), or log it. */}
+            <DialogClose render={<Button type="button" variant="ghost" />}>
+              Cancel
             </DialogClose>
             <Button
+              type="button"
+              variant="outline"
+              disabled={isPending || isDismissing}
+              onClick={handleDismiss}
+            >
+              {isDismissing ? "Discarding…" : "Discard"}
+            </Button>
+            <Button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || isDismissing}
               className="bg-blue-600 text-white hover:bg-blue-700"
             >
               {isPending ? "Logging…" : "Log Session"}
